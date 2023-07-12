@@ -1,13 +1,16 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,6 +41,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import eu.rg_engineering.simplemusicplayer.Constants;
 import eu.rg_engineering.simplemusicplayer.R;
@@ -219,12 +224,18 @@ public class HomeFragment extends Fragment  {
 
 
     public void LoadData() {
-
+        /*
         Log.d(TAG,"load data ");
 
         readFromFile(filename);
 
         Log.d(TAG,"data loaded,  " + items.size() + " items " );
+
+         */
+        ContentResolver cr = getActivity().getContentResolver();
+        getAllMusic(cr);
+
+
     }
 
     public void SaveData() {
@@ -301,5 +312,75 @@ public class HomeFragment extends Fragment  {
     }
 
 
+    public  final Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+    public void getAllMusic(ContentResolver cr) {
+        Log.d(TAG, "check for audio files ");
+        String[] projection = {
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Media.ARTIST_ID,
 
+                //MediaStore.Audio.Media.DATA
+        };
+        String sortOrder = MediaStore.Audio.Media._ID + " desc";
+        Cursor cur = cr.query(AUDIO_URI, projection, null, null, sortOrder);
+        List<String> pathNameList = new ArrayList<>();
+        if (cur != null) {
+
+            while (cur.moveToNext()) {
+                String Album = cur.getString(0);
+                String AlbumId = cur.getString(5);
+                String Artist = cur.getString(1);
+                String ArtistId = cur.getString(6);
+                String Title = cur.getString(2);
+                String fileName = cur.getString(3);
+                int nDuration = Integer.parseInt(cur.getString(4));
+
+                String sDuration = String.format("%02d:%02d:%02d",
+                        TimeUnit.MILLISECONDS.toHours(nDuration),
+                        TimeUnit.MILLISECONDS.toMinutes(nDuration) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(nDuration)),
+                        TimeUnit.MILLISECONDS.toSeconds(nDuration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(nDuration)));
+
+
+                String Line = Artist + " - " + Title + " " + sDuration;
+
+                Log.d(TAG, "Audio " + Line);
+
+                //https://stackoverflow.com/questions/23043123/retrive-the-track-image-from-android-mediastore-audio-media-content-provider
+                String[] projection2 = {
+                        MediaStore.Audio.AlbumColumns.ALBUM_ART
+                };
+                String selection = MediaStore.Audio.Media._ID+" =?";
+                String[] selectionArgs = {
+                        String.valueOf(AlbumId)
+                };
+                Cursor artCursor = cr.query(
+                        MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                        projection2,
+                        selection,
+                        selectionArgs,
+                        null);
+                String albumArt;
+                if(artCursor.moveToNext()) {
+                    albumArt = "file://"+artCursor.getString(0);
+                } else {
+                    albumArt = null;
+                }
+                Log.d(TAG, "Image " + albumArt);
+                artCursor.close();
+
+                MusicItem song = new MusicItem(Title,Artist,Album, fileName,nDuration);
+
+                items.add(song);
+            }
+            cur.close();
+        }
+
+    }
 }

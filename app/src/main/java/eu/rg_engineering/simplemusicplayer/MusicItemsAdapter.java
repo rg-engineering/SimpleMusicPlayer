@@ -65,6 +65,9 @@ public class MusicItemsAdapter extends
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(itemView);
+
+        mCommunication = (MusicItemsAdapterListener) context;
+        mContext=context;
         return viewHolder;
     }
 

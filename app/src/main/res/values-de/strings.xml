@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Meine Einkaufsliste</string>
+    <string name="app_name">Simple Music Player</string>
     <string name="button_add">hinzufügen</string>
     <string name="button_edit">bearbeiten</string>
     <string name="button_cancel">abbrechen</string>
@@ -8,9 +8,9 @@
     <string name="hint_count">Anzahl</string>
     <string name="menu_shops">Läden</string>
     <string name="menu_categories">Kategorien</string>
-    <string name="menu_home">Einkaufsliste</string>
+    <string name="menu_home">Home</string>
     <string name="my_logo">my logo</string>
-    <string name="my_shopping_list_by_rg_engineering">Meine Einkaufsliste von rg-engineering</string>
+    <string name="my_shopping_list_by_rg_engineering">Simple Music Player von rg-engineering</string>
     <string name="action_settings">Einstellungen</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="email">E-Mail</string>
@@ -18,8 +18,7 @@
     <string name="send_email_to">E-Mail senden an</string>
     <string name="share_title">Standard-App für Teilen</string>
     <string name="always_ask">immer fragen</string>
-    <string name="email_start">"Bitte bringe beim nächsten Einkauf mit: "</string>
-    <string name="whatsapp_start">"Bitte bringe beim nächsten Einkauf mit: "</string>
+
     <string name="hint_shop">Laden</string>
     <string name="hint_category">Kategorie</string>
     <string name="shops">Läden</string>

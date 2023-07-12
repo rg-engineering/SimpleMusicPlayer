@@ -25,7 +25,7 @@
     <string name="v_0_0_0" translatable="false">V 0.0.0</string>
     <string name="info_rg_engineering_eu" translatable="false">info@rg-engineering.eu</string>
     <string name="rg_engineering_eu" translatable="false">rg-engineering</string>
-    <string name="copyright" translatable="false">(c) 2021)</string>
+    <string name="copyright" translatable="false">(c) 2023)</string>
 
     <!-- Preference Titles -->
     <string name="messages_header" translatable="false">Messages</string>
