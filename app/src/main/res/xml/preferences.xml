@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <PreferenceCategory app:title="@string/design">
+        <CheckBoxPreference
+            app:key="useBackgroundColor"
+            app:title="@string/useBackgroundColor"
+            app:defaultValue="true"
+            />
+
+        <ListPreference
+            app:key="BackgroundColor"
+            app:title="@string/BackgroundColor"
+            app:entries="@array/background_color_names_array"
+            app:entryValues="@array/background_color_values_array"
+            app:defaultValue=""
+            app:summary="%s"/>
+
+        <Preference
+            app:key="BackgroundImage"
+            app:title="@string/BackgroundImage"
+            app:defaultValue=""/>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

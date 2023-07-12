@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meine Einkaufsliste</string>
+    <string name="button_add">hinzufügen</string>
+    <string name="button_edit">bearbeiten</string>
+    <string name="button_cancel">abbrechen</string>
+    <string name="hint_name">Bezeichnung</string>
+    <string name="hint_count">Anzahl</string>
+    <string name="menu_shops">Läden</string>
+    <string name="menu_categories">Kategorien</string>
+    <string name="menu_home">Einkaufsliste</string>
+    <string name="my_logo">my logo</string>
+    <string name="my_shopping_list_by_rg_engineering">Meine Einkaufsliste von rg-engineering</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="email">E-Mail</string>
+    <string name="share">teilen</string>
+    <string name="send_email_to">E-Mail senden an</string>
+    <string name="share_title">Standard-App für Teilen</string>
+    <string name="always_ask">immer fragen</string>
+    <string name="email_start">"Bitte bringe beim nächsten Einkauf mit: "</string>
+    <string name="whatsapp_start">"Bitte bringe beim nächsten Einkauf mit: "</string>
+    <string name="hint_shop">Laden</string>
+    <string name="hint_category">Kategorie</string>
+    <string name="shops">Läden</string>
+    <string name="categories">Kategorien</string>
+    <string name="lists">Listen</string>
+    <string name="units">Einheiten</string>
+    <string name="design">Design</string>
+    <string name="useBackgroundColor">Hintergrundfarbe nutzen</string>
+    <string name="BackgroundColor">Hintergrundfarbe</string>
+    <string name="enableclosed">zeige Erledigte</string>
+    <string name="disableclosed">verstecke Erledigte</string>
+    <string name="BackgroundImage">Hintergrundbild</string>
+    <string name="menu_about" >Über</string>
+    <string name="ShowDataPrivacy">Datenschutzerklärung</string>
+    <string name="menu_search" >Suche</string>
+</resources>
