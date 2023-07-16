@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--
     <color name="colorPrimary">#0aaf00</color>
     <color name="colorPrimaryDark">#008b00</color>
     <color name="colorAccent">#aaf255</color>
+    -->
+    <color name="colorPrimary">#F0A4AB</color>
+    <color name="colorPrimaryDark">#008b00</color>
+    <color name="colorAccent">#F0A4AB</color>
+
 
 
     <color name="Wheat">#F5DEB3</color>
     <color name="PapayaWhip">#FFEFD5</color>
     <color name="Cornsilk">#FFF8DC</color>
     <color name="AliceBlue">#F0F8FF</color>
+
+
+    <color name="neuesGelb">#FFFFCC</color>
+    <color name="komischesBlau">#CCFFFF</color>
+    <color name="soenlila">#CCCCFF</color>
+    <color name="choenesgrün">#CCFFCC</color>
+
+    <color name="PastellTuerkis">#DAFBF8</color>
+    <color name="PastellBlau">#DAEDFB</color>
+    <color name="PastellDunkelLila">#DADDFB</color>
+    <color name="PastellLila">#E8DAFB</color>
+    <color name="PastellRosa">#F8DAFB</color>
+
+    <color name="SweetMelon">#F0A4AB</color>
+    <color name="HappySun">#F9DC86</color>
+    <color name="JuicyGreen">#D9E0B0</color>
+    <color name="CloudyBlue">#C9D2D1</color>
+
 </resources>

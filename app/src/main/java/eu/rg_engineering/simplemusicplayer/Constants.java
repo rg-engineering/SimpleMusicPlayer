@@ -6,5 +6,4 @@ public class Constants {
     public static String ITEM_INTENT_INDEX = "index";
 
 
-
 }

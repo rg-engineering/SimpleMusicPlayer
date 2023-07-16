@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/f"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/JuicyGreen">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -23,35 +24,69 @@
                 android:id="@+id/rvItems"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
+                android:background="@color/JuicyGreen"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/StopMusic" />
 
-            <TextView
+            <EditText
                 android:id="@+id/filter_title"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:hint="title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <EditText
                 android:id="@+id/filter_artist"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:hint="artist"
+                app:layout_constraintEnd_toStartOf="@+id/filter_album"
                 app:layout_constraintStart_toEndOf="@+id/filter_title"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+            <EditText
                 android:id="@+id/filter_album"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/filter_artist"
+                android:hint="album"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
+            <Button
+                android:id="@+id/PauseMusic"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="50dp"
+                android:background="@android:drawable/ic_media_pause"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_album" />
+
+            <Button
+                android:id="@+id/PlayMusic"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@android:drawable/ic_media_play"
+                app:layout_constraintEnd_toStartOf="@+id/PauseMusic"
+                app:layout_constraintStart_toEndOf="@+id/StopMusic"
+                app:layout_constraintTop_toBottomOf="@+id/filter_album" />
+
+            <Button
+                android:id="@+id/StopMusic"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="50dp"
+                android:background="@android:drawable/ic_delete"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filter_album" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

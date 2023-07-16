@@ -24,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
@@ -32,15 +34,18 @@ import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 
 
 public class MainActivity extends AppCompatActivity
-        implements MusicItemsAdapter.MusicItemsAdapterListener
-         {
+        implements
+            MusicItemsAdapter.MusicItemsAdapterListener,
+        HomeFragment.HomeFragmentListener {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     private String TAG = "Main";
     MediaPlayer music;
+    Timer progressTimer;
+
     @Override
-    public void messageFromMusicItemsAdapter (String msg, String params) {
+    public void messageFromMusicItemsAdapter(String msg, String params) {
 
         Log.d(TAG, "got message from MusicItemsAdapter " + msg + " " + params);
 
@@ -52,6 +57,27 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
+    @Override
+    public void messageFromHomeFragment(String msg, String params) {
+
+        Log.d(TAG, "got message from HomeFragment " + msg + " " + params);
+
+        switch (msg) {
+
+            case "PlayMusic":
+                musicplay();
+                break;
+            case "PauseMusic":
+                musicpause();
+                break;
+            case "StopMusic":
+                musicstop();
+                break;
+
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         //fragments wieder rein: activity_main_drawer.xml und mobile_navigation.xml
         mAppBarConfiguration = new AppBarConfiguration.Builder(
 
-        R.id.nav_home, R.id.nav_settings)
+                R.id.nav_home, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -90,7 +116,6 @@ public class MainActivity extends AppCompatActivity
         text.setText(Version);
 
 
-        FindHomeFragment();
     }
 
     @Override
@@ -126,7 +151,8 @@ public class MainActivity extends AppCompatActivity
                 if (subManager != null) {
 
                     List<Fragment> allFrag = subManager.getFragments();
-                     homeFragment = (HomeFragment) subManager.findFragmentById(R.id.nav_home);
+                    homeFragment = (HomeFragment) allFrag.get(0);
+                    //homeFragment = (HomeFragment) subManager.findFragmentById(R.id.nav_home);
                 }
             }
         }
@@ -135,29 +161,83 @@ public class MainActivity extends AppCompatActivity
 
     // Playing the music
     private void musicplay(String filename) {
-        if (music!=null) {
+        if (music != null) {
             music.stop();
         }
         Uri uri = Uri.parse(filename);
         music = MediaPlayer.create(this, uri);
+        CreateMusic();
         music.start();
     }
 
     private void musicplay() {
-        music.start();
+
+        if (music != null) {
+            music.start();
+        }
     }
 
     // Pausing the music
     private void musicpause() {
-        music.pause();
+        if (music != null) {
+            music.pause();
+        }
     }
 
     // Stopping the music
     private void musicstop() {
-        music.stop();
+        if (music != null) {
+            music.stop();
+        }
+        if (progressTimer != null) {
+            progressTimer.cancel();
+            progressTimer.purge();
+        }
         //music = MediaPlayer.create(this, R.raw.antihero);
     }
 
+    private void CreateMusic() {
+        music.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                Log.d(TAG, "Song Complete");
 
+                HomeFragment homefragment = FindHomeFragment();
+                if (homefragment != null) {
+                    homefragment.GetNextSong();
+                } else {
+                    Log.e(TAG, "homefragement not found");
+                }
+
+            }
+        });
+
+        if (progressTimer != null) {
+            progressTimer.cancel();
+            progressTimer.purge();
+        }
+
+        progressTimer = new Timer();
+        TimerTask updateProgress = new UpdateProgressTask();
+        progressTimer.scheduleAtFixedRate(updateProgress, 0, 1000);
+    }
+
+
+    class UpdateProgressTask extends TimerTask {
+        public void run() {
+            runOnUiThread(UpdateProgress);
+        }
+    }
+
+    private Runnable UpdateProgress = new Runnable() {
+        public void run() {
+
+            HomeFragment homefragment = FindHomeFragment();
+            if (homefragment != null) {
+                int position = music.getCurrentPosition();
+                Log.d(TAG, "current position " + position);
+                homefragment.SetCurrentplaytime(position);
+            }
+        }
+    };
 
 }

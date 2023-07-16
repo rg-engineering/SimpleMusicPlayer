@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -49,24 +52,47 @@ import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.MusicItem;
 import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
+import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
 
 
-public class HomeFragment extends Fragment  {
+public class HomeFragment extends Fragment implements
+        OnDeleteMusicitemListener {
 
     private HomeViewModel homeViewModel;
     ArrayList<MusicItem> items;
-    private RecyclerView rvShoppingItems= null;
-    private MusicItemsAdapter ShoppingItemsAdapter= null;
-    private SearchView searchView= null;;
+    private RecyclerView rvMusicItems = null;
+    private MusicItemsAdapter MusicItemsAdapter = null;
+    private SearchView searchView = null;
+    ;
     private String TAG = "HomeFragment";
     private String filename = "ShoppingList";
     private final int REQUEST_CODE_EDIT = 101;
+    HomeFragmentListener mCommunication;
+    Context mContext;
 
+    @Override
+    public void ItemDeleted() {
+        SaveData();
+    }
+
+    public void GetNextSong(){
+        MusicItemsAdapter.GetNextSong();
+    }
+
+    public void SetCurrentplaytime(int duration){
+        MusicItemsAdapter.SetCurrentPlaytime(duration);
+    }
+
+    //Interface for communication
+    public interface HomeFragmentListener {
+        void messageFromHomeFragment(String msg, String params);
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
         inflater.inflate(R.menu.main_menu, menu);
+        /*
         MenuItem item = null;
         item = menu.findItem(R.id.action_item_search);
 
@@ -74,7 +100,7 @@ public class HomeFragment extends Fragment  {
             searchView = (SearchView) item.getActionView();
         }
 
-        if (searchView!=null) {
+        if (searchView != null) {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -86,14 +112,27 @@ public class HomeFragment extends Fragment  {
 
                     Log.d(TAG, "filter text changed " + newText);
 
-                    ShoppingItemsAdapter.setFilterIdx(0);
-                    ShoppingItemsAdapter.getFilter().filter(newText);
+                    MusicItemsAdapter.setFilterIdx(0);
+                    MusicItemsAdapter.getFilter().filter(newText);
                     return false;
                 }
             });
         }
-
+*/
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCommunication = (HomeFragmentListener) context;
+        mContext = context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCommunication = null;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -104,7 +143,7 @@ public class HomeFragment extends Fragment  {
 
         try {
             // Lookup the recyclerview in activity layout
-            rvShoppingItems = (RecyclerView) root.findViewById(R.id.rvItems);
+            rvMusicItems = (RecyclerView) root.findViewById(R.id.rvItems);
 
 
             // Initialize items
@@ -113,20 +152,111 @@ public class HomeFragment extends Fragment  {
             LoadData();
 
             // Create adapter passing in the sample user data
-            ShoppingItemsAdapter = new MusicItemsAdapter(items);
+            MusicItemsAdapter = new MusicItemsAdapter(items,this);
 
 
-            ItemTouchHelper.Callback callback = new MyItemTouchHelper(ShoppingItemsAdapter);
+            ItemTouchHelper.Callback callback = new MyItemTouchHelper(MusicItemsAdapter);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-            ShoppingItemsAdapter.setTouchHelper(itemTouchHelper);
-            itemTouchHelper.attachToRecyclerView(rvShoppingItems);
+            MusicItemsAdapter.setTouchHelper(itemTouchHelper);
+            itemTouchHelper.attachToRecyclerView(rvMusicItems);
             // Attach the adapter to the recyclerview to populate items
-            rvShoppingItems.setAdapter(ShoppingItemsAdapter);
+            rvMusicItems.setAdapter(MusicItemsAdapter);
 
             // Set layout manager to position the items
-            rvShoppingItems.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvMusicItems.setLayoutManager(new LinearLayoutManager(getActivity()));
 
             // That's all!
+
+            EditText editFilterArtist = (EditText) root.findViewById(R.id.filter_artist);
+            EditText editFilterTitle = (EditText) root.findViewById(R.id.filter_title);
+            EditText editFilterAlbum = (EditText) root.findViewById(R.id.filter_album);
+
+            editFilterArtist.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.d(TAG, "artist filter text changed " + s);
+                    MusicItemsAdapter.setFilterIdx(1);
+                    MusicItemsAdapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            });
+            editFilterTitle.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.d(TAG, "title filter text changed " + s);
+                    MusicItemsAdapter.setFilterIdx(2);
+                    MusicItemsAdapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            });
+
+            editFilterAlbum.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.d(TAG, "album filter text changed " + s);
+                    MusicItemsAdapter.setFilterIdx(3);
+                    MusicItemsAdapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            });
+
+            Button btnPauseMusic = (Button) root.findViewById(R.id.PauseMusic);
+            btnPauseMusic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "PauseMusic pressed");
+                    mCommunication.messageFromHomeFragment("PauseMusic", "");
+                }
+            });
+
+            Button btnPlayMusic = (Button) root.findViewById(R.id.PlayMusic);
+            btnPlayMusic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "PlayMusic pressed");
+                    mCommunication.messageFromHomeFragment("PlayMusic", "");
+                }
+            });
+
+            Button btnStopMusic = (Button) root.findViewById(R.id.StopMusic);
+            btnStopMusic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "StopMusic pressed");
+                    mCommunication.messageFromHomeFragment("StopMusic", "");
+                }
+            });
+
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String backGroundColor = sharedPreferences.getString("BackgroundColor", "");
@@ -136,7 +266,7 @@ public class HomeFragment extends Fragment  {
             Log.d(TAG, "set background color to " + backGroundColor);
 
             if (useBackGroundColor && backGroundColor != null && backGroundColor.length() > 1) {
-                rvShoppingItems.setBackgroundColor(Color.parseColor(backGroundColor));
+                rvMusicItems.setBackgroundColor(Color.parseColor(backGroundColor));
 
             } else if (!useBackGroundColor && backGroundImage != null && backGroundImage.length() > 1) {
 
@@ -144,14 +274,12 @@ public class HomeFragment extends Fragment  {
                     InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(backGroundImage));
                     Drawable myPic = Drawable.createFromStream(inputStream, backGroundImage);
 
-                    rvShoppingItems.setBackground(myPic);
+                    rvMusicItems.setBackground(myPic);
 
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, "image not found " + backGroundImage);
                 }
             }
-
-
 
 
             setHasOptionsMenu(true);
@@ -166,13 +294,10 @@ public class HomeFragment extends Fragment  {
     }
 
 
-
-
     private void FillFilters() {
 
         //todo fill filtes
     }
-
 
 
     private String AddDisclaimer() {
@@ -182,35 +307,30 @@ public class HomeFragment extends Fragment  {
     }
 
 
-
-
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_EDIT){
-            if(resultCode == Activity.RESULT_OK){
-                if(data == null){
+        if (requestCode == REQUEST_CODE_EDIT) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data == null) {
                     return;
                 }
                 boolean isEdit = data.getBooleanExtra(Constants.ITEM_INTENT_EDIT, false);
                 MusicItem item = data.getParcelableExtra(Constants.ITEM_INTENT_OBJECT);
-                if(isEdit){
+                if (isEdit) {
                     int index = data.getIntExtra(Constants.ITEM_INTENT_INDEX, -1);
-                    if(index == -1){
+                    if (index == -1) {
                         return;
                     }
-                    ShoppingItemsAdapter.ChangeItem(index, item);
+                    MusicItemsAdapter.ChangeItem(index, item);
 
-                }else{
+                } else {
                     //items.add(item);
-                    ShoppingItemsAdapter.AddItem(item);
+                    MusicItemsAdapter.AddItem(item);
                 }
-                ShoppingItemsAdapter.notifyDataSetChanged();
+                MusicItemsAdapter.notifyDataSetChanged();
 
-                ShoppingItemsAdapter.getFilter().filter("");
+                MusicItemsAdapter.getFilter().filter("");
 
                 SaveData();
             }
@@ -219,8 +339,6 @@ public class HomeFragment extends Fragment  {
 
 
     //save nach delete item
-
-
 
 
     public void LoadData() {
@@ -239,7 +357,7 @@ public class HomeFragment extends Fragment  {
     }
 
     public void SaveData() {
-        Log.d(TAG,"save date ");
+        Log.d(TAG, "save date ");
         String Contents = "";
         try {
 
@@ -247,27 +365,25 @@ public class HomeFragment extends Fragment  {
 
             //OutputStream outStream = new FileOutputStream(oriFile);
 
-            for (int i =0; i< items.size(); i++) {
+            for (int i = 0; i < items.size(); i++) {
                 Contents += items.get(i).Serialize(true);
             }
 
 
-            writeToFile(Contents,filename);
+            writeToFile(Contents, filename);
 
-        }
-        catch (Exception ex){
-            Log.e(TAG,"exception in save file " + ex.toString());
+        } catch (Exception ex) {
+            Log.e(TAG, "exception in save file " + ex.toString());
         }
     }
 
 
-    private void writeToFile(String data,String filename) {
+    private void writeToFile(String data, String filename) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getActivity().openFileOutput(filename, Context.MODE_PRIVATE));
             outputStreamWriter.write(data);
             outputStreamWriter.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
 
@@ -281,27 +397,26 @@ public class HomeFragment extends Fragment  {
         try {
             InputStream inputStream = getActivity().openFileInput(filename);
 
-            if ( inputStream != null ) {
+            if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 //StringBuilder stringBuilder = new StringBuilder();
 
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                while ((receiveString = bufferedReader.readLine()) != null) {
                     //stringBuilder.append("\n").append(receiveString);
 
                     MusicItem item = new MusicItem(receiveString);
 
 
-                        items.add(item);
+                    items.add(item);
 
                 }
 
                 inputStream.close();
                 //ret = stringBuilder.toString();
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Log.e(TAG, "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e(TAG, "Can not read file: " + e.toString());
@@ -312,7 +427,8 @@ public class HomeFragment extends Fragment  {
     }
 
 
-    public  final Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+    public final Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
     public void getAllMusic(ContentResolver cr) {
         Log.d(TAG, "check for audio files ");
         String[] projection = {
@@ -356,7 +472,7 @@ public class HomeFragment extends Fragment  {
                 String[] projection2 = {
                         MediaStore.Audio.AlbumColumns.ALBUM_ART
                 };
-                String selection = MediaStore.Audio.Media._ID+" =?";
+                String selection = MediaStore.Audio.Media._ID + " =?";
                 String[] selectionArgs = {
                         String.valueOf(AlbumId)
                 };
@@ -367,15 +483,15 @@ public class HomeFragment extends Fragment  {
                         selectionArgs,
                         null);
                 String albumArt;
-                if(artCursor.moveToNext()) {
-                    albumArt = "file://"+artCursor.getString(0);
+                if (artCursor.moveToNext()) {
+                    albumArt = "file://" + artCursor.getString(0);
                 } else {
                     albumArt = null;
                 }
                 Log.d(TAG, "Image " + albumArt);
                 artCursor.close();
 
-                MusicItem song = new MusicItem(Title,Artist,Album, fileName,nDuration);
+                MusicItem song = new MusicItem(Title, Album, Artist, fileName, nDuration);
 
                 items.add(song);
             }

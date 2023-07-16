@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,36 +24,47 @@ import java.util.Collection;
 import java.util.List;
 
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
+import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class MusicItemsAdapter extends
         RecyclerView.Adapter<MusicItemsAdapter.ViewHolder> implements
         Filterable,
-        ItemTouchHelperAdapter
-{
-
-    private  String TAG = "MusicItemsAdapter";
-    private List<MusicItem> mItems;
+        ItemTouchHelperAdapter {
+    private String TAG = "MusicItemsAdapter";
+    private List<MusicItem> mItemsFiltered;
+    private List<MusicItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private int mFilterIdx=0;
+    private OnDeleteMusicitemListener deleteListener;
+    private int mFilterIdx = 0;
+    private int currentPlayedMusicPosition = -1;
     Context mContext;
     MusicItemsAdapterListener mCommunication;
+
     //Interface for communication
     public interface MusicItemsAdapterListener {
         void messageFromMusicItemsAdapter(String msg, String params);
     }
+
     // Pass in the contact array into the constructor
-    public MusicItemsAdapter(List<MusicItem> items) {
-
-        mItems = items;
+    public MusicItemsAdapter(List<MusicItem> items, OnDeleteMusicitemListener deleteListener) {
+        this.deleteListener = deleteListener;
+        mItemsFiltered = MusicItem.createItemsList(0);
+        ;
+        mItemsAll = items;
         UpdateData();
-
     }
 
+    public void UpdateData() {
 
-    public void UpdateData(){
-        Log.d(TAG,"UpdateData called "  );
+        Log.d(TAG, "UpdateData called ");
+        mItemsFiltered.clear();
+        for (MusicItem item : mItemsAll) {
+
+            //todo filter beachten???
+            mItemsFiltered.add(item);
+        }
     }
 
     @NonNull
@@ -67,75 +80,123 @@ public class MusicItemsAdapter extends
         ViewHolder viewHolder = new ViewHolder(itemView);
 
         mCommunication = (MusicItemsAdapterListener) context;
-        mContext=context;
+        mContext = context;
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 // Get the data model based on position
-        MusicItem item = mItems.get(position);
+        MusicItem item = mItemsFiltered.get(position);
 
-        Log.d(TAG,"onBindViewHolder called, position " +position  );
+        Log.d(TAG, "onBindViewHolder called, position " + position);
         TextView titleTextView = viewHolder.titleTextView;
-        if (titleTextView!=null) {
+        if (titleTextView != null) {
             titleTextView.setText(item.getTitle());
         }
         TextView artistTextView = viewHolder.artistTextView;
-        if (artistTextView!=null) {
+        if (artistTextView != null) {
             artistTextView.setText(item.getArtist());
         }
         TextView albumTextView = viewHolder.albumTextView;
-        if (albumTextView!=null) {
+        if (albumTextView != null) {
             albumTextView.setText(item.getAlbum());
         }
         TextView durationTextView = viewHolder.durationTextView;
-        if (durationTextView!=null) {
+        if (durationTextView != null) {
             durationTextView.setText(item.getDuration());
         }
+        TextView currentPlaytimeTextView = viewHolder.currentPlaytimeTextView;
+        if (currentPlaytimeTextView != null) {
+            currentPlaytimeTextView.setText(item.getCurrentPlaytime());
+        }
+        ProgressBar currentProgress = viewHolder.currentProgressbar;
+        if (currentProgress != null) {
+            currentProgress.setMin(0);
+            currentProgress.setMax(100);
+            currentProgress.setProgress(item.getProgress());
+        }
+        SeekBar currentSeek = viewHolder.currentSeekbar;
+        if (currentSeek != null) {
+            currentSeek.setMin(0);
+            currentSeek.setMax(100);
+            currentSeek.setProgress(item.getProgress());
+        }
+
 
         Button btnPlaySong = viewHolder.btnPlaySong;
         btnPlaySong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "PlayMusic pressed position " + position);
-                String filename = mItems.get(position).getFilename();
-                mCommunication.messageFromMusicItemsAdapter("PlayMusic",filename);
+                String filename = mItemsFiltered.get(position).getFilename();
+                currentPlayedMusicPosition = position;
+                mCommunication.messageFromMusicItemsAdapter("PlayMusic", filename);
             }
         });
     }
 
+    public void GetNextSong() {
+
+        int maxMusic = mItemsFiltered.size() - 1;
+        if (currentPlayedMusicPosition >= 0 && currentPlayedMusicPosition < maxMusic) {
+            currentPlayedMusicPosition++;
+        } else {
+            currentPlayedMusicPosition = 0;
+        }
+        String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFilename();
+        mCommunication.messageFromMusicItemsAdapter("PlayMusic", filename);
+    }
+
+    public void SetCurrentPlaytime(int playtime) {
+
+        Log.d(TAG, "got current playtime " + playtime + " " + mItemsFiltered.size());
+
+        if (currentPlayedMusicPosition > 0 && currentPlayedMusicPosition < mItemsFiltered.size()) {
+            mItemsFiltered.get(currentPlayedMusicPosition).setCurrentPlaytime(playtime);
+            notifyItemChanged(currentPlayedMusicPosition);
+        } else {
+            Log.e(TAG, "index out of range ");
+        }
+    }
+
     @Override
     public int getItemCount() {
-        int cnt=0;
+        int cnt = 0;
 
-        if (mItems!=null){
-            cnt=mItems.size();
+        if (mItemsFiltered != null) {
+            cnt = mItemsFiltered.size();
         }
-        Log.d(TAG,"items " + cnt  );
+        //Log.d(TAG,"items " + cnt  );
         return cnt;
     }
 
-    public void setTouchHelper (ItemTouchHelper touchHelper)
-    {
+    public void setTouchHelper(ItemTouchHelper touchHelper) {
         this.mTouchHelper = touchHelper;
     }
 
-    public void setFilterIdx(int idx){
-        mFilterIdx=idx;
+    public void setFilterIdx(int idx) {
+        mFilterIdx = idx;
     }
 
     @Override
     public Filter getFilter() {
-        Log.d(TAG,"getFilter #" + mFilterIdx );
+        Log.d(TAG, "getFilter #" + mFilterIdx);
 
         Filter oRet = null;
 
-        switch (mFilterIdx)
-        {
-
+        switch (mFilterIdx) {
+            case 1: // artist filter
+                oRet = filterArtist;
+                break;
+            case 2: // title filter
+                oRet = filterTitle;
+                break;
+            case 3: // album filter
+                oRet = filterAlbum;
+                break;
             default:
-                oRet= filterItemname;
+                Log.e(TAG, "no Filter #" + mFilterIdx);
                 break;
 
         }
@@ -143,28 +204,24 @@ public class MusicItemsAdapter extends
         return oRet;
     }
 
-    Filter filterItemname = new Filter() {
+    Filter filterArtist = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
             List<MusicItem> filteredList = new ArrayList<>();
 
-            if (constraint.toString().isEmpty()){
-
-                Log.d(TAG,"no filter set " + mItems.size());
-
-                filteredList.addAll(mItems);
+            if (constraint.toString().isEmpty()) {
+                Log.d(TAG, "no filter set " + mItemsAll.size());
+                filteredList.addAll(mItemsAll);
 
             } else {
+                Log.d(TAG, "artist filter set " + constraint.toString() + " " + mItemsAll.size());
 
-                Log.d(TAG,"filter set " + constraint.toString() + " " + mItems.size() );
-                
+                for (MusicItem item : mItemsAll) {
 
-                for (MusicItem item:mItems) {
-
-                    Log.d(TAG,"compare " +  item.getTitle().toLowerCase()  + " ?= " + constraint.toString().toLowerCase());
-
-                    if (item.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())){
+                    Log.d(TAG, "artist filter compare " + item.getArtist().toLowerCase() + " ?= " + constraint.toString().toLowerCase());
+//todo combination of all filter
+                    if (item.getArtist().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         filteredList.add(item);
                     }
                 }
@@ -177,15 +234,91 @@ public class MusicItemsAdapter extends
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mItems.clear();
+            mItemsFiltered.clear();
 
-            mItems.addAll((Collection<? extends MusicItem>) results.values);
+            mItemsFiltered.addAll((Collection<? extends MusicItem>) results.values);
 
             notifyDataSetChanged();
         }
     };
 
+    Filter filterAlbum = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
 
+            List<MusicItem> filteredList = new ArrayList<>();
+
+            if (constraint.toString().isEmpty()) {
+                Log.d(TAG, "no filter set " + mItemsAll.size());
+                filteredList.addAll(mItemsAll);
+
+            } else {
+                Log.d(TAG, "album filter set " + constraint.toString() + " " + mItemsAll.size());
+
+                for (MusicItem item : mItemsAll) {
+
+                    Log.d(TAG, "album filter compare " + item.getAlbum().toLowerCase() + " ?= " + constraint.toString().toLowerCase());
+//todo combination of all filter
+                    if (item.getAlbum().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mItemsFiltered.clear();
+
+            mItemsFiltered.addAll((Collection<? extends MusicItem>) results.values);
+
+            notifyDataSetChanged();
+        }
+    };
+
+    Filter filterTitle = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<MusicItem> filteredList = new ArrayList<>();
+
+            if (constraint.toString().isEmpty()) {
+                Log.d(TAG, "no filter set " + mItemsAll.size());
+                filteredList.addAll(mItemsAll);
+
+            } else {
+                Log.d(TAG, "title filter set " + constraint.toString() + " " + mItemsAll.size());
+
+                for (MusicItem item : mItemsAll) {
+
+                    Log.d(TAG, "title filter compare " + item.getTitle().toLowerCase() + " ?= " + constraint.toString().toLowerCase());
+
+                    //todo combination of all filter
+
+                    if (item.getTitle().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mItemsFiltered.clear();
+
+            mItemsFiltered.addAll((Collection<? extends MusicItem>) results.values);
+
+            notifyDataSetChanged();
+        }
+    };
 
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
@@ -194,7 +327,20 @@ public class MusicItemsAdapter extends
 
     @Override
     public void onItemSwiped(int position) {
+        Log.d(TAG, "item swiped, position " + position);
 
+        int pos = FindItemInList(mItemsAll, mItemsFiltered.get(position).getId());
+
+        if (pos > -1) {
+            mItemsAll.remove(pos);
+        }
+        mItemsFiltered.remove(position);
+
+        notifyItemRemoved(position);
+        //just inform parent class
+        if (deleteListener != null) {
+            deleteListener.ItemDeleted();
+        }
     }
 
 
@@ -203,16 +349,17 @@ public class MusicItemsAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnTouchListener,
 
-            GestureDetector.OnGestureListener
-    {
+            GestureDetector.OnGestureListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView titleTextView;
         public TextView artistTextView;
         public TextView albumTextView;
         public TextView durationTextView;
+        public TextView currentPlaytimeTextView;
+        public ProgressBar currentProgressbar;
+        public SeekBar currentSeekbar;
         public Button btnPlaySong;
-
 
         GestureDetector mGestureDetector;
 
@@ -227,10 +374,12 @@ public class MusicItemsAdapter extends
             artistTextView = (TextView) itemView.findViewById(R.id.item_artist);
             albumTextView = (TextView) itemView.findViewById(R.id.item_album);
             durationTextView = (TextView) itemView.findViewById(R.id.item_duration);
+            currentPlaytimeTextView = (TextView) itemView.findViewById(R.id.item_currentPlaytime);
+            currentProgressbar = (ProgressBar) itemView.findViewById(R.id.item_progressBar);
+            currentSeekbar = (SeekBar) itemView.findViewById(R.id.item_seekBar);
             btnPlaySong = (Button) itemView.findViewById(R.id.PlaySong);
 
-            mGestureDetector = new GestureDetector(itemView.getContext(),this);
-
+            mGestureDetector = new GestureDetector(itemView.getContext(), this);
 
 
             itemView.setOnTouchListener(this);
@@ -248,7 +397,7 @@ public class MusicItemsAdapter extends
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            Log.d(TAG,"onSingleTapUp position " + this.getAdapterPosition());
+            Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
 
 
             return true;
@@ -261,7 +410,7 @@ public class MusicItemsAdapter extends
 
         @Override
         public void onLongPress(MotionEvent e) {
-            if (mTouchHelper!=null) {
+            if (mTouchHelper != null) {
                 mTouchHelper.startDrag(this);
             }
         }
@@ -272,7 +421,6 @@ public class MusicItemsAdapter extends
         }
 
 
-
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
@@ -280,35 +428,32 @@ public class MusicItemsAdapter extends
         }
     }
 
-    public String GetSerializedData()
-    {
-        String sRet="";
+    public String GetSerializedData() {
+        String sRet = "";
 
-        for (int i =0; i< mItems.size(); i++) {
-            sRet += mItems.get(i).Serialize2();
+        for (int i = 0; i < mItemsAll.size(); i++) {
+            sRet += mItemsAll.get(i).Serialize2();
         }
         return sRet;
     }
 
-    public void ChangeItem(int index, MusicItem item)
-    {
-        Log.d(TAG,"change item " + item.getTitle() );
-        mItems.set(index, item);
+    public void ChangeItem(int index, MusicItem item) {
+        Log.d(TAG, "change item " + item.getTitle());
+        mItemsFiltered.set(index, item);
 
-        int pos = FindItemInList(mItems, item.getTitle());
+        int pos = FindItemInList(mItemsFiltered, item.getTitle());
 
         if (pos > -1) {
-            mItems.set(pos, item);
+            mItemsFiltered.set(pos, item);
         }
 
 
     }
 
-    public void AddItem(MusicItem item)
-    {
-        Log.d(TAG,"add item " + item.getTitle());
+    public void AddItem(MusicItem item) {
+        Log.d(TAG, "add item " + item.getTitle());
 
-        mItems.add(item);
+        mItemsAll.add(item);
 
 
         getFilter().filter("");
@@ -316,14 +461,14 @@ public class MusicItemsAdapter extends
     }
 
 
-    private int FindItemInList(List<MusicItem> list, String id){
-        int nRet=-1;
+    private int FindItemInList(List<MusicItem> list, String id) {
+        int nRet = -1;
 
         try {
             if (list != null) {
                 for (int i = 0; i < list.size(); i++) {
 
-                    Log.d(TAG, "check item " + list.get(i).getTitle() +  " =? " + id);
+                    Log.d(TAG, "check item " + list.get(i).getTitle() + " =? " + id);
 
                     if (list.get(i).getTitle().toLowerCase().contains(id.toLowerCase())) {
 
@@ -332,8 +477,7 @@ public class MusicItemsAdapter extends
                     }
                 }
             }
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             Log.e(TAG, "exception in FindItemInList " + ex.toString());
         }
         return nRet;
