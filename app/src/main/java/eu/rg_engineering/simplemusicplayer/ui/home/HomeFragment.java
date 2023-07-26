@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements
         MusicItemsAdapter.GetNextSong();
     }
 
-    public void SetCurrentplaytime(int duration){
+    public void SetCurrentplaytime(long duration){
         MusicItemsAdapter.SetCurrentPlaytime(duration);
     }
 
@@ -164,7 +164,7 @@ public class HomeFragment extends Fragment implements
 
             // Set layout manager to position the items
             rvMusicItems.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+            rvMusicItems.setItemAnimator(null);
             // That's all!
 
             EditText editFilterArtist = (EditText) root.findViewById(R.id.filter_artist);

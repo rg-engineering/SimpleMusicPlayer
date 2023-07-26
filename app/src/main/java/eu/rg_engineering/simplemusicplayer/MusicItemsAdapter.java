@@ -1,6 +1,7 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -51,9 +52,11 @@ public class MusicItemsAdapter extends
     public MusicItemsAdapter(List<MusicItem> items, OnDeleteMusicitemListener deleteListener) {
         this.deleteListener = deleteListener;
         mItemsFiltered = MusicItem.createItemsList(0);
-        ;
+
         mItemsAll = items;
         UpdateData();
+
+        //todo load playlist
     }
 
     public void UpdateData() {
@@ -134,6 +137,19 @@ public class MusicItemsAdapter extends
                 mCommunication.messageFromMusicItemsAdapter("PlayMusic", filename);
             }
         });
+
+        if (currentPlayedMusicPosition==position) {
+
+            viewHolder.titleTextView.setTextColor(Color.RED);
+
+            //viewHolder.albumTextView.setBackgroundColor(Color.parseColor( String.format("#%06X", (0xFFFFFF & R.color.HappySun))));
+            //viewHolder.artistTextView.setBackgroundColor(Color.parseColor( String.format("#%06X", (0xFFFFFF & R.color.HappySun))));
+            //viewHolder.titleTextView.setBackgroundColor(Color.parseColor( String.format("#%06X", (0xFFFFFF & R.color.HappySun))));
+            //viewHolder.itemView.setBackgroundColor(Color.parseColor( String.format("#%06X", (0xFFFFFF & R.color.HappySun))));
+        }
+        else {
+            viewHolder.titleTextView.setTextColor(Color.BLACK);
+        }
     }
 
     public void GetNextSong() {
@@ -148,7 +164,7 @@ public class MusicItemsAdapter extends
         mCommunication.messageFromMusicItemsAdapter("PlayMusic", filename);
     }
 
-    public void SetCurrentPlaytime(int playtime) {
+    public void SetCurrentPlaytime(long playtime) {
 
         Log.d(TAG, "got current playtime " + playtime + " " + mItemsFiltered.size());
 

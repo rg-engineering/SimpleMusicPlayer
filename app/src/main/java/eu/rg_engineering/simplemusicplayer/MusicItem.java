@@ -17,7 +17,7 @@ public class MusicItem implements Parcelable {
     private String mArtist;
     private String mFilename;
     private int mDuration;
-    private int mCurrentPlaytime;
+    private long mCurrentPlaytime;
     private int mProgress;
     private String TAG = "MusicItem";
 
@@ -107,12 +107,15 @@ public class MusicItem implements Parcelable {
         return sDuration;
     }
 
-    public void setCurrentPlaytime(int playtime) {
+    public void setCurrentPlaytime(long playtime) {
 
         Log.d(TAG, "current play time " + playtime + " of " + mDuration);
 
         mCurrentPlaytime = playtime;
-        mProgress = mCurrentPlaytime * 100 / mDuration;
+
+        long ntemp = mCurrentPlaytime * 100 / (long) mDuration;
+
+        mProgress = (int) ntemp;
     }
 
     public String getCurrentPlaytime() {
@@ -124,7 +127,7 @@ public class MusicItem implements Parcelable {
         return mProgress;
     }
 
-    String Convert2Timestring(int duration) {
+    String Convert2Timestring(long duration) {
         String sRet = "";
         if (duration > 0) {
             {

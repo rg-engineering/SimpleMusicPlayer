@@ -2,7 +2,6 @@ package eu.rg_engineering.simplemusicplayer;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +14,9 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.Player;
+import androidx.media3.exoplayer.ExoPlayer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -27,7 +29,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 
 
@@ -41,7 +42,11 @@ public class MainActivity extends AppCompatActivity
     private AppBarConfiguration mAppBarConfiguration;
 
     private String TAG = "Main";
+    ExoPlayer exoPlayer;
+    /* mediaplayer
     MediaPlayer music;
+
+     */
     Timer progressTimer;
 
     @Override
@@ -85,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -161,6 +165,29 @@ public class MainActivity extends AppCompatActivity
 
     // Playing the music
     private void musicplay(String filename) {
+
+        if (exoPlayer != null) {
+            exoPlayer.stop();
+        }
+
+        exoPlayer = new ExoPlayer.Builder(getApplicationContext()).build();
+
+        Uri uri = Uri.parse(filename);
+        // Build the media item.
+        MediaItem mediaItem = MediaItem.fromUri(uri);
+        // Set the media item to be played.
+        exoPlayer.setMediaItem(mediaItem);
+        // Prepare the player.
+        exoPlayer.prepare();
+
+        CreateMusic();
+
+        // Start the playback.
+        exoPlayer.play();
+
+
+
+        /* mediaplayer
         if (music != null) {
             music.stop();
         }
@@ -168,35 +195,65 @@ public class MainActivity extends AppCompatActivity
         music = MediaPlayer.create(this, uri);
         CreateMusic();
         music.start();
+
+         */
     }
 
     private void musicplay() {
 
+        if (exoPlayer != null) {
+            exoPlayer.play();
+        }
+
+        /* mediaplayer
         if (music != null) {
             music.start();
         }
+
+         */
     }
 
     // Pausing the music
     private void musicpause() {
+
+        if (exoPlayer != null) {
+            exoPlayer.pause();
+        }
+
+        /* mediaplayer
         if (music != null) {
             music.pause();
         }
+
+         */
     }
 
     // Stopping the music
     private void musicstop() {
+
+        if (exoPlayer != null) {
+            exoPlayer.release();
+        }
+
+        /* mediaplayer
         if (music != null) {
             music.stop();
         }
+        //music = MediaPlayer.create(this, R.raw.antihero);
+        */
+
         if (progressTimer != null) {
             progressTimer.cancel();
             progressTimer.purge();
         }
-        //music = MediaPlayer.create(this, R.raw.antihero);
+
+
+
     }
 
     private void CreateMusic() {
+
+        /* mediaplayer
         music.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             public void onCompletion(MediaPlayer mp) {
                 Log.d(TAG, "Song Complete");
@@ -210,6 +267,39 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+         */
+        //todo listener to add
+
+        exoPlayer.addListener(
+                new Player.Listener() {
+                    @Override
+                    public void onIsPlayingChanged(boolean isPlaying) {
+                        if (isPlaying) {
+                            // Active playback.
+                            Log.i(TAG, "is playing");
+                        } else {
+                            // Not playing because playback is paused, ended, suppressed, or the player
+                            // is buffering, stopped or failed. Check player.getPlayWhenReady,
+                            // player.getPlaybackState, player.getPlaybackSuppressionReason and
+                            // player.getPlaybackError for details.
+                            Log.i(TAG, "is not playing " + exoPlayer.getPlaybackState());
+
+                            if (exoPlayer.getPlaybackState()==Player.STATE_ENDED){
+                                Log.d(TAG, "Song Complete");
+
+                                HomeFragment homefragment = FindHomeFragment();
+                                if (homefragment != null) {
+                                    homefragment.GetNextSong();
+                                } else {
+                                    Log.e(TAG, "homefragement not found");
+                                }
+                            }
+
+                        }
+                    }
+                });
+
+
 
         if (progressTimer != null) {
             progressTimer.cancel();
@@ -233,7 +323,12 @@ public class MainActivity extends AppCompatActivity
 
             HomeFragment homefragment = FindHomeFragment();
             if (homefragment != null) {
+                /* mediaplayer
                 int position = music.getCurrentPosition();
+
+                 */
+
+                long position = exoPlayer.getCurrentPosition();
                 Log.d(TAG, "current position " + position);
                 homefragment.SetCurrentplaytime(position);
             }
