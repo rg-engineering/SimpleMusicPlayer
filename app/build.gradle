@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "eu.rg_engineering.simplemusicplayer"
         minSdkVersion 27
         targetSdkVersion 33
-        versionCode 10
-        versionName '0.1.0'
+        versionCode 30
+        versionName '0.3.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,12 +38,21 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.activity:activity:1.7.2'
+    implementation 'androidx.fragment:fragment:1.6.1'
 
     // ExoPlayer
     //https://developer.android.com/guide/topics/media/exoplayer/hello-world
     implementation "androidx.media3:media3-exoplayer:1.1.0"
     implementation "androidx.media3:media3-exoplayer-dash:1.1.0"
     implementation "androidx.media3:media3-ui:1.1.0"
+
+
+    //implementation group: 'org.jupnp', name: 'org.jupnp', version: '2.7.0'
+    //implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.7'
+    //implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
+
+
 
 
     testImplementation 'junit:junit:4.13.2'

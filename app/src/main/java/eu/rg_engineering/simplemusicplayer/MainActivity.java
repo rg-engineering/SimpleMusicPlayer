@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.media3.common.MediaItem;
@@ -39,15 +41,18 @@ public class MainActivity extends AppCompatActivity
             MusicItemsAdapter.MusicItemsAdapterListener,
         HomeFragment.HomeFragmentListener {
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
 
     private String TAG = "Main";
-    ExoPlayer exoPlayer;
+    private ExoPlayer exoPlayer;
     /* mediaplayer
-    MediaPlayer music;
+    private MediaPlayer music;
 
      */
-    Timer progressTimer;
+    private Timer progressTimer;
+    //private discoverServer  discover;
+    //private ScanNASFolder scanNASFolder;
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -119,7 +124,24 @@ public class MainActivity extends AppCompatActivity
         TextView text = (TextView) header.findViewById(R.id.VersionView);
         text.setText(Version);
 
+        //discover = new discoverServer(this);
+        //discover.start();
 
+        //scanNASFolder = new ScanNASFolder();
+        //scanNASFolder.execute();
+
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Log.e(TAG, "need more permissions");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
+        }
+        else {
+            Log.d(TAG, "permission set correctly");
+        }
     }
 
     @Override
@@ -166,25 +188,33 @@ public class MainActivity extends AppCompatActivity
     // Playing the music
     private void musicplay(String filename) {
 
+        Log.d(TAG, "musicplay " );
         if (exoPlayer != null) {
             exoPlayer.stop();
+            Log.d(TAG, "player stopped " );
         }
 
         exoPlayer = new ExoPlayer.Builder(getApplicationContext()).build();
+        Log.d(TAG, "builder called " );
 
         Uri uri = Uri.parse(filename);
         // Build the media item.
         MediaItem mediaItem = MediaItem.fromUri(uri);
         // Set the media item to be played.
         exoPlayer.setMediaItem(mediaItem);
+        Log.d(TAG, "media item set " );
         // Prepare the player.
         exoPlayer.prepare();
-
+        Log.d(TAG, "player prepared " );
         CreateMusic();
-
-        // Start the playback.
-        exoPlayer.play();
-
+        Log.d(TAG, "all created " );
+        try {
+            // Start the playback.
+            exoPlayer.play();
+        }
+        catch (Exception e){
+            Log.e(TAG, "exception in musicplay " + e.getMessage());
+        }
 
 
         /* mediaplayer
