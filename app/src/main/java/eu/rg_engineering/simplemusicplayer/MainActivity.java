@@ -142,6 +142,18 @@ public class MainActivity extends AppCompatActivity
         else {
             Log.d(TAG, "permission set correctly");
         }
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.READ_MEDIA_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Log.e(TAG, "need more permissions");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.READ_MEDIA_AUDIO},
+                    PERMISSION_REQUEST_CODE);
+        }
+        else {
+            Log.d(TAG, "permission set correctly");
+        }
     }
 
     @Override
