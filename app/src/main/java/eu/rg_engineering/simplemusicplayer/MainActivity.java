@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity
     //private discoverServer  discover;
     //private ScanNASFolder scanNASFolder;
 
+    private boolean OnlyOneSong=true;
+
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
 
@@ -63,8 +65,8 @@ public class MainActivity extends AppCompatActivity
 
             case "PlayMusic":
                 musicplay(params);
+                OnlyOneSong=true;
                 break;
-
         }
     }
 
@@ -76,7 +78,8 @@ public class MainActivity extends AppCompatActivity
         switch (msg) {
 
             case "PlayMusic":
-                musicplay();
+                GetNextSong();
+                OnlyOneSong=false;
                 break;
             case "PauseMusic":
                 musicpause();
@@ -84,7 +87,6 @@ public class MainActivity extends AppCompatActivity
             case "StopMusic":
                 musicstop();
                 break;
-
         }
     }
 
@@ -200,15 +202,18 @@ public class MainActivity extends AppCompatActivity
     // Playing the music
     private void musicplay(String filename) {
 
-        Log.d(TAG, "musicplay " );
+        Log.d(TAG, "musicplay " + filename);
+       /*
         if (exoPlayer != null) {
             exoPlayer.stop();
-            Log.d(TAG, "player stopped " );
+            Log.d(TAG, "player stopped ");
         }
-
-        exoPlayer = new ExoPlayer.Builder(getApplicationContext()).build();
-        Log.d(TAG, "builder called " );
-
+*/
+        if (exoPlayer == null) {
+            exoPlayer = new ExoPlayer.Builder(getApplicationContext()).build();
+            Log.d(TAG, "builder called ");
+            CreateMusic();
+        }
         Uri uri = Uri.parse(filename);
         // Build the media item.
         MediaItem mediaItem = MediaItem.fromUri(uri);
@@ -218,8 +223,7 @@ public class MainActivity extends AppCompatActivity
         // Prepare the player.
         exoPlayer.prepare();
         Log.d(TAG, "player prepared " );
-        CreateMusic();
-        Log.d(TAG, "all created " );
+
         try {
             // Start the playback.
             exoPlayer.play();
@@ -229,30 +233,21 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        /* mediaplayer
-        if (music != null) {
-            music.stop();
-        }
-        Uri uri = Uri.parse(filename);
-        music = MediaPlayer.create(this, uri);
-        CreateMusic();
-        music.start();
 
-         */
     }
 
     private void musicplay() {
 
         if (exoPlayer != null) {
+
+            //first stop
+            exoPlayer.stop();
+
+            //then start
             exoPlayer.play();
         }
 
-        /* mediaplayer
-        if (music != null) {
-            music.start();
-        }
 
-         */
     }
 
     // Pausing the music
@@ -261,56 +256,22 @@ public class MainActivity extends AppCompatActivity
         if (exoPlayer != null) {
             exoPlayer.pause();
         }
-
-        /* mediaplayer
-        if (music != null) {
-            music.pause();
-        }
-
-         */
     }
 
     // Stopping the music
     private void musicstop() {
 
-        if (exoPlayer != null) {
-            exoPlayer.release();
-        }
-
-        /* mediaplayer
-        if (music != null) {
-            music.stop();
-        }
-        //music = MediaPlayer.create(this, R.raw.antihero);
-        */
-
         if (progressTimer != null) {
             progressTimer.cancel();
             progressTimer.purge();
         }
-
-
-
+        if (exoPlayer != null) {
+            exoPlayer.release();
+            exoPlayer=null;
+        }
     }
 
     private void CreateMusic() {
-
-        /* mediaplayer
-        music.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mp) {
-                Log.d(TAG, "Song Complete");
-
-                HomeFragment homefragment = FindHomeFragment();
-                if (homefragment != null) {
-                    homefragment.GetNextSong();
-                } else {
-                    Log.e(TAG, "homefragement not found");
-                }
-
-            }
-        });
-         */
-        //todo listener to add
 
         exoPlayer.addListener(
                 new Player.Listener() {
@@ -328,20 +289,16 @@ public class MainActivity extends AppCompatActivity
 
                             if (exoPlayer.getPlaybackState()==Player.STATE_ENDED){
                                 Log.d(TAG, "Song Complete");
-
-                                HomeFragment homefragment = FindHomeFragment();
-                                if (homefragment != null) {
-                                    homefragment.GetNextSong();
-                                } else {
-                                    Log.e(TAG, "homefragement not found");
+                                if (!OnlyOneSong) {
+                                    GetNextSong();
+                                }
+                                else {
+                                    musicstop();
                                 }
                             }
-
                         }
                     }
                 });
-
-
 
         if (progressTimer != null) {
             progressTimer.cancel();
@@ -353,6 +310,18 @@ public class MainActivity extends AppCompatActivity
         progressTimer.scheduleAtFixedRate(updateProgress, 0, 1000);
     }
 
+
+
+
+    private void GetNextSong(){
+        Log.d(TAG, "get next song");
+        HomeFragment homefragment = FindHomeFragment();
+        if (homefragment != null) {
+            homefragment.GetNextSong();
+        } else {
+            Log.e(TAG, "homefragement not found");
+        }
+    }
 
     class UpdateProgressTask extends TimerTask {
         public void run() {
@@ -370,9 +339,11 @@ public class MainActivity extends AppCompatActivity
 
                  */
 
-                long position = exoPlayer.getCurrentPosition();
-                Log.d(TAG, "current position " + position);
-                homefragment.SetCurrentplaytime(position);
+                if (exoPlayer != null) {
+                    long position = exoPlayer.getCurrentPosition();
+                    //Log.d(TAG, "current position " + position);
+                    homefragment.SetCurrentplaytime(position);
+                }
             }
         }
     };

@@ -24,11 +24,13 @@
                 android:id="@+id/rvItems"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:background="@color/JuicyGreen"
+                app:layout_constraintBottom_toTopOf="@+id/PlayMusic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/StopMusic" />
+                app:layout_constraintTop_toBottomOf="@+id/filter_artist" />
 
             <EditText
                 android:id="@+id/filter_title"
@@ -64,7 +66,7 @@
                 android:layout_marginEnd="50dp"
                 android:background="@android:drawable/ic_media_pause"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filter_album" />
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <Button
                 android:id="@+id/PlayMusic"
@@ -75,18 +77,19 @@
                 android:layout_marginEnd="20dp"
                 android:background="@android:drawable/ic_media_play"
                 app:layout_constraintEnd_toStartOf="@+id/PauseMusic"
+                app:layout_constraintHorizontal_bias="0.491"
                 app:layout_constraintStart_toEndOf="@+id/StopMusic"
-                app:layout_constraintTop_toBottomOf="@+id/filter_album" />
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <Button
                 android:id="@+id/StopMusic"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="56dp"
                 android:background="@android:drawable/ic_delete"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filter_album" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

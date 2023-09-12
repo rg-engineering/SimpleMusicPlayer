@@ -33,19 +33,19 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment:2.6.0'
-    implementation 'androidx.navigation:navigation-ui:2.6.0'
+    implementation 'androidx.navigation:navigation-fragment:2.7.2'
+    implementation 'androidx.navigation:navigation-ui:2.7.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'androidx.annotation:annotation:1.7.0'
     implementation 'androidx.activity:activity:1.7.2'
     implementation 'androidx.fragment:fragment:1.6.1'
 
     // ExoPlayer
     //https://developer.android.com/guide/topics/media/exoplayer/hello-world
-    implementation "androidx.media3:media3-exoplayer:1.1.0"
-    implementation "androidx.media3:media3-exoplayer-dash:1.1.0"
-    implementation "androidx.media3:media3-ui:1.1.0"
+    implementation 'androidx.media3:media3-exoplayer:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.1.1'
+    implementation 'androidx.media3:media3-ui:1.1.1'
 
 
     //implementation group: 'org.jupnp', name: 'org.jupnp', version: '2.7.0'

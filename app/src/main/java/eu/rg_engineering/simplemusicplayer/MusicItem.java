@@ -109,7 +109,7 @@ public class MusicItem implements Parcelable {
 
     public void setCurrentPlaytime(long playtime) {
 
-        Log.d(TAG, "current play time " + playtime + " of " + mDuration);
+        //Log.d(TAG, "current play time " + playtime + " of " + mDuration);
 
         mCurrentPlaytime = playtime;
 

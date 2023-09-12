@@ -161,6 +161,7 @@ public class MusicItemsAdapter extends
             currentPlayedMusicPosition = 0;
         }
         String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFilename();
+        Log.d(TAG, "next song " + filename);
         mCommunication.messageFromMusicItemsAdapter("PlayMusic", filename);
     }
 
@@ -168,11 +169,11 @@ public class MusicItemsAdapter extends
 
         Log.d(TAG, "got current playtime " + playtime + " " + mItemsFiltered.size());
 
-        if (currentPlayedMusicPosition > 0 && currentPlayedMusicPosition < mItemsFiltered.size()) {
+        if (currentPlayedMusicPosition >= 0 && currentPlayedMusicPosition < mItemsFiltered.size()) {
             mItemsFiltered.get(currentPlayedMusicPosition).setCurrentPlaytime(playtime);
             notifyItemChanged(currentPlayedMusicPosition);
         } else {
-            Log.e(TAG, "index out of range ");
+            Log.e(TAG, "index out of range " + currentPlayedMusicPosition);
         }
     }
 
