@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -139,7 +141,6 @@ public class HomeFragment extends Fragment implements
             // Lookup the recyclerview in activity layout
             rvMusicItems = (RecyclerView) root.findViewById(R.id.rvItems);
 
-
             // Initialize items
             items = MusicItem.createItemsList(0);
 
@@ -161,9 +162,25 @@ public class HomeFragment extends Fragment implements
             rvMusicItems.setItemAnimator(null);
             // That's all!
 
-            EditText editFilterArtist = (EditText) root.findViewById(R.id.filter_artist);
+            AutoCompleteTextView editFilterArtist = (AutoCompleteTextView ) root.findViewById(R.id.filter_artist);
             EditText editFilterTitle = (EditText) root.findViewById(R.id.filter_title);
             EditText editFilterAlbum = (EditText) root.findViewById(R.id.filter_album);
+
+            ArrayList <String> ArtistList = new ArrayList<>();
+
+            for (int i = 0; i < items.size(); i++) {
+
+                String artist = items.get(i).getArtist();
+                if (!ArtistList.contains(artist)) {
+                    ArtistList.add(artist);
+                }
+            }
+
+            ArrayAdapter<String> ArtistListAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_dropdown_item_1line, ArtistList);
+
+            editFilterArtist.setThreshold(1);
+            editFilterArtist.setAdapter(ArtistListAdapter);
 
             editFilterArtist.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -184,6 +201,7 @@ public class HomeFragment extends Fragment implements
                 }
 
             });
+
             editFilterTitle.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
