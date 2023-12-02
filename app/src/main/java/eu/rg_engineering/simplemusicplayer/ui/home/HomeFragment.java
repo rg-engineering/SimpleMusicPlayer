@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
@@ -181,6 +182,16 @@ public class HomeFragment extends Fragment implements
 
             editFilterArtist.setThreshold(1);
             editFilterArtist.setAdapter(ArtistListAdapter);
+
+            ImageButton btnFilterArtistSearch = (ImageButton) root.findViewById(R.id.filter_artist_search);
+            btnFilterArtistSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "Search Artist pressed");
+                    mCommunication.messageFromHomeFragment("ReplaceFragment", "SearchArtist");
+                }
+            });
+
 
             editFilterArtist.addTextChangedListener(new TextWatcher() {
                 @Override

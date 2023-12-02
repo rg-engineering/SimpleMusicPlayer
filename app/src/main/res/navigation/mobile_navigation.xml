@@ -13,6 +13,13 @@
         tools:layout="@layout/fragment_home_new" />
 
     <fragment
+        android:id="@+id/nav_searchartist"
+        android:tag="SearchArtist"
+        android:name="eu.rg_engineering.simplemusicplayer.ui.home.SearchArtistFragment"
+        android:label="SearchArtist"
+        tools:layout="@layout/fragment_artists" />
+
+    <fragment
         android:id="@+id/nav_settings"
         android:tag="SettingsFragment"
         android:name="eu.rg_engineering.simplemusicplayer.ui.settings.SettingsFragment"

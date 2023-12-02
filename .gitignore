@@ -12,3 +12,5 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/debug/app-debug.aab
+/app/release/app-release.aab

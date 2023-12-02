@@ -1,5 +1,6 @@
 package eu.rg_engineering.simplemusicplayer;
 
+import android.app.FragmentTransaction;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -34,8 +36,8 @@ import java.util.TimerTask;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 
 
-
-
+//todo: car intergration https://github.com/google/ExoPlayer/issues/8561
+//todo: spielt nur 2 oder drei songs und stoppt dann
 public class MainActivity extends AppCompatActivity
         implements
             MusicItemsAdapter.MusicItemsAdapterListener,
@@ -65,7 +67,10 @@ public class MainActivity extends AppCompatActivity
 
             case "PlayMusic":
                 musicplay(params);
-                OnlyOneSong=true;
+                break;
+            case "NoSongs":
+                Toast.makeText(this, "This is my Toast message!",
+                        Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -86,11 +91,29 @@ public class MainActivity extends AppCompatActivity
                 break;
             case "StopMusic":
                 musicstop();
+                OnlyOneSong=true;
+                break;
+            case "ReplaceFragment":
+                //replaceFragment("SearchArtist");
                 break;
         }
     }
+/*
+    public void replaceFragment(String FragmentName) {
+
+        Fragment fragment = null;
+        if (FragmentName=="SearchArtist"){
+
+        }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
 
+    }
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +129,7 @@ public class MainActivity extends AppCompatActivity
         //fragments wieder rein: activity_main_drawer.xml und mobile_navigation.xml
         mAppBarConfiguration = new AppBarConfiguration.Builder(
 
-                R.id.nav_home, R.id.nav_settings)
+                R.id.nav_home,R.id.nav_searchartist, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -288,7 +311,7 @@ public class MainActivity extends AppCompatActivity
                             Log.i(TAG, "is not playing " + exoPlayer.getPlaybackState());
 
                             if (exoPlayer.getPlaybackState()==Player.STATE_ENDED){
-                                Log.d(TAG, "Song Complete");
+                                Log.d(TAG, "Song Complete " + OnlyOneSong);
                                 if (!OnlyOneSong) {
                                     GetNextSong();
                                 }

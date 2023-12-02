@@ -14,6 +14,7 @@ import android.widget.Filterable;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -154,15 +155,20 @@ public class MusicItemsAdapter extends
 
     public void GetNextSong() {
 
-        int maxMusic = mItemsFiltered.size() - 1;
-        if (currentPlayedMusicPosition >= 0 && currentPlayedMusicPosition < maxMusic) {
-            currentPlayedMusicPosition++;
-        } else {
-            currentPlayedMusicPosition = 0;
+        if (mItemsFiltered.size()>0) {
+            int maxMusic = mItemsFiltered.size() - 1;
+            if (currentPlayedMusicPosition >= 0 && currentPlayedMusicPosition < maxMusic) {
+                currentPlayedMusicPosition++;
+            } else {
+                currentPlayedMusicPosition = 0;
+            }
+            String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFilename();
+            Log.d(TAG, "next song " + filename);
+            mCommunication.messageFromMusicItemsAdapter("PlayMusic", filename);
         }
-        String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFilename();
-        Log.d(TAG, "next song " + filename);
-        mCommunication.messageFromMusicItemsAdapter("PlayMusic", filename);
+        else {
+            mCommunication.messageFromMusicItemsAdapter("NoSongs",null);
+        }
     }
 
     public void SetCurrentPlaytime(long playtime) {
