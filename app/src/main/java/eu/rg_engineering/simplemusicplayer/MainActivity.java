@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindArtists;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 
 
@@ -154,6 +155,11 @@ public class MainActivity extends AppCompatActivity
 
         //scanNASFolder = new ScanNASFolder();
         //scanNASFolder.execute();
+
+
+        Plex_FindArtists plex_FindArtists = new Plex_FindArtists();
+        plex_FindArtists.start();
+
 
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE)
