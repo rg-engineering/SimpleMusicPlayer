@@ -145,7 +145,7 @@ public class MusicItem implements Parcelable {
     private static int lastItemId = 0;
 
     public static ArrayList<MusicItem> createItemsList(int numItems) {
-        ArrayList<MusicItem> items = new ArrayList<MusicItem>();
+        ArrayList<MusicItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
             items.add(new MusicItem("test", "test", "test", "test", 0));

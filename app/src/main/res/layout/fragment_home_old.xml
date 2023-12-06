@@ -17,7 +17,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context="eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment">
+            tools:context="eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment_old">
 
 
             <androidx.recyclerview.widget.RecyclerView

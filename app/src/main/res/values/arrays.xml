@@ -1,26 +1,4 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
-    </string-array>
-
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
-    </string-array>
-
-    <string-array name="share_entries">
-        <item>@string/always_ask</item>
-        <item>@string/email</item>
-        <item>@string/whatsapp</item>
-    </string-array>
-
-    <string-array name="share_values">
-        <item>always_ask</item>
-        <item>email</item>
-        <item>whatsapp</item>
-    </string-array>
 
     <!-- background color names array -->
     <string-array name="background_color_names_array">

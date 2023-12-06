@@ -6,8 +6,6 @@
     <string name="button_cancel">abbrechen</string>
     <string name="hint_name">Bezeichnung</string>
     <string name="hint_count">Anzahl</string>
-    <string name="menu_shops">Läden</string>
-    <string name="menu_categories">Kategorien</string>
     <string name="menu_home">Home</string>
     <string name="my_logo">my logo</string>
     <string name="my_shopping_list_by_rg_engineering">Simple Music Player von rg-engineering</string>
@@ -34,4 +32,7 @@
     <string name="menu_about" >Über</string>
     <string name="ShowDataPrivacy">Datenschutzerklärung</string>
     <string name="menu_search" >Suche</string>
+    <string name="menu_tracks" >Musikstücke</string>
+    <string name="menu_albums" >Alben</string>
+    <string name="menu_artists" >Künstler</string>
 </resources>

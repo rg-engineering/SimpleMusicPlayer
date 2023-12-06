@@ -10,14 +10,28 @@
         android:tag="HomeFragment"
         android:name="eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home_new" />
+        tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_searchartist"
+        android:id="@+id/nav_artists"
         android:tag="SearchArtist"
-        android:name="eu.rg_engineering.simplemusicplayer.ui.home.SearchArtistFragment"
+        android:name="eu.rg_engineering.simplemusicplayer.ui.home.ArtistsFragment"
         android:label="SearchArtist"
         tools:layout="@layout/fragment_artists" />
+
+    <fragment
+        android:id="@+id/nav_albums"
+        android:tag="SearchArtist"
+        android:name="eu.rg_engineering.simplemusicplayer.ui.home.AlbumsFragment"
+        android:label="SearchArtist"
+        tools:layout="@layout/fragment_albums" />
+
+    <fragment
+        android:id="@+id/nav_tracks"
+        android:tag="SearchArtist"
+        android:name="eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment"
+        android:label="SearchArtist"
+        tools:layout="@layout/fragment_tracks" />
 
     <fragment
         android:id="@+id/nav_settings"

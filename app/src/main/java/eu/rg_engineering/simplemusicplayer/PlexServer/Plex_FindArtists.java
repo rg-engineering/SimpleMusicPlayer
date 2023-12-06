@@ -50,6 +50,10 @@ public class Plex_FindArtists {
 
     //taken from
     //https://developer.android.com/develop/connectivity/network-ops/xml
+    //https://support.plex.tv/articles/201638786-plex-media-server-url-commands/
+
+    //how to get plex token
+    //https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
     private void downloadXml(URL url) {
 
         String result="";

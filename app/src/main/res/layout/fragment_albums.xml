@@ -7,7 +7,7 @@
     android:background="@color/JuicyGreen">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvArtists"
+        android:id="@+id/rvAlbums"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <AutoCompleteTextView
-        android:id="@+id/filter_artist"
+        android:id="@+id/filter_albums"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:hint="artist"

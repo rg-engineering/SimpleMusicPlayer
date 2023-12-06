@@ -52,7 +52,7 @@ public class MusicItemsAdapter extends
     // Pass in the contact array into the constructor
     public MusicItemsAdapter(List<MusicItem> items, OnDeleteMusicitemListener deleteListener) {
         this.deleteListener = deleteListener;
-        mItemsFiltered = MusicItem.createItemsList(0);
+        mItemsFiltered = MusicItem.createItemsList(5);
 
         mItemsAll = items;
         UpdateData();

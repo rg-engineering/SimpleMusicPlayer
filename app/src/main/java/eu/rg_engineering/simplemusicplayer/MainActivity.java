@@ -1,6 +1,5 @@
 package eu.rg_engineering.simplemusicplayer;
 
-import android.app.FragmentTransaction;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -34,7 +33,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindArtists;
-import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
+import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment_old;
 
 
 //todo: car intergration https://github.com/google/ExoPlayer/issues/8561
@@ -42,7 +41,8 @@ import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 public class MainActivity extends AppCompatActivity
         implements
             MusicItemsAdapter.MusicItemsAdapterListener,
-        HomeFragment.HomeFragmentListener {
+        ArtistItemsAdapter.ArtistItemsAdapterListener,
+        HomeFragment_old.HomeFragmentListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
@@ -99,6 +99,12 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
+    @Override
+    public void messageFromArtistItemsAdapter(String msg, String params) {
+        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params);
+    }
+
 /*
     public void replaceFragment(String FragmentName) {
 
@@ -130,7 +136,7 @@ public class MainActivity extends AppCompatActivity
         //fragments wieder rein: activity_main_drawer.xml und mobile_navigation.xml
         mAppBarConfiguration = new AppBarConfiguration.Builder(
 
-                R.id.nav_home,R.id.nav_searchartist, R.id.nav_settings)
+                R.id.nav_home,R.id.nav_artists, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -209,9 +215,9 @@ public class MainActivity extends AppCompatActivity
         //SaveData();
     }
 
-    private HomeFragment FindHomeFragment() {
+    private HomeFragment_old FindHomeFragment() {
 
-        HomeFragment homeFragment = null;
+        HomeFragment_old homeFragment = null;
         FragmentManager manager = getSupportFragmentManager();
         if (manager != null) {
             Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
@@ -220,7 +226,7 @@ public class MainActivity extends AppCompatActivity
                 if (subManager != null) {
 
                     List<Fragment> allFrag = subManager.getFragments();
-                    homeFragment = (HomeFragment) allFrag.get(0);
+                    homeFragment = (HomeFragment_old) allFrag.get(0);
                     //homeFragment = (HomeFragment) subManager.findFragmentById(R.id.nav_home);
                 }
             }
@@ -243,9 +249,19 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "builder called ");
             CreateMusic();
         }
-        Uri uri = Uri.parse(filename);
+
+        //original:
+        //Uri uri = Uri.parse(filename);
+
+        //funktioniert:
+        Uri uri = Uri.parse("http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ");
+
+        //funktioniert:
+        //Uri uri = Uri.parse("https://storage.googleapis.com/exoplayer-test-media-0/Jazz_In_Paris.mp3");
+
         // Build the media item.
         MediaItem mediaItem = MediaItem.fromUri(uri);
+
         // Set the media item to be played.
         exoPlayer.setMediaItem(mediaItem);
         Log.d(TAG, "media item set " );
@@ -344,13 +360,15 @@ public class MainActivity extends AppCompatActivity
 
     private void GetNextSong(){
         Log.d(TAG, "get next song");
-        HomeFragment homefragment = FindHomeFragment();
+        HomeFragment_old homefragment = FindHomeFragment();
         if (homefragment != null) {
             homefragment.GetNextSong();
         } else {
             Log.e(TAG, "homefragement not found");
         }
     }
+
+
 
     class UpdateProgressTask extends TimerTask {
         public void run() {
@@ -361,7 +379,7 @@ public class MainActivity extends AppCompatActivity
     private Runnable UpdateProgress = new Runnable() {
         public void run() {
 
-            HomeFragment homefragment = FindHomeFragment();
+            HomeFragment_old homefragment = FindHomeFragment();
             if (homefragment != null) {
                 /* mediaplayer
                 int position = music.getCurrentPosition();

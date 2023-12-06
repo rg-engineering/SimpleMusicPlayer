@@ -43,17 +43,11 @@
     <string name="lists">lists</string>
     <string name="design">design</string>
 
-
-
     <string name="useBackgroundColor">useBackgroundColor</string>
     <string name="BackgroundColor">BackgroundColor</string>
     <string name="BackgroundImage">BackgroundImage</string>
 
-    <string name="always_ask">always ask</string>
-    <string name="whatsapp" translatable="false">WhatsApp</string>
 
-    <string name="email_start">Please bring with you the next time you shop</string>
-    <string name="whatsapp_start">Please bring with you the next time you shop</string>
 
     <!-- Sync Preferences -->
     <string name="enableclosed">EnableClosed</string>
@@ -61,7 +55,9 @@
     <string name="ShowDataPrivacy">Data protection</string>
 
     <string name="disableclosed">DisableClosed</string>
-    <string name="menu_search" >Search</string>
+    <string name="menu_tracks">tracks </string>
+    <string name="menu_albums">albums </string>
+    <string name="menu_artists">artists</string>
 
 
 </resources>

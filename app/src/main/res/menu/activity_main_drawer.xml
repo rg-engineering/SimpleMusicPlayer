@@ -10,9 +10,19 @@
             android:title="@string/menu_home" />
 
         <item
-            android:id="@+id/nav_searchartist"
+            android:id="@+id/nav_artists"
             android:icon="@drawable/ic_list"
-            android:title="menu_searchartist" />
+            android:title="@string/menu_artists" />
+
+        <item
+            android:id="@+id/nav_albums"
+            android:icon="@drawable/ic_list"
+            android:title="@string/menu_albums" />
+
+        <item
+            android:id="@+id/nav_tracks"
+            android:icon="@drawable/ic_list"
+            android:title="@string/menu_tracks" />
 
         <item
             android:id="@+id/nav_settings"

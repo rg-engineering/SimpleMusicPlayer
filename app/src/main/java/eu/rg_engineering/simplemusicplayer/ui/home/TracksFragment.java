@@ -8,18 +8,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import eu.rg_engineering.simplemusicplayer.R;
 
-public class SearchArtistFragment extends Fragment {
+public class TracksFragment extends Fragment {
 
-    private String TAG = "SearchArtistFragment";
+    private String TAG = "TracksFragment";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_artists, container, false);
+        View root = inflater.inflate(R.layout.fragment_tracks, container, false);
 
         try {
 
