@@ -12,23 +12,41 @@ public class ArtistItem implements Parcelable  {
 
     private String mID;
     private String mName;
-
+    private String mGenre;
+    private String mCountry;
+    private String mPath2Image;
+    private String mSummery;
 
     protected ArtistItem(Parcel in) {
         mID = in.readString();
         mName = in.readString();
     }
-    public ArtistItem(String name) {
+    public ArtistItem(String name, String genre, String country, String path2image, String summery ) {
         mID = UUID.randomUUID().toString();
         mName = name;
+        mGenre = genre;
+        mCountry=country;
+        mPath2Image = path2image;
+        mSummery = summery;
     }
 
     public String getId() {
         return mID;
     }
-
     public String getName() {
         return mName;
+    }
+    public String getGenre() {
+        return mGenre;
+    }
+    public String getCountry() {
+        return mCountry;
+    }
+    public String getPath2Image() {
+        return mPath2Image;
+    }
+    public String getInfo() {
+        return mSummery;
     }
 
     public static final Creator<ArtistItem> CREATOR = new Creator<ArtistItem>() {
@@ -36,7 +54,6 @@ public class ArtistItem implements Parcelable  {
         public ArtistItem createFromParcel(Parcel in) {
             return new ArtistItem(in);
         }
-
         @Override
         public ArtistItem[] newArray(int size) {
             return new ArtistItem[size];
@@ -52,13 +69,17 @@ public class ArtistItem implements Parcelable  {
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(mID);
         parcel.writeString(mName);
+        parcel.writeString(mGenre);
+        parcel.writeString(mCountry);
+        parcel.writeString(mPath2Image);
+        parcel.writeString(mSummery);
     }
 
     public static ArrayList<ArtistItem> createItemsList(int numItems) {
         ArrayList<ArtistItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new ArtistItem("test"));
+            items.add(new ArtistItem("test"+i, "Jazz", "Germany", "", "no info"));
         }
         return items;
     }
@@ -70,6 +91,14 @@ public class ArtistItem implements Parcelable  {
         sRet += System.getProperty("line.separator");
         sRet += mName;
         sRet += System.getProperty("line.separator");
+        sRet += mGenre;
+        sRet += System.getProperty("line.separator");
+        sRet += mCountry;
+        sRet += System.getProperty("line.separator");
+        sRet += mPath2Image;
+        sRet += System.getProperty("line.separator");
+        sRet += mSummery;
+        sRet += System.getProperty("line.separator");
         return sRet;
     }
 
@@ -78,6 +107,10 @@ public class ArtistItem implements Parcelable  {
 
         sRet += "," + mID;
         sRet += "," + mName;
+        sRet += "," + mGenre;
+        sRet += "," + mCountry;
+        sRet += "," + mPath2Image;
+        sRet += "," + mSummery;
         sRet += System.getProperty("line.separator");
         return sRet;
     }

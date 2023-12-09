@@ -1,5 +1,6 @@
 package eu.rg_engineering.simplemusicplayer;
 
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -32,32 +33,32 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
 import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindArtists;
+import eu.rg_engineering.simplemusicplayer.ui.home.ArtistsFragment;
+import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment_old;
 
 
 //todo: car intergration https://github.com/google/ExoPlayer/issues/8561
-//todo: spielt nur 2 oder drei songs und stoppt dann
+
 public class MainActivity extends AppCompatActivity
         implements
             MusicItemsAdapter.MusicItemsAdapterListener,
-        ArtistItemsAdapter.ArtistItemsAdapterListener,
-        HomeFragment_old.HomeFragmentListener {
+            ArtistItemsAdapter.ArtistItemsAdapterListener,
+            HomeFragment_old.HomeFragmentListener ,
+            Plex_FindArtists.PlexFindArtistListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
 
     private String TAG = "Main";
     private ExoPlayer exoPlayer;
-    /* mediaplayer
-    private MediaPlayer music;
-
-     */
     private Timer progressTimer;
     //private discoverServer  discover;
     //private ScanNASFolder scanNASFolder;
 
-    private boolean OnlyOneSong=true;
+    private boolean OnlyOneSong = true;
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -85,14 +86,14 @@ public class MainActivity extends AppCompatActivity
 
             case "PlayMusic":
                 GetNextSong();
-                OnlyOneSong=false;
+                OnlyOneSong = false;
                 break;
             case "PauseMusic":
                 musicpause();
                 break;
             case "StopMusic":
                 musicstop();
-                OnlyOneSong=true;
+                OnlyOneSong = true;
                 break;
             case "ReplaceFragment":
                 //replaceFragment("SearchArtist");
@@ -105,22 +106,22 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from ArtistFragment " + msg + " " + params);
     }
 
-/*
-    public void replaceFragment(String FragmentName) {
+    /*
+        public void replaceFragment(String FragmentName) {
 
-        Fragment fragment = null;
-        if (FragmentName=="SearchArtist"){
+            Fragment fragment = null;
+            if (FragmentName=="SearchArtist"){
+
+            }
+
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
 
         }
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-
-    }
-*/
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity
         //fragments wieder rein: activity_main_drawer.xml und mobile_navigation.xml
         mAppBarConfiguration = new AppBarConfiguration.Builder(
 
-                R.id.nav_home,R.id.nav_artists, R.id.nav_settings)
+                R.id.nav_home, R.id.nav_artists, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -156,16 +157,6 @@ public class MainActivity extends AppCompatActivity
         TextView text = (TextView) header.findViewById(R.id.VersionView);
         text.setText(Version);
 
-        //discover = new discoverServer(this);
-        //discover.start();
-
-        //scanNASFolder = new ScanNASFolder();
-        //scanNASFolder.execute();
-
-
-        Plex_FindArtists plex_FindArtists = new Plex_FindArtists();
-        plex_FindArtists.start();
-
 
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -175,8 +166,7 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_REQUEST_CODE);
-        }
-        else {
+        } else {
             Log.d(TAG, "permission set correctly");
         }
         if (ContextCompat.checkSelfPermission(this,
@@ -187,8 +177,7 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.READ_MEDIA_AUDIO},
                     PERMISSION_REQUEST_CODE);
-        }
-        else {
+        } else {
             Log.d(TAG, "permission set correctly");
         }
     }
@@ -215,9 +204,9 @@ public class MainActivity extends AppCompatActivity
         //SaveData();
     }
 
-    private HomeFragment_old FindHomeFragment() {
+    private HomeFragment FindHomeFragment() {
 
-        HomeFragment_old homeFragment = null;
+        HomeFragment homeFragment = null;
         FragmentManager manager = getSupportFragmentManager();
         if (manager != null) {
             Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
@@ -226,24 +215,37 @@ public class MainActivity extends AppCompatActivity
                 if (subManager != null) {
 
                     List<Fragment> allFrag = subManager.getFragments();
-                    homeFragment = (HomeFragment_old) allFrag.get(0);
-                    //homeFragment = (HomeFragment) subManager.findFragmentById(R.id.nav_home);
+                    homeFragment = (HomeFragment) allFrag.get(0);
                 }
             }
         }
         return homeFragment;
     }
 
+    private ArtistsFragment FindArtistFragment() {
+
+        ArtistsFragment artistFragment = null;
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager != null) {
+            Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
+            if (mainFragment != null) {
+                FragmentManager subManager = mainFragment.getChildFragmentManager();
+                if (subManager != null) {
+
+                    List<Fragment> allFrag = subManager.getFragments();
+                    artistFragment = (ArtistsFragment) allFrag.get(0);
+                }
+            }
+        }
+        return artistFragment;
+    }
+
+
     // Playing the music
     private void musicplay(String filename) {
 
         Log.d(TAG, "musicplay " + filename);
-       /*
-        if (exoPlayer != null) {
-            exoPlayer.stop();
-            Log.d(TAG, "player stopped ");
-        }
-*/
+
         if (exoPlayer == null) {
             exoPlayer = new ExoPlayer.Builder(getApplicationContext()).build();
             Log.d(TAG, "builder called ");
@@ -264,19 +266,17 @@ public class MainActivity extends AppCompatActivity
 
         // Set the media item to be played.
         exoPlayer.setMediaItem(mediaItem);
-        Log.d(TAG, "media item set " );
+        Log.d(TAG, "media item set ");
         // Prepare the player.
         exoPlayer.prepare();
-        Log.d(TAG, "player prepared " );
+        Log.d(TAG, "player prepared ");
 
         try {
             // Start the playback.
             exoPlayer.play();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "exception in musicplay " + e.getMessage());
         }
-
 
 
     }
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity
         }
         if (exoPlayer != null) {
             exoPlayer.release();
-            exoPlayer=null;
+            exoPlayer = null;
         }
     }
 
@@ -332,12 +332,11 @@ public class MainActivity extends AppCompatActivity
                             // player.getPlaybackError for details.
                             Log.i(TAG, "is not playing " + exoPlayer.getPlaybackState());
 
-                            if (exoPlayer.getPlaybackState()==Player.STATE_ENDED){
+                            if (exoPlayer.getPlaybackState() == Player.STATE_ENDED) {
                                 Log.d(TAG, "Song Complete " + OnlyOneSong);
                                 if (!OnlyOneSong) {
                                     GetNextSong();
-                                }
-                                else {
+                                } else {
                                     musicstop();
                                 }
                             }
@@ -356,11 +355,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-    private void GetNextSong(){
+    private void GetNextSong() {
         Log.d(TAG, "get next song");
-        HomeFragment_old homefragment = FindHomeFragment();
+        HomeFragment homefragment = FindHomeFragment();
         if (homefragment != null) {
             homefragment.GetNextSong();
         } else {
@@ -368,6 +365,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void messageFromPlexFindArtist(String msg) {
+        Log.d(TAG, "got message from PlexFindArtist " + msg);
+        ArtistsFragment artistfragment = FindArtistFragment();
+        if (artistfragment != null) {
+            artistfragment.ReadPlexArtistData();
+        } else {
+            Log.e(TAG, "artistfragment not found");
+        }
+
+
+    }
 
 
     class UpdateProgressTask extends TimerTask {
@@ -379,7 +388,7 @@ public class MainActivity extends AppCompatActivity
     private Runnable UpdateProgress = new Runnable() {
         public void run() {
 
-            HomeFragment_old homefragment = FindHomeFragment();
+            HomeFragment homefragment = FindHomeFragment();
             if (homefragment != null) {
                 /* mediaplayer
                 int position = music.getCurrentPosition();

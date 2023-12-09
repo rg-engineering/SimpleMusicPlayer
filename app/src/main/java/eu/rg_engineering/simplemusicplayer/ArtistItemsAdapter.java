@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +39,15 @@ public class ArtistItemsAdapter extends
     private int mFilterIdx = 0;
     Context mContext;
     ArtistItemsAdapter.ArtistItemsAdapterListener mCommunication;
+
+    public void notifyDatasetChanged() {
+        notifyDataSetChanged();
+    }
+
+    public void updateItems(ArrayList<ArtistItem> mArtists) {
+        mItemsAll = mArtists;
+        UpdateData();
+    }
 
     public interface ArtistItemsAdapterListener {
         void messageFromArtistItemsAdapter(String msg, String params);
@@ -85,11 +96,40 @@ public class ArtistItemsAdapter extends
 
         Log.d(TAG, "onBindViewHolder called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
+        TextView genreTextView = viewHolder.genreTextView;
+        TextView countryTextView = viewHolder.countryTextView;
+        Button infoButton = viewHolder.infoButton;
+        ImageView imageImageView = viewHolder.imageImageView;
+
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
         }
+        if (genreTextView != null) {
+            genreTextView.setText(item.getGenre());
+        }
+        if (countryTextView != null) {
+            countryTextView.setText(item.getCountry());
+        }
+        if (infoButton != null) {
+            String infoSummery=item.getInfo();
 
+            if (infoSummery!=null && infoSummery.length()>0){
+                Log.d(TAG, "info Button should be visible ");
+            }
+            else {
+                Log.d(TAG, "info Button should be invisible ");
+            }
+        }
+        if (imageImageView!=null){
+            String path2image=item.getPath2Image();
 
+            if (path2image!=null && path2image.length()>0) {
+                Log.d(TAG, "image view should be used ");
+            }
+            else {
+                Log.d(TAG, "image view shouldn't be used ");
+            }
+        }
 
 
     }
@@ -126,12 +166,7 @@ public class ArtistItemsAdapter extends
             case 1: // artist name filter
                 oRet = filterArtist;
                 break;
-            case 2: // title filter
 
-                break;
-            case 3: // album filter
-
-                break;
             default:
                 Log.e(TAG, "no Filter #" + mFilterIdx);
                 break;
@@ -216,7 +251,10 @@ public class ArtistItemsAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-
+        public TextView genreTextView;
+        public TextView countryTextView;
+        public Button infoButton;
+        public ImageView imageImageView;
 
         GestureDetector mGestureDetector;
 
@@ -227,7 +265,11 @@ public class ArtistItemsAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            nameTextView = (TextView) itemView.findViewById(R.id.item_name);
+            nameTextView = (TextView) itemView.findViewById(R.id.artist_Name);
+            genreTextView = (TextView) itemView.findViewById(R.id.artist_Genre);
+            countryTextView = (TextView) itemView.findViewById(R.id.artist_Country);
+            infoButton = (Button) itemView.findViewById(R.id.artist_info_button);
+            imageImageView = (ImageView) itemView.findViewById(R.id.artist_image);
 
 
             mGestureDetector = new GestureDetector(itemView.getContext(), this);

@@ -1,5 +1,6 @@
 package eu.rg_engineering.simplemusicplayer.PlexServer;
 
+import android.app.Activity;
 import android.util.Log;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -11,7 +12,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-public class Plex_FindArtists {
+import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
+
+
+public class Plex_FindArtists extends Thread {
 
     private String TAG = "plex_findArtists";
     private String IP = "192.168.3.21";
@@ -20,26 +24,28 @@ public class Plex_FindArtists {
     //private String Token = "eVp_3aBs33Jmdst9ifxmU";
     private String LibID = "2";
 
+    public List<Plex_Artists> mArtists = null;
+
     private static final String ns = null;
 
-    public void start() {
+    PlexFindArtistListener mCommunication;
+
+    //Interface for communication
+    public interface PlexFindArtistListener {
+        void messageFromPlexFindArtist(String msg);
+    }
+    public Plex_FindArtists(Activity activity) {
+        mCommunication = (PlexFindArtistListener) activity;
+    }
+
+    public void run() {
+        //started in separate thread
         Log.d(TAG, "start find artists ");
 
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    // Your code goes here
-                    startFindArtists();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
+        startFindArtists();
     }
-    private void startFindArtists() {
+
+    public void startFindArtists() {
         try {
             URL url = new URL("http://" + IP + ":" + Port + "/library/sections/" + LibID + "/all?X-Plex-Token=" + Token);
             downloadXml(url);
@@ -55,28 +61,29 @@ public class Plex_FindArtists {
     //how to get plex token
     //https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
     private void downloadXml(URL url) {
-
-        String result="";
         try {
-            result = loadXmlFromNetwork(url);
+            loadXmlFromNetwork(url);
         } catch (IOException e) {
 
-        } catch (XmlPullParserException e) {
-
+        } catch (XmlPullParserException ex) {
+            Log.e(TAG, "exception in downloadXml " +ex.toString());
         }
-        String finalResult = result;
     }
 
-    private String loadXmlFromNetwork(URL url) throws XmlPullParserException, IOException {
+    private void loadXmlFromNetwork(URL url) throws XmlPullParserException, IOException {
         InputStream stream = null;
         // Instantiates the parser.
         Plex_ArtistsXmlParser artistsXmlParser = new Plex_ArtistsXmlParser();
-        List<Plex_Artists> artists = null;
+
 
         StringBuilder htmlString = new StringBuilder();
         try {
             stream = downloadUrl(url);
-            artists = artistsXmlParser.parse(stream);
+            mArtists = artistsXmlParser.parse(stream);
+
+            Log.d(TAG, "parsed artists " +mArtists.size());
+
+            mCommunication.messageFromPlexFindArtist("got all artists ");
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {
@@ -84,9 +91,6 @@ public class Plex_FindArtists {
                 stream.close();
             }
         }
-
-        //todo add arist data to string or json
-        return htmlString.toString();
     }
 
     private InputStream downloadUrl(URL url) throws IOException {
@@ -102,13 +106,11 @@ public class Plex_FindArtists {
     }
 
 
-
-
-
-
-
-
 }
+
+
+
+
 
 
 

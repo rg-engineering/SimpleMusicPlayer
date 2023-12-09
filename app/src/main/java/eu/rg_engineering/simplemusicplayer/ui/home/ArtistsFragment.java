@@ -1,10 +1,14 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,6 +20,7 @@ import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.ArtistItem;
 import eu.rg_engineering.simplemusicplayer.ArtistItemsAdapter;
+import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
 import eu.rg_engineering.simplemusicplayer.MusicItem;
 import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.R;
@@ -29,7 +34,8 @@ public class ArtistsFragment extends Fragment implements
     private String TAG = "ArtistsFragment";
     private RecyclerView rvArtistItems = null;
     private ArtistItemsAdapter ArtistItemsAdapter = null;
-    ArrayList<ArtistItem> artists;
+    ArrayList<ArtistItem> mArtists;
+    MusicData mMusicData;
 
     @Override
     public void ItemDeleted() {
@@ -43,11 +49,11 @@ public class ArtistsFragment extends Fragment implements
         try {
             rvArtistItems = (RecyclerView) root.findViewById(R.id.rvArtists);
 
-            artists = ArtistItem.createItemsList(5);
-
+            mMusicData = new MusicData(getActivity());
+            mArtists=mMusicData.getArtistData();
 
             // Create adapter passing in the sample user data
-            ArtistItemsAdapter = new ArtistItemsAdapter(artists,this);
+            ArtistItemsAdapter = new ArtistItemsAdapter(mArtists,this);
 
 
             ItemTouchHelper.Callback callback = new MyItemTouchHelper(ArtistItemsAdapter);
@@ -61,6 +67,42 @@ public class ArtistsFragment extends Fragment implements
             rvArtistItems.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvArtistItems.setItemAnimator(null);
             // That's all!
+            AutoCompleteTextView editFilterArtist = (AutoCompleteTextView ) root.findViewById(R.id.filter_artist);
+            ArrayList <String> ArtistList = new ArrayList<>();
+
+            for (int i = 0; i < mArtists.size(); i++) {
+
+                String artist = mArtists.get(i).getName();
+                if (!ArtistList.contains(artist)) {
+                    ArtistList.add(artist);
+                }
+            }
+
+            ArrayAdapter<String> ArtistListAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_dropdown_item_1line, ArtistList);
+
+            editFilterArtist.setThreshold(1);
+            editFilterArtist.setAdapter(ArtistListAdapter);
+
+            editFilterArtist.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.d(TAG, "artist filter text changed " + s);
+                    ArtistItemsAdapter.setFilterIdx(1);
+                    ArtistItemsAdapter.getFilter().filter(s);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            });
 
 
         } catch (Exception ex) {
@@ -70,5 +112,29 @@ public class ArtistsFragment extends Fragment implements
 
 
     }
+
+    public void ReadPlexArtistData(){
+
+        if (mMusicData!=null) {
+            mMusicData.ReadPlexArtistData();
+            Log.d(TAG, "plex data read ");
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ArtistItemsAdapter.updateItems(mArtists);
+                    ArtistItemsAdapter.notifyDatasetChanged();
+                }
+            });
+
+
+
+
+            Log.d(TAG, "adapter notified ");
+        }
+
+
+    }
+
 
 }

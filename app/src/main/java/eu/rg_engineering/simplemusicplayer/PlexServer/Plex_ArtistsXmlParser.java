@@ -1,5 +1,6 @@
 package eu.rg_engineering.simplemusicplayer.PlexServer;
 
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -12,6 +13,7 @@ import java.util.List;
 
 
 public class Plex_ArtistsXmlParser {
+    private String TAG = "Plex_ArtistsXmlParser";
     private static final String ns = null;
 
    /*
@@ -104,6 +106,9 @@ public class Plex_ArtistsXmlParser {
                 skip(parser);
             }
         }
+
+        Log.d(TAG, "new artist from plex: " + title);
+
         return new Plex_Artists(ratingKey,key,guid,type,title,summary,index,thumb,art,addedAt,updatedAt,Genre, Country);
     }
 

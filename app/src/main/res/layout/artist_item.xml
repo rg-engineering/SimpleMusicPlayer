@@ -21,15 +21,56 @@
         android:paddingBottom="10dp">
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/artist_Name"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_weight="8"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            card_view:layout_constraintEnd_toStartOf="@+id/artist_image"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/artist_Genre"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
             android:layout_weight="8"
             android:textSize="18sp"
             android:textStyle="bold"
             card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/artist_Name" />
+
+        <TextView
+            android:id="@+id/artist_Country"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            card_view:layout_constraintEnd_toStartOf="@+id/artist_image"
+            card_view:layout_constraintHorizontal_bias="0.194"
+            card_view:layout_constraintStart_toEndOf="@+id/artist_Genre"
+            card_view:layout_constraintTop_toBottomOf="@+id/artist_Name" />
+
+        <Button
+            android:id="@+id/artist_info_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:drawable/ic_menu_info_details"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/artist_image"
+            android:layout_width="63dp"
+            android:layout_height="53dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toStartOf="@+id/artist_info_button"
+            card_view:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
