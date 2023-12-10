@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.ArtistItem;
 import eu.rg_engineering.simplemusicplayer.ArtistItemsAdapter;
+import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
 import eu.rg_engineering.simplemusicplayer.MusicItem;
 import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
@@ -35,7 +36,7 @@ public class ArtistsFragment extends Fragment implements
     private RecyclerView rvArtistItems = null;
     private ArtistItemsAdapter ArtistItemsAdapter = null;
     ArrayList<ArtistItem> mArtists;
-    MusicData mMusicData;
+
 
     @Override
     public void ItemDeleted() {
@@ -49,8 +50,8 @@ public class ArtistsFragment extends Fragment implements
         try {
             rvArtistItems = (RecyclerView) root.findViewById(R.id.rvArtists);
 
-            mMusicData = new MusicData(getActivity());
-            mArtists=mMusicData.getArtistData();
+            MainActivity activity = (MainActivity) getActivity();
+            mArtists=activity.mMusicData.getArtistData();
 
             // Create adapter passing in the sample user data
             ArtistItemsAdapter = new ArtistItemsAdapter(mArtists,this);
@@ -101,22 +102,18 @@ public class ArtistsFragment extends Fragment implements
                 public void afterTextChanged(Editable s) {
 
                 }
-
             });
-
-
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());
         }
         return root;
-
-
     }
 
     public void ReadPlexArtistData(){
 
-        if (mMusicData!=null) {
-            mMusicData.ReadPlexArtistData();
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity.mMusicData!=null) {
+            activity.mMusicData.ReadPlexArtistData();
             Log.d(TAG, "plex data read ");
 
             getActivity().runOnUiThread(new Runnable() {
@@ -127,14 +124,7 @@ public class ArtistsFragment extends Fragment implements
                 }
             });
 
-
-
-
             Log.d(TAG, "adapter notified ");
         }
-
-
     }
-
-
 }

@@ -1,65 +1,57 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
-
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
-import eu.rg_engineering.simplemusicplayer.utils.OnDeleteArtistitemListener;
+import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 
 
-public class ArtistItemsAdapter extends
-        RecyclerView.Adapter<ArtistItemsAdapter.ViewHolder> implements
+public class TrackItemsAdapter extends
+        RecyclerView.Adapter<TrackItemsAdapter.ViewHolder> implements
         Filterable,
         ItemTouchHelperAdapter {
 
-    private String TAG = "ArtistItemsAdapter";
-    private List<ArtistItem> mItemsFiltered;
-    private List<ArtistItem> mItemsAll;
+    private String TAG = "TrackItemsAdapter";
+    private List<TrackItem> mItemsFiltered;
+    private List<TrackItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private OnDeleteArtistitemListener deleteListener;
+    private OnDeleteTrackitemListener deleteListener;
     private int mFilterIdx = 0;
     Context mContext;
-    ArtistItemsAdapter.ArtistItemsAdapterListener mCommunication;
+    TrackItemsAdapterListener mCommunication;
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
     }
 
-    public void updateItems(ArrayList<ArtistItem> mArtists) {
-        mItemsAll = mArtists;
+    public void updateItems(ArrayList<TrackItem> mTracks) {
+        mItemsAll = mTracks;
         UpdateData();
     }
 
-    public interface ArtistItemsAdapterListener {
-        void messageFromArtistItemsAdapter(String msg, String params);
+    public interface TrackItemsAdapterListener {
+        void messageFromTrackItemsAdapter(String msg, String params);
     }
-    public ArtistItemsAdapter(List<ArtistItem> items, OnDeleteArtistitemListener deleteListener) {
+    public TrackItemsAdapter(List<TrackItem> items, OnDeleteTrackitemListener deleteListener) {
         this.deleteListener = deleteListener;
-        mItemsFiltered = ArtistItem.createItemsList(0);
+        mItemsFiltered = TrackItem.createItemsList(0);
 
         mItemsAll = items;
         UpdateData();
@@ -71,7 +63,7 @@ public class ArtistItemsAdapter extends
 
         Log.d(TAG, "UpdateData called ");
         mItemsFiltered.clear();
-        for (ArtistItem item : mItemsAll) {
+        for (TrackItem item : mItemsAll) {
 
             //todo filter beachten???
             mItemsFiltered.add(item);
@@ -79,109 +71,33 @@ public class ArtistItemsAdapter extends
     }
     @NonNull
     @Override
-    public ArtistItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TrackItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View itemView = inflater.inflate(R.layout.artist_item, parent, false);
+        View itemView = inflater.inflate(R.layout.track_item, parent, false);
 
         // Return a new holder instance
-        ArtistItemsAdapter.ViewHolder viewHolder = new ArtistItemsAdapter.ViewHolder(itemView);
+        TrackItemsAdapter.ViewHolder viewHolder = new TrackItemsAdapter.ViewHolder(itemView);
 
-        mCommunication = (ArtistItemsAdapter.ArtistItemsAdapterListener) context;
+        mCommunication = (TrackItemsAdapterListener) context;
         mContext = context;
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ArtistItemsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull TrackItemsAdapter.ViewHolder viewHolder, int position) {
 // Get the data model based on position
-        ArtistItem item = mItemsFiltered.get(position);
+        TrackItem item = mItemsFiltered.get(position);
 
         Log.d(TAG, "onBindViewHolder called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
-        TextView genreTextView = viewHolder.genreTextView;
-        TextView countryTextView = viewHolder.countryTextView;
-        Button infoButton = viewHolder.infoButton;
-        ImageView imageImageView = viewHolder.imageImageView;
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
         }
-        if (genreTextView != null) {
-            genreTextView.setText(item.getGenre());
-        }
-        if (countryTextView != null) {
-            countryTextView.setText(item.getCountry());
-        }
-        if (infoButton != null) {
-            String infoSummery=item.getInfo();
-
-            if (infoSummery!=null && infoSummery.length()>0){
-                Log.d(TAG, "info Button should be visible ");
-                infoButton.setVisibility(View.VISIBLE);
-
-                infoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(TAG, "infoButton pressed position " + position);
-                        String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromArtistItemsAdapter("ShowInfo", info);
-                    }
-                });
-
-
-            }
-            else {
-                Log.d(TAG, "info Button should be invisible ");
-            }
-        }
-        if (imageImageView!=null){
-            String path2image=item.getPath2Image();
-
-            if (path2image!=null && path2image.length()>0) {
-                Log.d(TAG, "image view should be used ");
-
-                new DownloadImageTask(imageImageView) .execute(path2image);
-
-
-            }
-            else {
-                Log.d(TAG, "image view shouldn't be used ");
-            }
-        }
-
-
     }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView mImage;
-        public DownloadImageTask(ImageView image) {
-            this.mImage = image;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String fullURL = "http://192.168.3.21:32400"+urls[0]+"?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ";
-            Bitmap icon = null;
-
-            Log.d("TAG", "get image from " + fullURL);
-
-            try {
-                InputStream in = new java.net.URL(fullURL).openStream();
-                icon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
-                e.printStackTrace();
-            }
-            return icon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            mImage.setImageBitmap(result);
-        }
-    }
-
 
     @Override
     public int getItemCount() {
@@ -209,8 +125,8 @@ public class ArtistItemsAdapter extends
         Filter oRet = null;
 
         switch (mFilterIdx) {
-            case 1: // artist name filter
-                oRet = filterArtist;
+            case 1: // track name filter
+                oRet = filterTrack;
                 break;
 
             default:
@@ -222,22 +138,22 @@ public class ArtistItemsAdapter extends
         return oRet;
     }
 
-    Filter filterArtist = new Filter() {
+    Filter filterTrack = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            List<ArtistItem> filteredList = new ArrayList<>();
+            List<TrackItem> filteredList = new ArrayList<>();
 
             if (constraint.toString().isEmpty()) {
                 Log.d(TAG, "no filter set " + mItemsAll.size());
                 filteredList.addAll(mItemsAll);
 
             } else {
-                Log.d(TAG, "artist filter set " + constraint.toString() + " " + mItemsAll.size());
+                Log.d(TAG, "track filter set " + constraint.toString() + " " + mItemsAll.size());
 
-                for (ArtistItem item : mItemsAll) {
+                for (TrackItem item : mItemsAll) {
 
-                    Log.d(TAG, "artist filter compare " + item.getName().toLowerCase() + " ?= " + constraint.toString().toLowerCase());
+                    Log.d(TAG, "track filter compare " + item.getName().toLowerCase() + " ?= " + constraint.toString().toLowerCase());
 
                     if (item.getName().toLowerCase().contains(constraint.toString().toLowerCase())) {
                         filteredList.add(item);
@@ -254,7 +170,7 @@ public class ArtistItemsAdapter extends
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mItemsFiltered.clear();
 
-            mItemsFiltered.addAll((Collection<? extends ArtistItem>) results.values);
+            mItemsFiltered.addAll((Collection<? extends TrackItem>) results.values);
 
             notifyDataSetChanged();
         }
@@ -297,10 +213,7 @@ public class ArtistItemsAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-        public TextView genreTextView;
-        public TextView countryTextView;
-        public Button infoButton;
-        public ImageView imageImageView;
+
 
         GestureDetector mGestureDetector;
 
@@ -311,11 +224,8 @@ public class ArtistItemsAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            nameTextView = (TextView) itemView.findViewById(R.id.artist_Name);
-            genreTextView = (TextView) itemView.findViewById(R.id.artist_Genre);
-            countryTextView = (TextView) itemView.findViewById(R.id.artist_Country);
-            infoButton = (Button) itemView.findViewById(R.id.artist_info_button);
-            imageImageView = (ImageView) itemView.findViewById(R.id.artist_image);
+            nameTextView = (TextView) itemView.findViewById(R.id.track_Name);
+
 
 
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
@@ -376,7 +286,7 @@ public class ArtistItemsAdapter extends
         return sRet;
     }
 
-    public void ChangeItem(int index, ArtistItem item) {
+    public void ChangeItem(int index, TrackItem item) {
         Log.d(TAG, "change item " + item.getName());
         mItemsFiltered.set(index, item);
 
@@ -389,7 +299,7 @@ public class ArtistItemsAdapter extends
 
     }
 
-    public void AddItem(ArtistItem item) {
+    public void AddItem(TrackItem item) {
         Log.d(TAG, "add item " + item.getName());
 
         mItemsAll.add(item);
@@ -400,7 +310,7 @@ public class ArtistItemsAdapter extends
     }
 
 
-    private int FindItemInList(List<ArtistItem> list, String id) {
+    private int FindItemInList(List<TrackItem> list, String id) {
         int nRet = -1;
 
         try {

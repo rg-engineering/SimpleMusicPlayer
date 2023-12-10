@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import eu.rg_engineering.simplemusicplayer.AlbumItem;
 import eu.rg_engineering.simplemusicplayer.ArtistItem;
 import eu.rg_engineering.simplemusicplayer.MusicItem;
 import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindArtists;
+import eu.rg_engineering.simplemusicplayer.TrackItem;
 
 public class MusicData  {
 
@@ -76,7 +78,51 @@ public class MusicData  {
         }
 
     }
+    //======================================================================================================================
 
+    public ArrayList<AlbumItem> getAlbumData() {
+
+        ArrayList<AlbumItem> albums;
+        //albums = getServerAlbumData();
+        //if (albums.size() == 0) {
+        //    albums = getLocalAlbumData();
+        //}
+        //if (albums.size() == 0) {
+            albums = getDummyAlbumData(7);
+        //}
+
+        return albums;
+    }
+
+    private ArrayList<AlbumItem> getDummyAlbumData(int count) {
+        ArrayList<AlbumItem> albums = AlbumItem.createItemsList(count);
+
+        return albums;
+    }
+
+    //======================================================================================================================
+
+    public ArrayList<TrackItem> getTrackData() {
+
+        ArrayList<TrackItem> tracks;
+        //tracks = getServerTrackData();
+        //if (tracks.size() == 0) {
+        //    tracks = getLocalTracksData();
+        //}
+        //if (tracks.size() == 0) {
+        tracks = getDummyTrackData(7);
+        //}
+
+        return tracks;
+    }
+
+    private ArrayList<TrackItem> getDummyTrackData(int count) {
+        ArrayList<TrackItem> tracks = TrackItem.createItemsList(count);
+
+        return tracks;
+    }
+
+    //=======================================================================================================================
     private ArrayList<ArtistItem> getLocalMusicData() {
 
 

@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity
         implements
             MusicItemsAdapter.MusicItemsAdapterListener,
             ArtistItemsAdapter.ArtistItemsAdapterListener,
+        AlbumItemsAdapter.AlbumItemsAdapterListener,
+        TrackItemsAdapter.TrackItemsAdapterListener,
             HomeFragment_old.HomeFragmentListener ,
             Plex_FindArtists.PlexFindArtistListener {
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private Timer progressTimer;
     //private discoverServer  discover;
     //private ScanNASFolder scanNASFolder;
+    public MusicData mMusicData;
 
     private boolean OnlyOneSong = true;
 
@@ -111,8 +114,26 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, params,Toast.LENGTH_LONG).show();
                 break;
         }
-
     }
+    @Override
+    public void messageFromAlbumItemsAdapter(String msg, String params) {
+        Log.d(TAG, "got message from AlbumFragment " + msg);
+    }
+    @Override
+    public void messageFromTrackItemsAdapter(String msg, String params) {
+        Log.d(TAG, "got message from TrackFragment " + msg);
+    }
+    @Override
+    public void messageFromPlexFindArtist(String msg) {
+        Log.d(TAG, "got message from PlexFindArtist " + msg);
+        ArtistsFragment artistfragment = FindArtistFragment();
+        if (artistfragment != null) {
+            artistfragment.ReadPlexArtistData();
+        } else {
+            Log.e(TAG, "artistfragment not found");
+        }
+    }
+
 
     /*
         public void replaceFragment(String FragmentName) {
@@ -136,6 +157,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        mMusicData = new MusicData(this);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -373,18 +397,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void messageFromPlexFindArtist(String msg) {
-        Log.d(TAG, "got message from PlexFindArtist " + msg);
-        ArtistsFragment artistfragment = FindArtistFragment();
-        if (artistfragment != null) {
-            artistfragment.ReadPlexArtistData();
-        } else {
-            Log.e(TAG, "artistfragment not found");
-        }
 
-
-    }
 
 
     class UpdateProgressTask extends TimerTask {

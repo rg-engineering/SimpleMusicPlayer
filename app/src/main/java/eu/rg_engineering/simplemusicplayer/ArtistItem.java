@@ -79,7 +79,7 @@ public class ArtistItem implements Parcelable  {
         ArrayList<ArtistItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new ArtistItem("test"+i, "Jazz", "Germany", "", "no info"));
+            items.add(new ArtistItem("artist"+i, "Jazz", "Germany", "", "no info"));
         }
         return items;
     }
