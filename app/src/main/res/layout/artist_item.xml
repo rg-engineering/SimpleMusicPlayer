@@ -60,7 +60,8 @@
             android:background="@android:drawable/ic_menu_info_details"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            card_view:layout_constraintTop_toTopOf="parent"
+            android:visibility="invisible"/>
 
         <ImageView
             android:id="@+id/artist_image"

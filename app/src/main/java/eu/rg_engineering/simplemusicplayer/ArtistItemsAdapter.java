@@ -1,6 +1,10 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -13,11 +17,13 @@ import android.widget.Filterable;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -115,6 +121,18 @@ public class ArtistItemsAdapter extends
 
             if (infoSummery!=null && infoSummery.length()>0){
                 Log.d(TAG, "info Button should be visible ");
+                infoButton.setVisibility(View.VISIBLE);
+
+                infoButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(TAG, "infoButton pressed position " + position);
+                        String info = mItemsFiltered.get(position).getInfo();
+                        mCommunication.messageFromArtistItemsAdapter("ShowInfo", info);
+                    }
+                });
+
+
             }
             else {
                 Log.d(TAG, "info Button should be invisible ");
@@ -125,6 +143,10 @@ public class ArtistItemsAdapter extends
 
             if (path2image!=null && path2image.length()>0) {
                 Log.d(TAG, "image view should be used ");
+
+                new DownloadImageTask(imageImageView) .execute(path2image);
+
+
             }
             else {
                 Log.d(TAG, "image view shouldn't be used ");
@@ -134,7 +156,32 @@ public class ArtistItemsAdapter extends
 
     }
 
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
 
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = "http://192.168.3.21:32400"+urls[0]+"?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ";
+            Bitmap mIcon11 = null;
+
+            Log.d("TAG", "get image from " + urldisplay);
+
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 
 
     @Override

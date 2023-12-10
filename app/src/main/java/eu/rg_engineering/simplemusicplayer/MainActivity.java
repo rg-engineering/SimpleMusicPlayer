@@ -104,6 +104,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void messageFromArtistItemsAdapter(String msg, String params) {
         Log.d(TAG, "got message from ArtistFragment " + msg + " " + params);
+
+        switch (msg) {
+
+            case "ShowInfo":
+                Toast.makeText(this, params,Toast.LENGTH_LONG).show();
+                break;
+        }
+
     }
 
     /*
