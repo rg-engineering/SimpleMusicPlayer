@@ -29,6 +29,7 @@ public class Plex_FindData extends Thread {
     private static final String ns = null;
     private String  mSearchMode="Artists";
     private String mArtist4Album="";
+    private String mAlbum4Track="";
 
 
     PlexFindArtistListener mCommunication;
@@ -47,7 +48,9 @@ public class Plex_FindData extends Thread {
     public void setArtist4AlbumFilter(String artist4album){
         mArtist4Album = artist4album;
     }
-
+    public void setAlbum4TrackFilter(String album4track){
+        mAlbum4Track = album4track;
+    }
 
     public void run() {
         //started in separate thread
@@ -57,7 +60,7 @@ public class Plex_FindData extends Thread {
                 startFindArtists();
                 break;
             case "Albums":
-                Log.d(TAG, "start find albums ");
+                Log.d(TAG, "start find albums for " + mArtist4Album);
                 startFindAlbums();
                 break;
             case "Tracks":
@@ -78,8 +81,8 @@ public class Plex_FindData extends Thread {
 
     public void startFindAlbums() {
         try {
-            //todo muss noch übergeebn werden
-            String artistID="47871";
+
+            String artistID= mArtist4Album;
 
             URL url = new URL("http://" + IP + ":" + Port + "/library/sections/2/all?artist.id=" + artistID + "&type=9&X-Plex-Token=" + Token);
             downloadXml(url);
@@ -89,8 +92,8 @@ public class Plex_FindData extends Thread {
     }
     public void startFindTracks() {
         try {
-            //todo muss noch übergeebn werden
-            String albumID="49906";
+
+            String albumID=mAlbum4Track;
 
             URL url = new URL("http://" + IP + ":" + Port + "/library/metadata/" + albumID + "/children?X-Plex-Token=" + Token);
             downloadXml(url);

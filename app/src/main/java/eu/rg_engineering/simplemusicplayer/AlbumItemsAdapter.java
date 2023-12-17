@@ -39,6 +39,7 @@ public class AlbumItemsAdapter extends
     Context mContext;
     AlbumItemsAdapterListener mCommunication;
 
+
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
     }
@@ -95,6 +96,8 @@ public class AlbumItemsAdapter extends
 
         Log.d(TAG, "onBindViewHolder called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
+
+        viewHolder.Plex_RatingKey=item.getPlexRatingKey();
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
@@ -216,6 +219,7 @@ public class AlbumItemsAdapter extends
         // for any view that will be set as you render a row
         public TextView nameTextView;
 
+        public int Plex_RatingKey;
 
         GestureDetector mGestureDetector;
 
@@ -251,7 +255,7 @@ public class AlbumItemsAdapter extends
             Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
 
             int pos =this.getAdapterPosition();
-            mCommunication.messageFromAlbumItemsAdapter("AlbumSelected", String.valueOf(pos));
+            mCommunication.messageFromAlbumItemsAdapter("AlbumSelected", String.valueOf(Plex_RatingKey));
             return true;
         }
 

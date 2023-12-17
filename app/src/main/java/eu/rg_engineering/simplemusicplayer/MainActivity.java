@@ -145,6 +145,8 @@ public class MainActivity extends AppCompatActivity
         switch (msg) {
             case "AlbumSelected":
 
+                mMusicData.SetAlbum4Track(params);
+
                 if (mTracksFragment==null){
                     mTracksFragment=new TracksFragment();
                 }

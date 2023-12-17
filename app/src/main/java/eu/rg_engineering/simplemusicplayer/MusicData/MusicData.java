@@ -25,6 +25,7 @@ public class MusicData  {
     private Plex_FindData mPlex_FindData=null;
 
     private String mArtist4Album="";
+    private String mAlbum4Track="";
 
     public MusicData(Activity activity) {
         mActivity = activity;
@@ -80,8 +81,9 @@ public class MusicData  {
                 String country = mPlex_FindData.mArtists.get(i).Country;
                 String path2image = mPlex_FindData.mArtists.get(i).thumb;
                 String summery = mPlex_FindData.mArtists.get(i).summary;
+                int ratingKey = Integer.parseInt(mPlex_FindData.mArtists.get(i).ratingKey);
 
-                ArtistItem artist = new ArtistItem(name, genre, country, path2image, summery);
+                ArtistItem artist = new ArtistItem(name, genre, country, path2image, summery,ratingKey);
                 mLocalArtists.add(artist);
             }
         }
@@ -96,8 +98,9 @@ public class MusicData  {
             for (int i = 0; i< mPlex_FindData.mAlbums.size(); i++) {
 
                 String name = mPlex_FindData.mAlbums.get(i).title;
+                int ratingKey = Integer.parseInt(mPlex_FindData.mAlbums.get(i).ratingKey);
 
-                AlbumItem album = new AlbumItem(name);
+                AlbumItem album = new AlbumItem(name,ratingKey);
                 mLocalAlbums.add(album);
             }
         }
@@ -156,6 +159,7 @@ public class MusicData  {
         mPlex_FindData = new Plex_FindData(mActivity);
         //}
         mPlex_FindData.setMode("Tracks");
+        mPlex_FindData.setAlbum4TrackFilter(mAlbum4Track);
 
         mPlex_FindData.start();
 
@@ -166,6 +170,10 @@ public class MusicData  {
 
     public void SetArtist4Album(String artist){
         mArtist4Album= artist;
+    }
+
+    public void SetAlbum4Track(String album){
+        mAlbum4Track= album;
     }
 
 
@@ -195,9 +203,11 @@ public class MusicData  {
 
     public ArrayList<TrackItem> getTrackData() {
 
-        ArrayList<TrackItem> tracks;
-        tracks = getServerTrackData();
-        if (tracks.size() == 0) {
+        ArrayList<TrackItem> tracks=null;
+        if (mAlbum4Track.length()>0) {
+            tracks = getServerTrackData();
+        }
+        if (tracks==null || tracks.size() == 0) {
             tracks = getLocalTrackData();
         }
         if (tracks.size() == 0) {
@@ -314,12 +324,12 @@ public class MusicData  {
 
 
                 if (!ArtistExists(Artist)) {
-                    ArtistItem artist = new ArtistItem(Artist, "", "", "", "");
+                    ArtistItem artist = new ArtistItem(Artist, "", "", "", "",-1);
                     mLocalArtists.add(artist);
                 }
 
                 if (!AlbumExists(Album)) {
-                    AlbumItem album = new AlbumItem(Album);
+                    AlbumItem album = new AlbumItem(Album, -1);
                     mLocalAlbums.add(album);
                 }
 

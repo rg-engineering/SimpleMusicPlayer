@@ -106,6 +106,8 @@ public class ArtistItemsAdapter extends
         Button infoButton = viewHolder.infoButton;
         ImageView imageImageView = viewHolder.imageImageView;
 
+        viewHolder.Plex_RatingKey=item.getPlexRatingKey();
+
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
         }
@@ -302,6 +304,8 @@ public class ArtistItemsAdapter extends
         public Button infoButton;
         public ImageView imageImageView;
 
+        public int Plex_RatingKey;
+
         GestureDetector mGestureDetector;
 
         // We also create a constructor that accepts the entire item row
@@ -338,7 +342,7 @@ public class ArtistItemsAdapter extends
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
             int pos =this.getAdapterPosition();
-            mCommunication.messageFromArtistItemsAdapter("ArtistSelected", String.valueOf(pos));
+            mCommunication.messageFromArtistItemsAdapter("ArtistSelected", String.valueOf(Plex_RatingKey));
             return true;
         }
 

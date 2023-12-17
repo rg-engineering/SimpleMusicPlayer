@@ -12,15 +12,19 @@ public class AlbumItem implements Parcelable  {
 
     private String mID;
     private String mName;
+    private int mPlex_ratingKey=47872;
 
 
     protected AlbumItem(Parcel in) {
         mID = in.readString();
         mName = in.readString();
     }
-    public AlbumItem(String name ) {
+    public AlbumItem(String name, int plex_ratingkey ) {
         mID = UUID.randomUUID().toString();
         mName = name;
+        if (plex_ratingkey>0){
+            mPlex_ratingKey=plex_ratingkey;
+        }
     }
 
     public String getId() {
@@ -29,7 +33,9 @@ public class AlbumItem implements Parcelable  {
     public String getName() {
         return mName;
     }
-
+    public int getPlexRatingKey() {
+        return mPlex_ratingKey;
+    }
 
     public static final Creator<AlbumItem> CREATOR = new Creator<AlbumItem>() {
         @Override
@@ -51,13 +57,14 @@ public class AlbumItem implements Parcelable  {
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(mID);
         parcel.writeString(mName);
+        parcel.writeInt(mPlex_ratingKey);
     }
 
     public static ArrayList<AlbumItem> createItemsList(int numItems) {
         ArrayList<AlbumItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new AlbumItem("album"+i));
+            items.add(new AlbumItem("album"+i,-1));
         }
         return items;
     }
@@ -69,6 +76,8 @@ public class AlbumItem implements Parcelable  {
         sRet += System.getProperty("line.separator");
         sRet += mName;
         sRet += System.getProperty("line.separator");
+        sRet += mPlex_ratingKey;
+        sRet += System.getProperty("line.separator");
 
         return sRet;
     }
@@ -78,6 +87,7 @@ public class AlbumItem implements Parcelable  {
 
         sRet += "," + mID;
         sRet += "," + mName;
+        sRet += "," + mPlex_ratingKey;
         sRet += System.getProperty("line.separator");
         return sRet;
     }

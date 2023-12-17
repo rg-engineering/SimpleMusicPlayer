@@ -16,18 +16,22 @@ public class ArtistItem implements Parcelable  {
     private String mCountry;
     private String mPath2Image;
     private String mSummery;
+    private int mPlex_ratingKey=46267;
 
     protected ArtistItem(Parcel in) {
         mID = in.readString();
         mName = in.readString();
     }
-    public ArtistItem(String name, String genre, String country, String path2image, String summery ) {
+    public ArtistItem(String name, String genre, String country, String path2image, String summery, int plex_ratingkey ) {
         mID = UUID.randomUUID().toString();
         mName = name;
         mGenre = genre;
         mCountry=country;
         mPath2Image = path2image;
         mSummery = summery;
+        if (plex_ratingkey>0){
+            mPlex_ratingKey=plex_ratingkey;
+        }
     }
 
     public String getId() {
@@ -47,6 +51,9 @@ public class ArtistItem implements Parcelable  {
     }
     public String getInfo() {
         return mSummery;
+    }
+    public int getPlexRatingKey() {
+        return mPlex_ratingKey;
     }
 
     public static final Creator<ArtistItem> CREATOR = new Creator<ArtistItem>() {
@@ -73,13 +80,14 @@ public class ArtistItem implements Parcelable  {
         parcel.writeString(mCountry);
         parcel.writeString(mPath2Image);
         parcel.writeString(mSummery);
+        parcel.writeInt(mPlex_ratingKey);
     }
 
     public static ArrayList<ArtistItem> createItemsList(int numItems) {
         ArrayList<ArtistItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new ArtistItem("artist"+i, "Jazz", "Germany", "", "no info"));
+            items.add(new ArtistItem("artist"+i, "Jazz", "Germany", "", "no info",-1));
         }
         return items;
     }
@@ -99,6 +107,8 @@ public class ArtistItem implements Parcelable  {
         sRet += System.getProperty("line.separator");
         sRet += mSummery;
         sRet += System.getProperty("line.separator");
+        sRet += mPlex_ratingKey;
+        sRet += System.getProperty("line.separator");
         return sRet;
     }
 
@@ -111,6 +121,7 @@ public class ArtistItem implements Parcelable  {
         sRet += "," + mCountry;
         sRet += "," + mPath2Image;
         sRet += "," + mSummery;
+        sRet += "," + mPlex_ratingKey;
         sRet += System.getProperty("line.separator");
         return sRet;
     }
