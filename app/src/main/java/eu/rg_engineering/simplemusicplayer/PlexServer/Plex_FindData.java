@@ -2,7 +2,7 @@ package eu.rg_engineering.simplemusicplayer.PlexServer;
 
 import android.app.Activity;
 import android.util.Log;
-import org.xmlpull.v1.XmlPullParser;
+
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -12,10 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
 
-
-public class Plex_FindArtists extends Thread {
+public class Plex_FindData extends Thread {
 
     private String TAG = "plex_findArtists";
     private String IP = "192.168.3.21";
@@ -24,9 +22,14 @@ public class Plex_FindArtists extends Thread {
     //private String Token = "eVp_3aBs33Jmdst9ifxmU";
     private String LibID = "2";
 
-    public List<Plex_Artists> mArtists = null;
+    public List<Plex_Artist> mArtists = null;
+    public List<Plex_Album> mAlbums = null;
+    public List<Plex_Track> mTracks = null;
 
     private static final String ns = null;
+    private String  mSearchMode="Artists";
+    private String mArtist4Album="";
+
 
     PlexFindArtistListener mCommunication;
 
@@ -34,20 +37,62 @@ public class Plex_FindArtists extends Thread {
     public interface PlexFindArtistListener {
         void messageFromPlexFindArtist(String msg);
     }
-    public Plex_FindArtists(Activity activity) {
+    public Plex_FindData(Activity activity) {
         mCommunication = (PlexFindArtistListener) activity;
     }
 
+    public void setMode(String mode){
+        mSearchMode = mode;
+    }
+    public void setArtist4AlbumFilter(String artist4album){
+        mArtist4Album = artist4album;
+    }
+
+
     public void run() {
         //started in separate thread
-        Log.d(TAG, "start find artists ");
-
-        startFindArtists();
+        switch (mSearchMode) {
+            case "Artists":
+                Log.d(TAG, "start find artists ");
+                startFindArtists();
+                break;
+            case "Albums":
+                Log.d(TAG, "start find albums ");
+                startFindAlbums();
+                break;
+            case "Tracks":
+                Log.d(TAG, "start find tracks ");
+                startFindTracks();
+                break;
+        }
     }
 
     public void startFindArtists() {
         try {
             URL url = new URL("http://" + IP + ":" + Port + "/library/sections/" + LibID + "/all?X-Plex-Token=" + Token);
+            downloadXml(url);
+        } catch (MalformedURLException ex) {
+            Log.e(TAG, "wrong url: " + ex.toString());
+        }
+    }
+
+    public void startFindAlbums() {
+        try {
+            //todo muss noch übergeebn werden
+            String artistID="47871";
+
+            URL url = new URL("http://" + IP + ":" + Port + "/library/sections/2/all?artist.id=" + artistID + "&type=9&X-Plex-Token=" + Token);
+            downloadXml(url);
+        } catch (MalformedURLException ex) {
+            Log.e(TAG, "wrong url: " + ex.toString());
+        }
+    }
+    public void startFindTracks() {
+        try {
+            //todo muss noch übergeebn werden
+            String albumID="49906";
+
+            URL url = new URL("http://" + IP + ":" + Port + "/library/metadata/" + albumID + "/children?X-Plex-Token=" + Token);
             downloadXml(url);
         } catch (MalformedURLException ex) {
             Log.e(TAG, "wrong url: " + ex.toString());
@@ -73,17 +118,54 @@ public class Plex_FindArtists extends Thread {
     private void loadXmlFromNetwork(URL url) throws XmlPullParserException, IOException {
         InputStream stream = null;
         // Instantiates the parser.
-        Plex_ArtistsXmlParser artistsXmlParser = new Plex_ArtistsXmlParser();
+
+        Plex_ArtistXmlParser artistsXmlParser=null;
+        Plex_AlbumXmlParser albumsXmlParser=null;
+        Plex_TrackXmlParser tracksXmlParser=null;
+
+        switch (mSearchMode) {
+            case "Artists":
+                artistsXmlParser = new Plex_ArtistXmlParser();
+                break;
+            case "Albums":
+                albumsXmlParser = new Plex_AlbumXmlParser();
+                break;
+            case "Tracks":
+                tracksXmlParser = new Plex_TrackXmlParser();
+                break;
+        }
+
 
 
         StringBuilder htmlString = new StringBuilder();
         try {
             stream = downloadUrl(url);
-            mArtists = artistsXmlParser.parse(stream);
 
-            Log.d(TAG, "parsed artists " +mArtists.size());
+            switch (mSearchMode) {
+                case "Artists":
+                    mArtists = artistsXmlParser.parse(stream);
 
-            mCommunication.messageFromPlexFindArtist("got all artists ");
+                    Log.d(TAG, "parsed artists " +mArtists.size());
+
+                    mCommunication.messageFromPlexFindArtist("got all artists ");
+                    break;
+                case "Albums":
+                    mAlbums = albumsXmlParser.parse(stream);
+
+                    Log.d(TAG, "parsed albums " +mAlbums.size());
+
+                    mCommunication.messageFromPlexFindArtist("got all albums ");
+                    break;
+                case "Tracks":
+                    mTracks = tracksXmlParser.parse(stream);
+
+                    Log.d(TAG, "parsed tracks " +mTracks.size());
+
+                    mCommunication.messageFromPlexFindArtist("got all tracks ");
+                    break;
+            }
+
+
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {

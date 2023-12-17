@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/JuicyGreen">
 
+    <FrameLayout
+        android:id="@+id/mainframeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp" />
+
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"

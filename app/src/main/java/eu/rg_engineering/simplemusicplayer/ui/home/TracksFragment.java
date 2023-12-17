@@ -106,5 +106,24 @@ public class TracksFragment extends Fragment implements
 
 
     }
+    public void ReadPlexTrackData(){
 
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity.mMusicData!=null) {
+            activity.mMusicData.ReadPlexTrackData();
+            Log.d(TAG, "plex data read ");
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mTracks != null) {
+                        TrackItemsAdapter.updateItems(mTracks);
+                        TrackItemsAdapter.notifyDatasetChanged();
+                    }
+                }
+            });
+
+            Log.d(TAG, "adapter notified ");
+        }
+    }
 }

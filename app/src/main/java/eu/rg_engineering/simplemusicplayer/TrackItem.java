@@ -7,20 +7,32 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class TrackItem implements Parcelable  {
 
     private String mID;
     private String mName;
-
+    private String mAlbum;
+    private String mArtist;
+    private String mFileName;
+    private int mDuration;
+    private int mProgress;
+    private long mCurrentPlaytime;
 
     protected TrackItem(Parcel in) {
         mID = in.readString();
         mName = in.readString();
     }
-    public TrackItem(String name ) {
+    public TrackItem(String name, String album, String artist, String filename, int duration ) {
         mID = UUID.randomUUID().toString();
         mName = name;
+        mAlbum = album;
+        mArtist= artist;
+        mFileName=filename;
+        mDuration=duration;
+        mProgress = 0;
+        mCurrentPlaytime = 0;
     }
 
     public String getId() {
@@ -29,7 +41,38 @@ public class TrackItem implements Parcelable  {
     public String getName() {
         return mName;
     }
+    public String getAlbum() {
+        return mAlbum;
+    }
+    public String getArtist() {
+        return mArtist;
+    }
+    public String getFileName() {
+        return mFileName;
+    }
+    public String getDuration() {
+        String sDuration = Convert2Timestring(mDuration);
+        return sDuration;
+    }
+    public int getProgress() {
+        return mProgress;
+    }
 
+    public void setCurrentPlaytime(long playtime) {
+
+        //Log.d(TAG, "current play time " + playtime + " of " + mDuration);
+
+        mCurrentPlaytime = playtime;
+
+        long ntemp = mCurrentPlaytime * 100 / (long) mDuration;
+
+        mProgress = (int) ntemp;
+    }
+
+    public String getCurrentPlaytime() {
+        String sCurrentPlaytime = Convert2Timestring(mCurrentPlaytime);
+        return sCurrentPlaytime;
+    }
 
     public static final Creator<TrackItem> CREATOR = new Creator<TrackItem>() {
         @Override
@@ -51,13 +94,17 @@ public class TrackItem implements Parcelable  {
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(mID);
         parcel.writeString(mName);
+        parcel.writeString(mAlbum);
+        parcel.writeString(mArtist);
+        parcel.writeString(mFileName);
+        parcel.writeInt(mDuration);
     }
 
     public static ArrayList<TrackItem> createItemsList(int numItems) {
         ArrayList<TrackItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new TrackItem("track"+i));
+            items.add(new TrackItem("track"+i,"","","",0));
         }
         return items;
     }
@@ -69,6 +116,14 @@ public class TrackItem implements Parcelable  {
         sRet += System.getProperty("line.separator");
         sRet += mName;
         sRet += System.getProperty("line.separator");
+        sRet += mAlbum;
+        sRet += System.getProperty("line.separator");
+        sRet += mArtist;
+        sRet += System.getProperty("line.separator");
+        sRet += mFileName;
+        sRet += System.getProperty("line.separator");
+        sRet += mDuration;
+        sRet += System.getProperty("line.separator");
 
         return sRet;
     }
@@ -78,7 +133,27 @@ public class TrackItem implements Parcelable  {
 
         sRet += "," + mID;
         sRet += "," + mName;
+        sRet += "," + mAlbum;
+        sRet += "," + mArtist;
+        sRet += "," + mFileName;
+        sRet += "," + mDuration;
         sRet += System.getProperty("line.separator");
+
+        return sRet;
+    }
+
+    String Convert2Timestring(long duration) {
+        String sRet = "";
+        if (duration > 0) {
+            {
+                sRet = String.format("%02d:%02d:%02d",
+                        TimeUnit.MILLISECONDS.toHours(duration),
+                        TimeUnit.MILLISECONDS.toMinutes(duration) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+                        TimeUnit.MILLISECONDS.toSeconds(duration) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+            }
+        }
         return sRet;
     }
 }

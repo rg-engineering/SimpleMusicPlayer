@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Plex_ArtistsXmlParser {
+public class Plex_ArtistXmlParser {
     private String TAG = "Plex_ArtistsXmlParser";
     private static final String ns = null;
 
@@ -62,7 +62,7 @@ public class Plex_ArtistsXmlParser {
         }
         return artists;
     }
-    private Plex_Artists readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Plex_Artist readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, "Directory");
         String ratingKey="";
         String key="";
@@ -109,7 +109,7 @@ public class Plex_ArtistsXmlParser {
 
         Log.d(TAG, "new artist from plex: " + title);
 
-        return new Plex_Artists(ratingKey,key,guid,type,title,summary,index,thumb,art,addedAt,updatedAt,Genre, Country);
+        return new Plex_Artist(ratingKey,key,guid,type,title,summary,index,thumb,art,addedAt,updatedAt,Genre, Country);
     }
 
     // Processes title tags in the feed.

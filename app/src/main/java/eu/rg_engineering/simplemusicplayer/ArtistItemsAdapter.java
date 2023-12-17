@@ -337,8 +337,8 @@ public class ArtistItemsAdapter extends
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
-
-
+            int pos =this.getAdapterPosition();
+            mCommunication.messageFromArtistItemsAdapter("ArtistSelected", String.valueOf(pos));
             return true;
         }
 

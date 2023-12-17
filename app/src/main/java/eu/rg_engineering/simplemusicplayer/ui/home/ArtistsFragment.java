@@ -119,8 +119,10 @@ public class ArtistsFragment extends Fragment implements
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ArtistItemsAdapter.updateItems(mArtists);
-                    ArtistItemsAdapter.notifyDatasetChanged();
+                    if (mArtists != null) {
+                        ArtistItemsAdapter.updateItems(mArtists);
+                        ArtistItemsAdapter.notifyDatasetChanged();
+                    }
                 }
             });
 

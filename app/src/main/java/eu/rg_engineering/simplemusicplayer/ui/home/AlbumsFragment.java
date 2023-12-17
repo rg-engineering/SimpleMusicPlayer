@@ -109,5 +109,24 @@ public class AlbumsFragment extends Fragment implements
 
 
     }
+    public void ReadPlexAlbumData(){
 
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity.mMusicData!=null) {
+            activity.mMusicData.ReadPlexAlbumData();
+            Log.d(TAG, "plex data read ");
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mAlbums != null) {
+                        AlbumItemsAdapter.updateItems(mAlbums);
+                        AlbumItemsAdapter.notifyDatasetChanged();
+                    }
+                }
+            });
+
+            Log.d(TAG, "adapter notified ");
+        }
+    }
 }

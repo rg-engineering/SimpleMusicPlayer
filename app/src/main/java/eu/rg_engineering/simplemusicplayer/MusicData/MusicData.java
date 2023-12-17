@@ -13,8 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import eu.rg_engineering.simplemusicplayer.AlbumItem;
 import eu.rg_engineering.simplemusicplayer.ArtistItem;
-import eu.rg_engineering.simplemusicplayer.MusicItem;
-import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindArtists;
+import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindData;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 
 public class MusicData  {
@@ -23,7 +22,9 @@ public class MusicData  {
 
     private Activity mActivity;
 
-    private Plex_FindArtists mPlex_FindArtists;
+    private Plex_FindData mPlex_FindData=null;
+
+    private String mArtist4Album="";
 
     public MusicData(Activity activity) {
         mActivity = activity;
@@ -53,8 +54,16 @@ public class MusicData  {
 
         ArrayList<ArtistItem> artists = getDummyArtistData(0);
 
-        mPlex_FindArtists = new Plex_FindArtists(mActivity);
-        mPlex_FindArtists.start();
+        if (mPlex_FindData != null && mPlex_FindData.isAlive()) {
+            mPlex_FindData.interrupt();
+        }
+
+        //if (mPlex_FindData==null) {
+        mPlex_FindData = new Plex_FindData(mActivity);
+        //}
+        mPlex_FindData.setMode("Artists");
+
+        mPlex_FindData.start();
 
         return artists;
     }
@@ -62,34 +71,116 @@ public class MusicData  {
     public void ReadPlexArtistData() {
         Log.d(TAG, "reading artist data from plex ");
 
-        if (mPlex_FindArtists!=null && mPlex_FindArtists.mArtists.size()>0){
+        if (mPlex_FindData !=null && mPlex_FindData.mArtists.size()>0){
 
-            for (int i=0; i<mPlex_FindArtists.mArtists.size();i++) {
+            for (int i = 0; i< mPlex_FindData.mArtists.size(); i++) {
 
-                String name = mPlex_FindArtists.mArtists.get(i).title;
-                String genre = mPlex_FindArtists.mArtists.get(i).Genre;
-                String country = mPlex_FindArtists.mArtists.get(i).Country;
-                String path2image = mPlex_FindArtists.mArtists.get(i).thumb;
-                String summery = mPlex_FindArtists.mArtists.get(i).summary;
+                String name = mPlex_FindData.mArtists.get(i).title;
+                String genre = mPlex_FindData.mArtists.get(i).Genre;
+                String country = mPlex_FindData.mArtists.get(i).Country;
+                String path2image = mPlex_FindData.mArtists.get(i).thumb;
+                String summery = mPlex_FindData.mArtists.get(i).summary;
 
                 ArtistItem artist = new ArtistItem(name, genre, country, path2image, summery);
                 mLocalArtists.add(artist);
             }
         }
-
+        mPlex_FindData.interrupt();
     }
+
+    public void ReadPlexAlbumData() {
+        Log.d(TAG, "reading album data from plex ");
+
+        if (mPlex_FindData !=null && mPlex_FindData.mAlbums.size()>0){
+
+            for (int i = 0; i< mPlex_FindData.mAlbums.size(); i++) {
+
+                String name = mPlex_FindData.mAlbums.get(i).title;
+
+                AlbumItem album = new AlbumItem(name);
+                mLocalAlbums.add(album);
+            }
+        }
+        mPlex_FindData.interrupt();
+    }
+
+    public void ReadPlexTrackData() {
+        Log.d(TAG, "reading track data from plex ");
+
+        if (mPlex_FindData !=null && mPlex_FindData.mTracks.size()>0){
+
+            for (int i = 0; i< mPlex_FindData.mTracks.size(); i++) {
+
+                String name = mPlex_FindData.mTracks.get(i).title;
+                String album = mPlex_FindData.mTracks.get(i).parentTitle;
+                String artist = mPlex_FindData.mTracks.get(i).grandparentTitle;
+                String filename= "to do";
+                int duration = Integer.parseInt(mPlex_FindData.mTracks.get(i).duration);
+
+                TrackItem track = new TrackItem(name,album,artist,filename,duration);
+                mLocalTracks.add(track);
+            }
+        }
+        mPlex_FindData.interrupt();
+    }
+
+    private ArrayList<AlbumItem> getServerAlbumData() {
+
+        ArrayList<AlbumItem> albums = getDummyAlbumData(0);
+
+        if (mPlex_FindData != null && mPlex_FindData.isAlive()) {
+            mPlex_FindData.interrupt();
+        }
+
+        //if (mPlex_FindData ==null) {
+        mPlex_FindData = new Plex_FindData(mActivity);
+        //}
+        mPlex_FindData.setMode("Albums");
+        mPlex_FindData.setArtist4AlbumFilter(mArtist4Album);
+
+
+        mPlex_FindData.start();
+
+        return albums;
+    }
+
+    private ArrayList<TrackItem> getServerTrackData() {
+
+        ArrayList<TrackItem> artists = getDummyTrackData(0);
+
+        if (mPlex_FindData != null && mPlex_FindData.isAlive()) {
+            mPlex_FindData.interrupt();
+        }
+
+        //if (mPlex_FindData==null) {
+        mPlex_FindData = new Plex_FindData(mActivity);
+        //}
+        mPlex_FindData.setMode("Tracks");
+
+        mPlex_FindData.start();
+
+        return artists;
+    }
+
     //======================================================================================================================
+
+    public void SetArtist4Album(String artist){
+        mArtist4Album= artist;
+    }
+
 
     public ArrayList<AlbumItem> getAlbumData() {
 
-        ArrayList<AlbumItem> albums;
-        //albums = getServerAlbumData();
-        //if (albums.size() == 0) {
-        //    albums = getLocalAlbumData();
-        //}
-        //if (albums.size() == 0) {
+        ArrayList<AlbumItem> albums = null;
+        if (mArtist4Album.length()>0) {
+            albums = getServerAlbumData();
+        }
+        if (albums == null || albums.size() == 0) {
+            albums = getLocalAlbumData();
+        }
+        if (albums.size() == 0) {
             albums = getDummyAlbumData(7);
-        //}
+        }
 
         return albums;
     }
@@ -105,13 +196,13 @@ public class MusicData  {
     public ArrayList<TrackItem> getTrackData() {
 
         ArrayList<TrackItem> tracks;
-        //tracks = getServerTrackData();
-        //if (tracks.size() == 0) {
-        //    tracks = getLocalTracksData();
-        //}
-        //if (tracks.size() == 0) {
-        tracks = getDummyTrackData(7);
-        //}
+        tracks = getServerTrackData();
+        if (tracks.size() == 0) {
+            tracks = getLocalTrackData();
+        }
+        if (tracks.size() == 0) {
+            tracks = getDummyTrackData(7);
+        }
 
         return tracks;
     }
@@ -132,13 +223,27 @@ public class MusicData  {
         return mLocalArtists;
     }
 
+    private ArrayList<AlbumItem> getLocalAlbumData() {
+
+        return mLocalAlbums;
+    }
+
+    private ArrayList<TrackItem> getLocalTrackData() {
+
+        return mLocalTracks;
+    }
+
     public final Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
     ArrayList<ArtistItem> mLocalArtists;
+    ArrayList<AlbumItem> mLocalAlbums;
+    ArrayList<TrackItem> mLocalTracks;
 
     public void getAllLocalMusic(ContentResolver cr) {
 
         mLocalArtists = getDummyArtistData(0);
+        mLocalAlbums = getDummyAlbumData(0);
+        mLocalTracks = getDummyTrackData(0);
 
         Log.d(TAG, "check for audio files ");
         String[] projection = {
@@ -201,11 +306,21 @@ public class MusicData  {
                 Log.d(TAG, "Image " + albumArt);
                 artCursor.close();
 
-                MusicItem song = new MusicItem(Title, Album, Artist, fileName, nDuration);
+                //MusicItem song = new MusicItem(Title, Album, Artist, fileName, nDuration);
+
+
+                TrackItem track = new TrackItem(Title,Album,Artist,fileName,nDuration);
+                mLocalTracks.add(track);
+
 
                 if (!ArtistExists(Artist)) {
                     ArtistItem artist = new ArtistItem(Artist, "", "", "", "");
                     mLocalArtists.add(artist);
+                }
+
+                if (!AlbumExists(Album)) {
+                    AlbumItem album = new AlbumItem(Album);
+                    mLocalAlbums.add(album);
                 }
 
             }
@@ -218,6 +333,18 @@ public class MusicData  {
         for (int i = 0; i < mLocalArtists.size(); i++) {
             String name= mLocalArtists.get(i).getName();
             if ( name.equals(ArtistName)) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
+
+    private boolean AlbumExists(String AlbumName) {
+
+        boolean ret = false;
+        for (int i = 0; i < mLocalAlbums.size(); i++) {
+            String name= mLocalAlbums.get(i).getName();
+            if ( name.equals(AlbumName)) {
                 ret = true;
             }
         }

@@ -12,12 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
 import androidx.media3.exoplayer.ExoPlayer;
@@ -34,10 +34,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
-import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindArtists;
+import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindData;
+import eu.rg_engineering.simplemusicplayer.ui.home.AlbumsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.ArtistsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment_old;
+import eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment;
 
 
 //todo: car intergration https://github.com/google/ExoPlayer/issues/8561
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         AlbumItemsAdapter.AlbumItemsAdapterListener,
         TrackItemsAdapter.TrackItemsAdapterListener,
             HomeFragment_old.HomeFragmentListener ,
-            Plex_FindArtists.PlexFindArtistListener {
+            Plex_FindData.PlexFindArtistListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
@@ -62,6 +64,10 @@ public class MainActivity extends AppCompatActivity
     public MusicData mMusicData;
 
     private boolean OnlyOneSong = true;
+
+    private ArtistsFragment mArtistsFragment;
+    private AlbumsFragment mAlbumsFragment;
+    private TracksFragment mTracksFragment;
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -76,6 +82,9 @@ public class MainActivity extends AppCompatActivity
             case "NoSongs":
                 Toast.makeText(this, "This is my Toast message!",
                         Toast.LENGTH_LONG).show();
+                break;
+            default:
+                Log.e(TAG, "unknown message " + msg);
                 break;
         }
     }
@@ -98,8 +107,9 @@ public class MainActivity extends AppCompatActivity
                 musicstop();
                 OnlyOneSong = true;
                 break;
-            case "ReplaceFragment":
-                //replaceFragment("SearchArtist");
+
+            default:
+                Log.e(TAG, "unknown message " + msg);
                 break;
         }
     }
@@ -113,44 +123,113 @@ public class MainActivity extends AppCompatActivity
             case "ShowInfo":
                 Toast.makeText(this, params,Toast.LENGTH_LONG).show();
                 break;
+            case "ArtistSelected":
+
+                mMusicData.SetArtist4Album(params);
+
+                if (mAlbumsFragment==null){
+                    mAlbumsFragment=new AlbumsFragment();
+                }
+                //open fragment "Album"
+                replaceFragment(mAlbumsFragment);
+                break;
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
         }
     }
     @Override
     public void messageFromAlbumItemsAdapter(String msg, String params) {
-        Log.d(TAG, "got message from AlbumFragment " + msg);
+        Log.d(TAG, "got message from AlbumFragment " + msg + " " + params);
+
+        switch (msg) {
+            case "AlbumSelected":
+
+                if (mTracksFragment==null){
+                    mTracksFragment=new TracksFragment();
+                }
+                //open fragment "Track"
+                replaceFragment(mTracksFragment);
+
+                break;
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
+        }
+
     }
     @Override
     public void messageFromTrackItemsAdapter(String msg, String params) {
-        Log.d(TAG, "got message from TrackFragment " + msg);
+        Log.d(TAG, "got message from TrackFragment " + msg + " " + params);
+
+        switch (msg) {
+
+            case "PlayMusic":
+                musicplay(params);
+                break;
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
+        }
+
     }
     @Override
     public void messageFromPlexFindArtist(String msg) {
         Log.d(TAG, "got message from PlexFindArtist " + msg);
-        ArtistsFragment artistfragment = FindArtistFragment();
-        if (artistfragment != null) {
-            artistfragment.ReadPlexArtistData();
-        } else {
-            Log.e(TAG, "artistfragment not found");
+
+        switch (msg) {
+            case "got all artists ": //Leerzeichen ist hier wichtig...
+                //plex founds all artists, now update View
+                if (mArtistsFragment != null) {
+                    mArtistsFragment.ReadPlexArtistData();
+                } else {
+                    Log.e(TAG, "artistfragment not found");
+                }
+                break;
+            case "got all albums ": //Leerzeichen ist hier wichtig...
+                //plex founds all artists, now update View
+                if (mAlbumsFragment != null) {
+                    mAlbumsFragment.ReadPlexAlbumData();
+                } else {
+                    Log.e(TAG, "albumfragment not found");
+                }
+                break;
+
+            case "got all tracks ": //Leerzeichen ist hier wichtig...
+                //plex founds all artists, now update View
+                if (mTracksFragment != null) {
+                    mTracksFragment.ReadPlexTrackData();
+                } else {
+                    Log.e(TAG, "trackfragment not found");
+                }
+                break;
+
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
         }
     }
 
 
-    /*
-        public void replaceFragment(String FragmentName) {
 
-            Fragment fragment = null;
-            if (FragmentName=="SearchArtist"){
-
-            }
-
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_container, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+    public void replaceFragment(Fragment fragmentName) {
 
 
+        if (fragmentName != null) {
+            Log.d(TAG, "replace fragment " + fragmentName);
+            // create a FragmentManager
+            FragmentManager fm = getSupportFragmentManager();
+            // create a FragmentTransaction to begin the transaction and replace the Fragment
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            // replace the FrameLayout with new Fragment
+            fragmentTransaction.replace(R.id.mainframeLayout, fragmentName);
+            fragmentTransaction.commit(); // save the changes
         }
-    */
+        else {
+            Log.e(TAG, "fragment not found, null");
+        }}
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,6 +291,9 @@ public class MainActivity extends AppCompatActivity
         } else {
             Log.d(TAG, "permission set correctly");
         }
+
+        mArtistsFragment = new ArtistsFragment();
+        replaceFragment(mArtistsFragment);
     }
 
     @Override
@@ -254,6 +336,7 @@ public class MainActivity extends AppCompatActivity
         return homeFragment;
     }
 
+    /*
     private ArtistsFragment FindArtistFragment() {
 
         ArtistsFragment artistFragment = null;
@@ -272,7 +355,48 @@ public class MainActivity extends AppCompatActivity
         return artistFragment;
     }
 
+     */
+   /*
+    private AlbumsFragment FindAlbumFragment() {
 
+        AlbumsFragment albumsFragment = null;
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager != null) {
+            Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
+            if (mainFragment != null) {
+                FragmentManager subManager = mainFragment.getChildFragmentManager();
+                if (subManager != null) {
+
+                    List<Fragment> allFrag = subManager.getFragments();
+                    albumsFragment = (AlbumsFragment) allFrag.get(0);
+                }
+            }
+        }
+        return albumsFragment;
+    }
+
+    */
+/*
+    private TracksFragment FindATrackFragment() {
+
+        TracksFragment tracksFragment = null;
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager != null) {
+            Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
+            if (mainFragment != null) {
+                FragmentManager subManager = mainFragment.getChildFragmentManager();
+                if (subManager != null) {
+
+                    List<Fragment> allFrag = subManager.getFragments();
+                    tracksFragment = (TracksFragment) allFrag.get(0);
+                }
+            }
+        }
+        return tracksFragment;
+    }
+
+
+ */
     // Playing the music
     private void musicplay(String filename) {
 
@@ -285,10 +409,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         //original:
-        //Uri uri = Uri.parse(filename);
+        Uri uri = Uri.parse(filename);
 
         //funktioniert:
-        Uri uri = Uri.parse("http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ");
+        //Uri uri = Uri.parse("http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ");
 
         //funktioniert:
         //Uri uri = Uri.parse("https://storage.googleapis.com/exoplayer-test-media-0/Jazz_In_Paris.mp3");
@@ -409,12 +533,16 @@ public class MainActivity extends AppCompatActivity
     private Runnable UpdateProgress = new Runnable() {
         public void run() {
 
+            //todo muss wieder rein
+            /*
+
+
             HomeFragment homefragment = FindHomeFragment();
             if (homefragment != null) {
-                /* mediaplayer
-                int position = music.getCurrentPosition();
+                // mediaplayer
+                //int position = music.getCurrentPosition();
 
-                 */
+
 
                 if (exoPlayer != null) {
                     long position = exoPlayer.getCurrentPosition();
@@ -422,6 +550,7 @@ public class MainActivity extends AppCompatActivity
                     homefragment.SetCurrentplaytime(position);
                 }
             }
+            */
         }
     };
 

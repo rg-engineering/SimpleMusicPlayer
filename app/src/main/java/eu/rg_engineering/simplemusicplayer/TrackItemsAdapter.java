@@ -1,14 +1,18 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +38,7 @@ public class TrackItemsAdapter extends
     private ItemTouchHelper mTouchHelper;
     private OnDeleteTrackitemListener deleteListener;
     private int mFilterIdx = 0;
+    private int currentPlayedMusicPosition = -1;
     Context mContext;
     TrackItemsAdapterListener mCommunication;
 
@@ -94,8 +99,56 @@ public class TrackItemsAdapter extends
         Log.d(TAG, "onBindViewHolder called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
 
+        TextView albumTextView = viewHolder.albumTextView;
+        TextView artistTextView = viewHolder.artistTextView;
+        TextView durationTextView = viewHolder.durationTextView;
+        TextView currentPlaytimeTextView = viewHolder.currentPlaytimeTextView;
+
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
+        }
+        if (albumTextView != null) {
+            albumTextView.setText(item.getAlbum());
+        }
+        if (artistTextView != null) {
+            artistTextView.setText(item.getArtist());
+        }
+        if (durationTextView != null) {
+            durationTextView.setText(item.getDuration());
+        }
+        if (currentPlaytimeTextView != null) {
+            currentPlaytimeTextView.setText(item.getCurrentPlaytime());
+        }
+
+        ProgressBar currentProgress = viewHolder.currentProgressbar;
+        if (currentProgress != null) {
+            currentProgress.setMin(0);
+            currentProgress.setMax(100);
+            currentProgress.setProgress(item.getProgress());
+        }
+        SeekBar currentSeek = viewHolder.currentSeekbar;
+        if (currentSeek != null) {
+            currentSeek.setMin(0);
+            currentSeek.setMax(100);
+            currentSeek.setProgress(item.getProgress());
+        }
+
+        Button btnPlaySong = viewHolder.btnPlaySong;
+        btnPlaySong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "PlayMusic pressed position " + position);
+                String filename = mItemsFiltered.get(position).getFileName();
+                currentPlayedMusicPosition = position;
+                mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
+            }
+        });
+
+        if (currentPlayedMusicPosition==position) {
+            viewHolder.nameTextView.setTextColor(Color.RED);
+        }
+        else {
+            viewHolder.nameTextView.setTextColor(Color.BLACK);
         }
     }
 
@@ -213,7 +266,13 @@ public class TrackItemsAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-
+        public TextView artistTextView;
+        public TextView albumTextView;
+        public TextView durationTextView;
+        public TextView currentPlaytimeTextView;
+        public ProgressBar currentProgressbar;
+        public SeekBar currentSeekbar;
+        public Button btnPlaySong;
 
         GestureDetector mGestureDetector;
 
@@ -225,7 +284,13 @@ public class TrackItemsAdapter extends
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.track_Name);
-
+            artistTextView = (TextView) itemView.findViewById(R.id.track_Artist);
+            albumTextView = (TextView) itemView.findViewById(R.id.track_Album);
+            durationTextView = (TextView) itemView.findViewById(R.id.track_Duration);
+            currentPlaytimeTextView = (TextView) itemView.findViewById(R.id.track_CurrentPlaytime);
+            currentProgressbar = (ProgressBar) itemView.findViewById(R.id.track_ProgressBar);
+            currentSeekbar = (SeekBar) itemView.findViewById(R.id.track_SeekBar);
+            btnPlaySong = (Button) itemView.findViewById(R.id.track_PlaySong);
 
 
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
@@ -248,6 +313,9 @@ public class TrackItemsAdapter extends
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
 
+            int pos =this.getAdapterPosition();
+
+            mCommunication.messageFromTrackItemsAdapter("TrackSelected", String.valueOf(pos));
 
             return true;
         }

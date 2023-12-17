@@ -1,13 +1,7 @@
 package eu.rg_engineering.simplemusicplayer.PlexServer;
 
 
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-
-public class Plex_Artists {
+public class Plex_Artist {
     public final String ratingKey;
     public final String key;
     public final String guid;
@@ -23,7 +17,7 @@ public class Plex_Artists {
     public final String Country;
     private static final String ns = null;
 
-    public Plex_Artists(
+    public Plex_Artist(
             String ratingKey,
             String key,
             String guid,

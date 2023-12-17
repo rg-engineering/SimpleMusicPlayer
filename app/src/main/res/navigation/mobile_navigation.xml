@@ -21,14 +21,14 @@
 
     <fragment
         android:id="@+id/nav_albums"
-        android:tag="SearchArtist"
+        android:tag="SearchAlbum"
         android:name="eu.rg_engineering.simplemusicplayer.ui.home.AlbumsFragment"
         android:label="SearchArtist"
         tools:layout="@layout/fragment_albums" />
 
     <fragment
         android:id="@+id/nav_tracks"
-        android:tag="SearchArtist"
+        android:tag="SearchTrack"
         android:name="eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment"
         android:label="SearchArtist"
         tools:layout="@layout/fragment_tracks" />

@@ -250,7 +250,8 @@ public class AlbumItemsAdapter extends
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
 
-
+            int pos =this.getAdapterPosition();
+            mCommunication.messageFromAlbumItemsAdapter("AlbumSelected", String.valueOf(pos));
             return true;
         }
 
