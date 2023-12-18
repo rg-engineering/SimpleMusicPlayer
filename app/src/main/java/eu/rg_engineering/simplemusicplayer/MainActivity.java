@@ -38,7 +38,6 @@ import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindData;
 import eu.rg_engineering.simplemusicplayer.ui.home.AlbumsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.ArtistsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
-import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment_old;
 import eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment;
 
 
@@ -48,9 +47,9 @@ public class MainActivity extends AppCompatActivity
         implements
             MusicItemsAdapter.MusicItemsAdapterListener,
             ArtistItemsAdapter.ArtistItemsAdapterListener,
-        AlbumItemsAdapter.AlbumItemsAdapterListener,
-        TrackItemsAdapter.TrackItemsAdapterListener,
-            HomeFragment_old.HomeFragmentListener ,
+            AlbumItemsAdapter.AlbumItemsAdapterListener,
+            TrackItemsAdapter.TrackItemsAdapterListener,
+            HomeFragment.HomeFragmentListener,
             Plex_FindData.PlexFindArtistListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -120,13 +119,13 @@ public class MainActivity extends AppCompatActivity
 
         switch (msg) {
             case "ShowInfo":
-                Toast.makeText(this, params,Toast.LENGTH_LONG).show();
+                Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
             case "ArtistSelected":
                 mMusicData.SetArtist4Album(params);
 
-                if (mAlbumsFragment==null){
-                    mAlbumsFragment=new AlbumsFragment();
+                if (mAlbumsFragment == null) {
+                    mAlbumsFragment = new AlbumsFragment();
                 }
                 //open fragment "Album"
                 replaceFragment(mAlbumsFragment);
@@ -136,19 +135,20 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
     @Override
     public void messageFromAlbumItemsAdapter(String msg, String params) {
         Log.d(TAG, "got message from AlbumFragment " + msg + " " + params);
 
         switch (msg) {
             case "ShowInfo":
-                Toast.makeText(this, params,Toast.LENGTH_LONG).show();
+                Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
             case "AlbumSelected":
                 mMusicData.SetAlbum4Track(params);
 
-                if (mTracksFragment==null){
-                    mTracksFragment=new TracksFragment();
+                if (mTracksFragment == null) {
+                    mTracksFragment = new TracksFragment();
                 }
                 //open fragment "Track"
                 replaceFragment(mTracksFragment);
@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
     @Override
     public void messageFromTrackItemsAdapter(String msg, String params) {
         Log.d(TAG, "got message from TrackFragment " + msg + " " + params);
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
     @Override
     public void messageFromPlexFindArtist(String msg) {
         Log.d(TAG, "got message from PlexFindArtist " + msg);
@@ -211,7 +213,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     public void replaceFragment(Fragment fragmentName) {
 
 
@@ -224,10 +225,10 @@ public class MainActivity extends AppCompatActivity
             // replace the FrameLayout with new Fragment
             fragmentTransaction.replace(R.id.mainframeLayout, fragmentName);
             fragmentTransaction.commit(); // save the changes
-        }
-        else {
+        } else {
             Log.e(TAG, "fragment not found, null");
-        }}
+        }
+    }
 
 
     @Override
@@ -520,8 +521,6 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "homefragement not found");
         }
     }
-
-
 
 
     class UpdateProgressTask extends TimerTask {

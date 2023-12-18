@@ -53,20 +53,25 @@ import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
 
 
 public class HomeFragment extends Fragment {
-
     private HomeViewModel homeViewModel;
-
     private String TAG = "HomeFragment";
-
+    HomeFragmentListener mCommunication;
+    Context mContext;
+    public interface HomeFragmentListener {
+        void messageFromHomeFragment(String msg, String params);
+    }
     @Override
     public void onAttach(Context context) {
+
         super.onAttach(context);
+        mCommunication = (HomeFragmentListener) context;
+        mContext = context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
+        mCommunication = null;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -77,16 +82,38 @@ public class HomeFragment extends Fragment {
 
         try {
 
+            Button btnPauseMusic = (Button) root.findViewById(R.id.PauseMusic);
+            btnPauseMusic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "PauseMusic pressed");
+                    mCommunication.messageFromHomeFragment("PauseMusic", "");
+                }
+            });
 
+            Button btnPlayMusic = (Button) root.findViewById(R.id.PlayMusic);
+            btnPlayMusic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "PlayMusic pressed");
+                    mCommunication.messageFromHomeFragment("PlayMusic", "");
+                }
+            });
 
+            Button btnStopMusic = (Button) root.findViewById(R.id.StopMusic);
+            btnStopMusic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "StopMusic pressed");
+                    mCommunication.messageFromHomeFragment("StopMusic", "");
+                }
+            });
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());
         }
         return root;
-
     }
-
 
     public void GetNextSong(){
         //MusicItemsAdapter.GetNextSong();
@@ -96,5 +123,5 @@ public class HomeFragment extends Fragment {
         //MusicItemsAdapter.SetCurrentPlaytime(duration);
     }
 
-
+    //todo wma kann nicht interpretiert werden
 }
