@@ -93,14 +93,18 @@ public class MusicData  {
     public void ReadPlexAlbumData() {
         Log.d(TAG, "reading album data from plex ");
 
-        if (mPlex_FindData !=null && mPlex_FindData.mAlbums.size()>0){
+        if (mPlex_FindData !=null && mPlex_FindData.mAlbums.size()>0) {
 
-            for (int i = 0; i< mPlex_FindData.mAlbums.size(); i++) {
+            for (int i = 0; i < mPlex_FindData.mAlbums.size(); i++) {
 
                 String name = mPlex_FindData.mAlbums.get(i).title;
+                String artist = mPlex_FindData.mAlbums.get(i).parentTitle;
+                int year = Integer.parseInt(mPlex_FindData.mAlbums.get(i).year);
+                String path2image = mPlex_FindData.mAlbums.get(i).thumb;
+                String summery = mPlex_FindData.mAlbums.get(i).summary;
                 int ratingKey = Integer.parseInt(mPlex_FindData.mAlbums.get(i).ratingKey);
 
-                AlbumItem album = new AlbumItem(name,ratingKey);
+                AlbumItem album = new AlbumItem(name, artist, year, path2image, summery, ratingKey);
                 mLocalAlbums.add(album);
             }
         }
@@ -117,7 +121,13 @@ public class MusicData  {
                 String name = mPlex_FindData.mTracks.get(i).title;
                 String album = mPlex_FindData.mTracks.get(i).parentTitle;
                 String artist = mPlex_FindData.mTracks.get(i).grandparentTitle;
-                String filename= "to do";
+
+                /*
+                http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ"
+                */
+                //todo: erst mal nur ersten Teil, später alle Teile
+                String filename= "http://192.168.3.21:32400"+mPlex_FindData.mTracks.get(i).parts.get(0).key + "?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ";
+
                 int duration = Integer.parseInt(mPlex_FindData.mTracks.get(i).duration);
 
                 TrackItem track = new TrackItem(name,album,artist,filename,duration);
@@ -329,7 +339,7 @@ public class MusicData  {
                 }
 
                 if (!AlbumExists(Album)) {
-                    AlbumItem album = new AlbumItem(Album, -1);
+                    AlbumItem album = new AlbumItem(Album,Artist,0,"","", -1);
                     mLocalAlbums.add(album);
                 }
 

@@ -8,31 +8,58 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class AlbumItem implements Parcelable  {
+public class AlbumItem implements Parcelable {
 
     private String mID;
     private String mName;
-    private int mPlex_ratingKey=47872;
+    private String mArtist;
+    private int mYear;
+    private String mPath2Image;
+    private String mSummery;
+    private int mPlex_ratingKey = 47872;
 
 
     protected AlbumItem(Parcel in) {
         mID = in.readString();
         mName = in.readString();
     }
-    public AlbumItem(String name, int plex_ratingkey ) {
+
+    public AlbumItem(String name, String artist, int year, String path2image, String summery, int plex_ratingkey) {
         mID = UUID.randomUUID().toString();
         mName = name;
-        if (plex_ratingkey>0){
-            mPlex_ratingKey=plex_ratingkey;
+        mArtist = artist;
+        mYear = year;
+        mPath2Image = path2image;
+        mSummery = summery;
+        if (plex_ratingkey > 0) {
+            mPlex_ratingKey = plex_ratingkey;
         }
     }
 
     public String getId() {
         return mID;
     }
+
     public String getName() {
         return mName;
     }
+
+    public String getArtist() {
+        return mArtist;
+    }
+
+    public int getYear() {
+        return mYear;
+    }
+
+    public String getPath2Image() {
+        return mPath2Image;
+    }
+
+    public String getInfo() {
+        return mSummery;
+    }
+
     public int getPlexRatingKey() {
         return mPlex_ratingKey;
     }
@@ -42,6 +69,7 @@ public class AlbumItem implements Parcelable  {
         public AlbumItem createFromParcel(Parcel in) {
             return new AlbumItem(in);
         }
+
         @Override
         public AlbumItem[] newArray(int size) {
             return new AlbumItem[size];
@@ -57,6 +85,10 @@ public class AlbumItem implements Parcelable  {
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(mID);
         parcel.writeString(mName);
+        parcel.writeString(mArtist);
+        parcel.writeInt(mYear);
+        parcel.writeString(mPath2Image);
+        parcel.writeString(mSummery);
         parcel.writeInt(mPlex_ratingKey);
     }
 
@@ -64,7 +96,7 @@ public class AlbumItem implements Parcelable  {
         ArrayList<AlbumItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new AlbumItem("album"+i,-1));
+            items.add(new AlbumItem("album" + i, "test artist", 2011, "", "", -1));
         }
         return items;
     }
@@ -75,6 +107,14 @@ public class AlbumItem implements Parcelable  {
         sRet += mID;
         sRet += System.getProperty("line.separator");
         sRet += mName;
+        sRet += System.getProperty("line.separator");
+        sRet += mArtist;
+        sRet += System.getProperty("line.separator");
+        sRet += mYear;
+        sRet += System.getProperty("line.separator");
+        sRet += mPath2Image;
+        sRet += System.getProperty("line.separator");
+        sRet += mSummery;
         sRet += System.getProperty("line.separator");
         sRet += mPlex_ratingKey;
         sRet += System.getProperty("line.separator");
@@ -87,6 +127,10 @@ public class AlbumItem implements Parcelable  {
 
         sRet += "," + mID;
         sRet += "," + mName;
+        sRet += "," + mArtist;
+        sRet += "," + mYear;
+        sRet += "," + mPath2Image;
+        sRet += "," + mSummery;
         sRet += "," + mPlex_ratingKey;
         sRet += System.getProperty("line.separator");
         return sRet;

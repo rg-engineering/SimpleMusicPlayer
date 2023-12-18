@@ -1,14 +1,19 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -96,14 +102,79 @@ public class AlbumItemsAdapter extends
 
         Log.d(TAG, "onBindViewHolder called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
-
+        TextView artistTextView = viewHolder.artistTextView;
+        TextView yearTextView = viewHolder.yearTextView;
+        Button infoButton = viewHolder.infoButton;
+        ImageView imageImageView = viewHolder.imageImageView;
         viewHolder.Plex_RatingKey=item.getPlexRatingKey();
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
         }
-    }
+        if (artistTextView != null) {
+            artistTextView.setText(item.getArtist());
+        }
+        if (yearTextView != null) {
+            yearTextView.setText(String.valueOf(item.getYear()));
+        }
+        if (infoButton != null) {
+            String infoSummery=item.getInfo();
 
+            if (infoSummery!=null && infoSummery.length()>0){
+                Log.d(TAG, "info Button should be visible ");
+                infoButton.setVisibility(View.VISIBLE);
+
+                infoButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(TAG, "infoButton pressed position " + position);
+                        String info = mItemsFiltered.get(position).getInfo();
+                        mCommunication.messageFromAlbumItemsAdapter("ShowInfo", info);
+                    }
+                });
+            }
+            else {
+                Log.d(TAG, "info Button should be invisible ");
+            }
+        }
+        if (imageImageView!=null){
+            String path2image=item.getPath2Image();
+
+            if (path2image!=null && path2image.length()>0) {
+                Log.d(TAG, "image view should be used ");
+                new AlbumItemsAdapter.DownloadImageTask(imageImageView) .execute(path2image);
+            }
+            else {
+                Log.d(TAG, "image view shouldn't be used ");
+            }
+        }
+    }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView mImage;
+        public DownloadImageTask(ImageView image) {
+            this.mImage = image;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String fullURL = "http://192.168.3.21:32400"+urls[0]+"?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ";
+            Bitmap icon = null;
+
+            Log.d("TAG", "get image from " + fullURL);
+
+            try {
+                InputStream in = new java.net.URL(fullURL).openStream();
+                icon = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
+                e.printStackTrace();
+            }
+            return icon;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            mImage.setImageBitmap(result);
+        }
+    }
     @Override
     public int getItemCount() {
         int cnt = 0;
@@ -218,7 +289,10 @@ public class AlbumItemsAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-
+        public TextView artistTextView;
+        public TextView yearTextView;
+        public Button infoButton;
+        public ImageView imageImageView;
         public int Plex_RatingKey;
 
         GestureDetector mGestureDetector;
@@ -231,9 +305,11 @@ public class AlbumItemsAdapter extends
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.album_Name);
+            artistTextView = (TextView) itemView.findViewById(R.id.album_Artist);
+            yearTextView = (TextView) itemView.findViewById(R.id.album_Year);
 
-
-
+            infoButton = (Button) itemView.findViewById(R.id.album_info_button);
+            imageImageView = (ImageView) itemView.findViewById(R.id.album_image);
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
 
 

@@ -119,12 +119,10 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from ArtistFragment " + msg + " " + params);
 
         switch (msg) {
-
             case "ShowInfo":
                 Toast.makeText(this, params,Toast.LENGTH_LONG).show();
                 break;
             case "ArtistSelected":
-
                 mMusicData.SetArtist4Album(params);
 
                 if (mAlbumsFragment==null){
@@ -143,8 +141,10 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from AlbumFragment " + msg + " " + params);
 
         switch (msg) {
+            case "ShowInfo":
+                Toast.makeText(this, params,Toast.LENGTH_LONG).show();
+                break;
             case "AlbumSelected":
-
                 mMusicData.SetAlbum4Track(params);
 
                 if (mTracksFragment==null){
@@ -152,13 +152,11 @@ public class MainActivity extends AppCompatActivity
                 }
                 //open fragment "Track"
                 replaceFragment(mTracksFragment);
-
                 break;
             default:
                 Log.e(TAG, "unknown message " + msg);
                 break;
         }
-
     }
     @Override
     public void messageFromTrackItemsAdapter(String msg, String params) {

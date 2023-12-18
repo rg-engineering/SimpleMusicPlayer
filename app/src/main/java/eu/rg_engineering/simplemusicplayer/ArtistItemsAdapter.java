@@ -105,7 +105,6 @@ public class ArtistItemsAdapter extends
         TextView countryTextView = viewHolder.countryTextView;
         Button infoButton = viewHolder.infoButton;
         ImageView imageImageView = viewHolder.imageImageView;
-
         viewHolder.Plex_RatingKey=item.getPlexRatingKey();
 
         if (nameTextView != null) {
@@ -132,8 +131,6 @@ public class ArtistItemsAdapter extends
                         mCommunication.messageFromArtistItemsAdapter("ShowInfo", info);
                     }
                 });
-
-
             }
             else {
                 Log.d(TAG, "info Button should be invisible ");
@@ -144,10 +141,7 @@ public class ArtistItemsAdapter extends
 
             if (path2image!=null && path2image.length()>0) {
                 Log.d(TAG, "image view should be used ");
-
                 new DownloadImageTask(imageImageView) .execute(path2image);
-
-
             }
             else {
                 Log.d(TAG, "image view shouldn't be used ");
@@ -303,7 +297,6 @@ public class ArtistItemsAdapter extends
         public TextView countryTextView;
         public Button infoButton;
         public ImageView imageImageView;
-
         public int Plex_RatingKey;
 
         GestureDetector mGestureDetector;

@@ -153,13 +153,14 @@ public class Plex_TrackXmlParser {
         updatedAt = parser.getAttributeValue(null, "updatedAt");
 
 
+        ArrayList<Plex_TrackPart> Media = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
             if (name.equals("Media")) {
-                String Media = readMedia(parser);
+                Media = readMedia(parser);
             } else {
                 skip(parser);
             }
@@ -195,11 +196,11 @@ public class Plex_TrackXmlParser {
                 duration,
                 addedAt,
                 updatedAt,
-                null);
+                Media);
     }
 
     // Processes title tags in the feed.
-    private String readMedia(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private ArrayList<Plex_TrackPart> readMedia(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "Media");
         String id = parser.getAttributeValue(null, "id");
         String duration = parser.getAttributeValue(null, "duration");
@@ -208,7 +209,7 @@ public class Plex_TrackXmlParser {
         String audioCodec = parser.getAttributeValue(null, "audioCodec");
         String container = parser.getAttributeValue(null, "container");
 
-        String part;
+        ArrayList<Plex_TrackPart> parts=new ArrayList<>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -216,15 +217,22 @@ public class Plex_TrackXmlParser {
             }
             String name = parser.getName();
             if (name.equals("Part")) {
-                part = readMediaPart(parser);
+                Plex_TrackPart part = readMediaPart(parser);
+
+                part.bitrate=bitrate;
+                part.audioChannels=audioChannels;
+                part.audioCodec=audioCodec;
+
+                parts.add(part);
+
             } else {
                 skip(parser);
             }
         }
-        return "to do";
+        return parts;
     }
 
-    private String readMediaPart(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private Plex_TrackPart readMediaPart(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "Part");
         String id = parser.getAttributeValue(null, "id");
         String key = parser.getAttributeValue(null, "key");
@@ -236,7 +244,7 @@ public class Plex_TrackXmlParser {
         while (parser.next() != XmlPullParser.END_TAG) {
 
         }
-        return "todo";
+        return new Plex_TrackPart(id,key,duration,file,size,container,"","","");
     }
 
 
