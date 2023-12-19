@@ -126,4 +126,8 @@ public class TracksFragment extends Fragment implements
             Log.d(TAG, "adapter notified ");
         }
     }
+
+    public void SetCurrentplaytime(long duration){
+        TrackItemsAdapter.SetCurrentPlaytime(duration);
+    }
 }

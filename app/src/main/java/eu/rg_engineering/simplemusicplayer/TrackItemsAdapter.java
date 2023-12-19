@@ -151,7 +151,17 @@ public class TrackItemsAdapter extends
             viewHolder.nameTextView.setTextColor(Color.BLACK);
         }
     }
+    public void SetCurrentPlaytime(long playtime) {
 
+        Log.d(TAG, "got current playtime " + playtime + " " + mItemsFiltered.size());
+
+        if (currentPlayedMusicPosition >= 0 && currentPlayedMusicPosition < mItemsFiltered.size()) {
+            mItemsFiltered.get(currentPlayedMusicPosition).setCurrentPlaytime(playtime);
+            notifyItemChanged(currentPlayedMusicPosition);
+        } else {
+            Log.e(TAG, "index out of range " + currentPlayedMusicPosition);
+        }
+    }
     @Override
     public int getItemCount() {
         int cnt = 0;

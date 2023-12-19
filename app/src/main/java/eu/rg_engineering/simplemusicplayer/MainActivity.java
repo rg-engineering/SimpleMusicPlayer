@@ -513,13 +513,8 @@ public class MainActivity extends AppCompatActivity
 
 
     private void GetNextSong() {
-        Log.d(TAG, "get next song");
-        HomeFragment homefragment = FindHomeFragment();
-        if (homefragment != null) {
-            homefragment.GetNextSong();
-        } else {
-            Log.e(TAG, "homefragement not found");
-        }
+        Log.d(TAG, "get next song (to do)");
+
     }
 
 
@@ -533,23 +528,11 @@ public class MainActivity extends AppCompatActivity
         public void run() {
 
             //todo muss wieder rein
-            /*
+
+            long position = exoPlayer.getCurrentPosition();
+            mTracksFragment.SetCurrentplaytime(position);
 
 
-            HomeFragment homefragment = FindHomeFragment();
-            if (homefragment != null) {
-                // mediaplayer
-                //int position = music.getCurrentPosition();
-
-
-
-                if (exoPlayer != null) {
-                    long position = exoPlayer.getCurrentPosition();
-                    //Log.d(TAG, "current position " + position);
-                    homefragment.SetCurrentplaytime(position);
-                }
-            }
-            */
         }
     };
 

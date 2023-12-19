@@ -115,13 +115,5 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    public void GetNextSong(){
-        //MusicItemsAdapter.GetNextSong();
-    }
-
-    public void SetCurrentplaytime(long duration){
-        //MusicItemsAdapter.SetCurrentPlaytime(duration);
-    }
-
     //todo wma kann nicht interpretiert werden
 }
