@@ -138,9 +138,8 @@ public class TrackItemsAdapter extends
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "PlayMusic pressed position " + position);
-                String filename = mItemsFiltered.get(position).getFileName();
                 currentPlayedMusicPosition = position;
-                mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
+                GetCurrentSong();
             }
         });
 
@@ -162,6 +161,28 @@ public class TrackItemsAdapter extends
             Log.e(TAG, "index out of range " + currentPlayedMusicPosition);
         }
     }
+
+    public void GetNextSong() {
+        Log.d(TAG, "GetNextSong  " + currentPlayedMusicPosition);
+
+        currentPlayedMusicPosition ++ ;
+        if (currentPlayedMusicPosition>=mItemsFiltered.size()){
+            currentPlayedMusicPosition=0;
+        }
+        String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFileName();
+        mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
+    }
+
+    public void GetCurrentSong() {
+        Log.d(TAG, "GetCurrentSong  " + currentPlayedMusicPosition);
+
+        if (currentPlayedMusicPosition>=mItemsFiltered.size()){
+            currentPlayedMusicPosition=0;
+        }
+        String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFileName();
+        mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
+    }
+
     @Override
     public int getItemCount() {
         int cnt = 0;

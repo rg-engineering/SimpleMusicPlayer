@@ -159,4 +159,12 @@ public class TracksFragment extends Fragment implements
     public void SetCurrentplaytime(long duration){
         TrackItemsAdapter.SetCurrentPlaytime(duration);
     }
+
+    public void GetNextSong(){
+        TrackItemsAdapter.GetNextSong();
+    }
+
+    public void GetCurrentSong(){
+        TrackItemsAdapter.GetCurrentSong();
+    }
 }

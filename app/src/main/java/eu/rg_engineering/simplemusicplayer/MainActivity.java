@@ -65,10 +65,13 @@ public class MainActivity extends AppCompatActivity
     public MusicData mMusicData;
 
     private boolean OnlyOneSong = true;
+    private boolean SongNotFinished = true;
 
     private ArtistsFragment mArtistsFragment;
     private AlbumsFragment mAlbumsFragment;
     private TracksFragment mTracksFragment;
+
+    private String nextSongFrom="";
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity
             case "StopMusic":
                 musicstop();
                 OnlyOneSong = true;
+                SongNotFinished=false;
                 break;
 
             default:
@@ -200,6 +204,7 @@ public class MainActivity extends AppCompatActivity
 
             case "PlayMusic":
                 musicplay(params);
+                nextSongFrom = "TrackItemsAdapter";
                 break;
             default:
                 Log.e(TAG, "unknown message " + msg);
@@ -258,6 +263,7 @@ public class MainActivity extends AppCompatActivity
             // replace the FrameLayout with new Fragment
             fragmentTransaction.replace(R.id.mainframeLayout, fragmentName);
             fragmentTransaction.commit(); // save the changes
+
         } else {
             Log.e(TAG, "fragment not found, null");
         }
@@ -436,6 +442,7 @@ public class MainActivity extends AppCompatActivity
                         if (isPlaying) {
                             // Active playback.
                             Log.i(TAG, "is playing");
+                            SongNotFinished=true;
                         } else {
                             // Not playing because playback is paused, ended, suppressed, or the player
                             // is buffering, stopped or failed. Check player.getPlayWhenReady,
@@ -445,6 +452,7 @@ public class MainActivity extends AppCompatActivity
 
                             if (exoPlayer.getPlaybackState() == Player.STATE_ENDED) {
                                 Log.d(TAG, "Song Complete " + OnlyOneSong);
+                                SongNotFinished=false;
                                 if (!OnlyOneSong) {
                                     GetNextSong();
                                 } else {
@@ -467,7 +475,25 @@ public class MainActivity extends AppCompatActivity
 
 
     private void GetNextSong() {
-        Log.d(TAG, "get next song (to do)");
+        Log.d(TAG, "get next song from " + nextSongFrom);
+
+        switch (nextSongFrom){
+            case "TrackItemsAdapter":
+                if (mTracksFragment != null) {
+                    //wenn noch nicht fertig, dann aktuellen Song holen
+                    if (SongNotFinished){
+                        mTracksFragment.GetCurrentSong();
+                    }
+                    else{
+                        mTracksFragment.GetNextSong();
+                    }
+                }
+                break;
+
+            default:
+                Log.e(TAG, "no source of tracks");
+                break;
+        }
 
     }
 
@@ -480,13 +506,10 @@ public class MainActivity extends AppCompatActivity
 
     private Runnable UpdateProgress = new Runnable() {
         public void run() {
-
-            //todo muss wieder rein
-
             long position = exoPlayer.getCurrentPosition();
-            mTracksFragment.SetCurrentplaytime(position);
-
-
+            if (mTracksFragment != null) {
+                mTracksFragment.SetCurrentplaytime(position);
+            }
         }
     };
 
