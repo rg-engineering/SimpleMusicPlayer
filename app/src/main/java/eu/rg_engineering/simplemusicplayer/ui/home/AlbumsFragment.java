@@ -1,5 +1,6 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,6 +32,8 @@ public class AlbumsFragment extends Fragment implements
         OnDeleteAlbumitemListener {
 
     private String TAG = "AlbumsFragment";
+    AlbumsFragmentListener mCommunication;
+    Context mContext;
     private RecyclerView rvAlbumItems = null;
     private AlbumItemsAdapter AlbumItemsAdapter = null;
     ArrayList<AlbumItem> mAlbums;
@@ -37,6 +41,23 @@ public class AlbumsFragment extends Fragment implements
     @Override
     public void ItemDeleted() {
         //SaveData();
+    }
+
+    public interface AlbumsFragmentListener {
+        void messageFromAlbumsFragment(String msg, String params);
+    }
+    @Override
+    public void onAttach(Context context) {
+
+        super.onAttach(context);
+        mCommunication = (AlbumsFragmentListener) context;
+        mContext = context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCommunication = null;
     }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -100,7 +121,14 @@ public class AlbumsFragment extends Fragment implements
                 }
 
             });
-
+            Button btnBack = (Button) root.findViewById(R.id.btnBackAlbums);
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "back button pressed");
+                    mCommunication.messageFromAlbumsFragment("btnBack", "");
+                }
+            });
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());

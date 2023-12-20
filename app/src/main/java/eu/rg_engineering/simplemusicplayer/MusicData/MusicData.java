@@ -95,6 +95,11 @@ public class MusicData  {
 
         if (mPlex_FindData !=null && mPlex_FindData.mAlbums.size()>0) {
 
+            if (mLocalAlbums.size()>0){
+                Log.d(TAG, "clear album list");
+                mLocalAlbums.clear();
+            }
+
             for (int i = 0; i < mPlex_FindData.mAlbums.size(); i++) {
 
                 String name = mPlex_FindData.mAlbums.get(i).title;
@@ -105,6 +110,7 @@ public class MusicData  {
                 int ratingKey = Integer.parseInt(mPlex_FindData.mAlbums.get(i).ratingKey);
 
                 AlbumItem album = new AlbumItem(name, artist, year, path2image, summery, ratingKey);
+
                 mLocalAlbums.add(album);
             }
         }
@@ -112,9 +118,15 @@ public class MusicData  {
     }
 
     public void ReadPlexTrackData() {
-        Log.d(TAG, "reading track data from plex ");
+        Log.d(TAG, "reading track data from plex");
 
         if (mPlex_FindData !=null && mPlex_FindData.mTracks.size()>0){
+
+            if (mLocalTracks.size()>0){
+                Log.d(TAG, "clear track list");
+                mLocalTracks.clear();
+            }
+
 
             for (int i = 0; i< mPlex_FindData.mTracks.size(); i++) {
 
@@ -213,11 +225,11 @@ public class MusicData  {
 
     public ArrayList<TrackItem> getTrackData() {
 
-        ArrayList<TrackItem> tracks=null;
-        if (mAlbum4Track.length()>0) {
+        ArrayList<TrackItem> tracks = null;
+        if (mAlbum4Track.length() > 0) {
             tracks = getServerTrackData();
         }
-        if (tracks==null || tracks.size() == 0) {
+        if (tracks == null || tracks.size() == 0) {
             tracks = getLocalTrackData();
         }
         if (tracks.size() == 0) {

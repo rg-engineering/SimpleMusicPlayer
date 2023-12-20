@@ -1,5 +1,6 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,6 +31,8 @@ public class TracksFragment extends Fragment implements
         OnDeleteTrackitemListener {
 
     private String TAG = "TracksFragment";
+    TracksFragmentListener mCommunication;
+    Context mContext;
     private RecyclerView rvTrackItems = null;
     private TrackItemsAdapter TrackItemsAdapter = null;
     ArrayList<TrackItem> mTracks;
@@ -36,6 +40,22 @@ public class TracksFragment extends Fragment implements
     @Override
     public void ItemDeleted() {
         //SaveData();
+    }
+    public interface TracksFragmentListener {
+        void messageFromTracksFragment(String msg, String params);
+    }
+    @Override
+    public void onAttach(Context context) {
+
+        super.onAttach(context);
+        mCommunication = (TracksFragmentListener) context;
+        mContext = context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCommunication = null;
     }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -96,6 +116,15 @@ public class TracksFragment extends Fragment implements
                 @Override
                 public void afterTextChanged(Editable s) {
 
+                }
+            });
+
+            Button btnBack = (Button) root.findViewById(R.id.btnBackTracks);
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "back button pressed");
+                    mCommunication.messageFromTracksFragment("btnBack", "");
                 }
             });
 

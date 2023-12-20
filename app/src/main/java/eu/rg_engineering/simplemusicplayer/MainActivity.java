@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity
             AlbumItemsAdapter.AlbumItemsAdapterListener,
             TrackItemsAdapter.TrackItemsAdapterListener,
             HomeFragment.HomeFragmentListener,
+            TracksFragment.TracksFragmentListener,
+            AlbumsFragment.AlbumsFragmentListener,
             Plex_FindData.PlexFindArtistListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -112,7 +114,38 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+    @Override
+    public void messageFromTracksFragment(String msg, String params) {
 
+        Log.d(TAG, "got message from TracksFragment " + msg + " " + params);
+
+        switch (msg) {
+
+            case "btnBack":
+                replaceFragment(mAlbumsFragment);
+                break;
+
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
+        }
+    }
+    @Override
+    public void messageFromAlbumsFragment(String msg, String params) {
+
+        Log.d(TAG, "got message from AlbumsFragment " + msg + " " + params);
+
+        switch (msg) {
+
+            case "btnBack":
+                replaceFragment(mArtistsFragment);
+                break;
+
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
+        }
+    }
     @Override
     public void messageFromArtistItemsAdapter(String msg, String params) {
         Log.d(TAG, "got message from ArtistFragment " + msg + " " + params);
@@ -249,7 +282,7 @@ public class MainActivity extends AppCompatActivity
         //fragments wieder rein: activity_main_drawer.xml und mobile_navigation.xml
         mAppBarConfiguration = new AppBarConfiguration.Builder(
 
-                R.id.nav_home, R.id.nav_artists, R.id.nav_settings)
+                R.id.nav_home, R.id.nav_settings)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -319,86 +352,7 @@ public class MainActivity extends AppCompatActivity
         //SaveData();
     }
 
-    private HomeFragment FindHomeFragment() {
-
-        HomeFragment homeFragment = null;
-        FragmentManager manager = getSupportFragmentManager();
-        if (manager != null) {
-            Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
-            if (mainFragment != null) {
-                FragmentManager subManager = mainFragment.getChildFragmentManager();
-                if (subManager != null) {
-
-                    List<Fragment> allFrag = subManager.getFragments();
-                    homeFragment = (HomeFragment) allFrag.get(0);
-                }
-            }
-        }
-        return homeFragment;
-    }
-
-    /*
-    private ArtistsFragment FindArtistFragment() {
-
-        ArtistsFragment artistFragment = null;
-        FragmentManager manager = getSupportFragmentManager();
-        if (manager != null) {
-            Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
-            if (mainFragment != null) {
-                FragmentManager subManager = mainFragment.getChildFragmentManager();
-                if (subManager != null) {
-
-                    List<Fragment> allFrag = subManager.getFragments();
-                    artistFragment = (ArtistsFragment) allFrag.get(0);
-                }
-            }
-        }
-        return artistFragment;
-    }
-
-     */
-   /*
-    private AlbumsFragment FindAlbumFragment() {
-
-        AlbumsFragment albumsFragment = null;
-        FragmentManager manager = getSupportFragmentManager();
-        if (manager != null) {
-            Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
-            if (mainFragment != null) {
-                FragmentManager subManager = mainFragment.getChildFragmentManager();
-                if (subManager != null) {
-
-                    List<Fragment> allFrag = subManager.getFragments();
-                    albumsFragment = (AlbumsFragment) allFrag.get(0);
-                }
-            }
-        }
-        return albumsFragment;
-    }
-
-    */
-/*
-    private TracksFragment FindATrackFragment() {
-
-        TracksFragment tracksFragment = null;
-        FragmentManager manager = getSupportFragmentManager();
-        if (manager != null) {
-            Fragment mainFragment = (Fragment) manager.findFragmentById(R.id.nav_host_fragment);
-            if (mainFragment != null) {
-                FragmentManager subManager = mainFragment.getChildFragmentManager();
-                if (subManager != null) {
-
-                    List<Fragment> allFrag = subManager.getFragments();
-                    tracksFragment = (TracksFragment) allFrag.get(0);
-                }
-            }
-        }
-        return tracksFragment;
-    }
-
-
- */
-    // Playing the music
+     // Playing the music
     private void musicplay(String filename) {
 
         Log.d(TAG, "musicplay " + filename);
