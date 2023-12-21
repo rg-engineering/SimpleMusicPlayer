@@ -1,6 +1,7 @@
 package eu.rg_engineering.simplemusicplayer;
 
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -28,6 +30,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import java.util.List;
 import java.util.Timer;
@@ -334,6 +337,7 @@ public class MainActivity extends AppCompatActivity
 
         mArtistsFragment = new ArtistsFragment();
         replaceFragment(mArtistsFragment);
+
     }
 
     @Override

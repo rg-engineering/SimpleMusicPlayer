@@ -22,11 +22,12 @@ public class Plex_FindData extends Thread {
     private String IP = "";
     private String Port = "";
     private String Token = "";
-    private String LibID = "2";
+    private String LibID = "";
 
     public List<Plex_Artist> mArtists = null;
     public List<Plex_Album> mAlbums = null;
     public List<Plex_Track> mTracks = null;
+    public List<Plex_Lib> mLibs=null;
 
     private static final String ns = null;
     private String  mSearchMode="Artists";
@@ -64,8 +65,9 @@ public class Plex_FindData extends Thread {
         IP = sharedPreferences.getString("plex_server_ip", "");
         Port = sharedPreferences.getString("plex_server_port", "");
         Token = sharedPreferences.getString("plex_server_token", "");
+        LibID = sharedPreferences.getString("plex_server_libid", "");
 
-        if (IP.length()>0 && Port.length()>0 && Token.length()>0){
+        if (IP.length()>0 && Port.length()>0 && Token.length()>0 && LibID.length()>0){
             ConfigOk=true;
         }
         else {
@@ -100,6 +102,25 @@ public class Plex_FindData extends Thread {
 
     public void startFindArtists() {
         try {
+            boolean needLibId=false;
+            int nLibId=-1;
+            try {
+                nLibId = Integer.parseInt(LibID);
+            }
+            catch (NumberFormatException ex) {
+                //handle exception here
+                needLibId=true;
+            }
+            if (needLibId || nLibId<0 ){
+                Log.e(TAG, "need to parse lib id ");
+                //get LibId first
+                String oldSearchMode = mSearchMode;
+                mSearchMode = "LibID";
+                URL url = new URL("http://" + IP + ":" + Port + "/library/sections?X-Plex-Token=" + Token);
+                downloadXml(url);
+                mSearchMode=oldSearchMode;
+            }
+
             URL url = new URL("http://" + IP + ":" + Port + "/library/sections/" + LibID + "/all?X-Plex-Token=" + Token);
             downloadXml(url);
         } catch (MalformedURLException ex) {
@@ -153,6 +174,7 @@ public class Plex_FindData extends Thread {
         Plex_ArtistXmlParser artistsXmlParser=null;
         Plex_AlbumXmlParser albumsXmlParser=null;
         Plex_TrackXmlParser tracksXmlParser=null;
+        Plex_LibXmlParser libXmlParser=null;
 
         switch (mSearchMode) {
             case "Artists":
@@ -164,11 +186,15 @@ public class Plex_FindData extends Thread {
             case "Tracks":
                 tracksXmlParser = new Plex_TrackXmlParser();
                 break;
+            case "LibID":
+                libXmlParser = new Plex_LibXmlParser();
+                break;
+            default:
+                Log.e(TAG, "wrong Search Mode " + mSearchMode);
+                break;
         }
 
 
-
-        StringBuilder htmlString = new StringBuilder();
         try {
             stream = downloadUrl(url);
 
@@ -176,23 +202,39 @@ public class Plex_FindData extends Thread {
                 case "Artists":
                     mArtists = artistsXmlParser.parse(stream);
 
-                    Log.d(TAG, "parsed artists " +mArtists.size());
+                    Log.d(TAG, "parsed artists " + mArtists.size());
 
                     mCommunication.messageFromPlexFindArtist("got all artists ");
                     break;
                 case "Albums":
                     mAlbums = albumsXmlParser.parse(stream);
 
-                    Log.d(TAG, "parsed albums " +mAlbums.size());
+                    Log.d(TAG, "parsed albums " + mAlbums.size());
 
                     mCommunication.messageFromPlexFindArtist("got all albums ");
                     break;
                 case "Tracks":
                     mTracks = tracksXmlParser.parse(stream);
 
-                    Log.d(TAG, "parsed tracks " +mTracks.size());
+                    Log.d(TAG, "parsed tracks " + mTracks.size());
 
                     mCommunication.messageFromPlexFindArtist("got all tracks ");
+                    break;
+                case "LibID":
+                    mLibs = libXmlParser.parse(stream);
+
+                    for (int i = 0; i < mLibs.size(); i++) {
+
+                        String scanner = mLibs.get(i).scanner;
+                        if (scanner.contains("Plex Music")) {
+                            LibID = mLibs.get(i).key;
+                        }
+                    }
+
+                    Log.d(TAG, "parsed lib ID " + LibID);
+                    break;
+                default:
+                    Log.e(TAG, "wrong Search Mode " + mSearchMode);
                     break;
             }
 

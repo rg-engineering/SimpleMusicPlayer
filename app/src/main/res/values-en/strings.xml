@@ -42,5 +42,6 @@
     <string name="plex_server_token" >Plex Server Token</string>
     <string name="settings_general" >General Settings</string>
     <string name="usePlexServer" >use Plex Server</string>
+    <string name="plex_server_libid" >Plex Server Library ID</string>
 
 </resources>

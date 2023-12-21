@@ -27,6 +27,11 @@
             app:title="@string/plex_server_token"
             app:defaultValue="LAtVbxshNWzuGUwtm8bJ"/>
 
+        <EditTextPreference
+            app:key="plex_server_libid"
+            app:title="@string/plex_server_libid"
+            app:defaultValue="2"/>
+
     </PreferenceCategory>
 
 
