@@ -1,7 +1,10 @@
 package eu.rg_engineering.simplemusicplayer.PlexServer;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -12,14 +15,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-
+//https://www.plexopedia.com/plex-media-server/api/
 public class Plex_FindData extends Thread {
 
     private String TAG = "plex_findArtists";
-    private String IP = "192.168.3.21";
-    private String Port = "32400";
-    private String Token = "LAtVbxshNWzuGUwtm8bJ";
-    //private String Token = "eVp_3aBs33Jmdst9ifxmU";
+    private String IP = "";
+    private String Port = "";
+    private String Token = "";
     private String LibID = "2";
 
     public List<Plex_Artist> mArtists = null;
@@ -33,13 +35,16 @@ public class Plex_FindData extends Thread {
 
 
     PlexFindArtistListener mCommunication;
+    Activity activity = null;
 
     //Interface for communication
     public interface PlexFindArtistListener {
         void messageFromPlexFindArtist(String msg);
     }
     public Plex_FindData(Activity activity) {
+
         mCommunication = (PlexFindArtistListener) activity;
+        this.activity = activity;
     }
 
     public void setMode(String mode){
@@ -53,20 +58,43 @@ public class Plex_FindData extends Thread {
     }
 
     public void run() {
-        //started in separate thread
-        switch (mSearchMode) {
-            case "Artists":
-                Log.d(TAG, "start find artists ");
-                startFindArtists();
-                break;
-            case "Albums":
-                Log.d(TAG, "start find albums for " + mArtist4Album);
-                startFindAlbums();
-                break;
-            case "Tracks":
-                Log.d(TAG, "start find tracks ");
-                startFindTracks();
-                break;
+
+        boolean ConfigOk = false;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        IP = sharedPreferences.getString("plex_server_ip", "");
+        Port = sharedPreferences.getString("plex_server_port", "");
+        Token = sharedPreferences.getString("plex_server_token", "");
+
+        if (IP.length()>0 && Port.length()>0 && Token.length()>0){
+            ConfigOk=true;
+        }
+        else {
+            Log.e(TAG, "bad config " + IP + " " + Port + " " + Token);
+            mCommunication.messageFromPlexFindArtist("config not okay");
+        }
+
+
+        Boolean usePlexServer = sharedPreferences.getBoolean("usePlexServer", false);
+
+        if (usePlexServer && ConfigOk) {
+            //started in separate thread
+            switch (mSearchMode) {
+                case "Artists":
+                    Log.d(TAG, "start find artists ");
+                    startFindArtists();
+                    break;
+                case "Albums":
+                    Log.d(TAG, "start find albums for " + mArtist4Album);
+                    startFindAlbums();
+                    break;
+                case "Tracks":
+                    Log.d(TAG, "start find tracks ");
+                    startFindTracks();
+                    break;
+            }
+        }
+        else {
+            Log.d(TAG, "plex server disabled ");
         }
     }
 
@@ -84,7 +112,7 @@ public class Plex_FindData extends Thread {
 
             String artistID= mArtist4Album;
 
-            URL url = new URL("http://" + IP + ":" + Port + "/library/sections/2/all?artist.id=" + artistID + "&type=9&X-Plex-Token=" + Token);
+            URL url = new URL("http://" + IP + ":" + Port + "/library/sections/" + LibID + "/all?artist.id=" + artistID + "&type=9&X-Plex-Token=" + Token);
             downloadXml(url);
         } catch (MalformedURLException ex) {
             Log.e(TAG, "wrong url: " + ex.toString());
@@ -168,7 +196,6 @@ public class Plex_FindData extends Thread {
                     break;
             }
 
-
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {
@@ -189,70 +216,7 @@ public class Plex_FindData extends Thread {
         conn.connect();
         return conn.getInputStream();
     }
-
-
 }
 
-
-
-
-
-
-
-
-    /*
-
-    private void startFindArtists() {
-        HttpURLConnection urlConnection = null;
-        InputStream data = null;
-
-        try {
-            URL url = new URL("http://" + IP + ":" + Port + "/library/sections/" + LibID + "/all?X-Plex-Token=" + Token);
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            //urlConnection.setRequestProperty("User-Agent", USER_AGENT);
-
-            data = new BufferedInputStream(urlConnection.getInputStream());
-            readArtists(data);
-
-        } catch (MalformedURLException ex) {
-            Log.e(TAG, "wrong url: " + ex.toString());
-        } catch (IOException ex) {
-            Log.e(TAG, "io exception: " + ex.toString());
-        } catch (Exception ex) {
-            Log.e(TAG, " exception: " + ex.toString());
-        } finally {
-            urlConnection.disconnect();
-        }
-    }
-
-
-    private void readArtists(InputStream data) {
-        Log.d(TAG, "start reading artists ");
-        Document dc = null;
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            dc = builder.parse(data);
-
-
-
-            Log.d(TAG, "artists data parsed ");
-
-        } catch (ParserConfigurationException ex) {
-            Log.e(TAG, "ParserConfigurationException: " + ex.toString());
-        } catch (IOException ex) {
-            Log.e(TAG, "IOException: " + ex.toString());
-        } catch (SAXException ex) {
-            Log.e(TAG, "SAXException: " + ex.toString());
-        } catch (XmlPullParserException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
-
-*/
 
 

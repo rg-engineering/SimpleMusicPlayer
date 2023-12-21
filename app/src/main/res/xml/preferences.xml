@@ -2,6 +2,33 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <PreferenceCategory app:title="@string/settings_general">
+        <CheckBoxPreference
+            app:key="usePlexServer"
+            app:title="@string/usePlexServer"
+            app:defaultValue="true"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/plex_server">
+
+        <EditTextPreference
+            app:key="plex_server_ip"
+            app:title="@string/plex_server_ip"
+            app:defaultValue="192.168.3.21"/>
+
+        <EditTextPreference
+            app:key="plex_server_port"
+            app:title="@string/plex_server_port"
+            app:defaultValue="32400"/>
+
+        <EditTextPreference
+            app:key="plex_server_token"
+            app:title="@string/plex_server_token"
+            app:defaultValue="LAtVbxshNWzuGUwtm8bJ"/>
+
+    </PreferenceCategory>
+
 
     <PreferenceCategory app:title="@string/design">
         <CheckBoxPreference

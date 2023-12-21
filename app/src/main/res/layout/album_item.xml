@@ -24,6 +24,7 @@
             android:id="@+id/album_Name"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_weight="8"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -34,9 +35,10 @@
             android:id="@+id/album_Artist"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_weight="8"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textStyle="normal"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/album_Name" />
 
@@ -45,8 +47,8 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="8"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textStyle="normal"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/album_Artist"
             card_view:layout_constraintTop_toTopOf="parent" />
@@ -58,7 +60,7 @@
             android:background="@android:drawable/ic_menu_info_details"
             android:visibility="invisible"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintStart_toEndOf="@+id/album_Year"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -66,7 +68,7 @@
             android:layout_width="63dp"
             android:layout_height="53dp"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintEnd_toStartOf="@+id/album_info_button"
             card_view:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 

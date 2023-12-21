@@ -36,5 +36,11 @@
     <string name="menu_tracks" >tracks</string>
     <string name="menu_albums" >albums</string>
     <string name="menu_artists" >artists</string>
+    <string name="plex_server" >Plex Server</string>
+    <string name="plex_server_ip" >Plex Server IP</string>
+    <string name="plex_server_port" >Plex Server Port</string>
+    <string name="plex_server_token" >Plex Server Token</string>
+    <string name="settings_general" >General Settings</string>
+    <string name="usePlexServer" >use Plex Server</string>
 
 </resources>

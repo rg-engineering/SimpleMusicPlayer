@@ -2,10 +2,13 @@ package eu.rg_engineering.simplemusicplayer.MusicData;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +29,18 @@ public class MusicData  {
 
     private String mArtist4Album="";
     private String mAlbum4Track="";
+    private String IP = "";
+    private String Port = "";
+    private String Token = "";
 
     public MusicData(Activity activity) {
+
         mActivity = activity;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        IP = sharedPreferences.getString("plex_server_ip", "");
+        Port = sharedPreferences.getString("plex_server_port", "");
+        Token = sharedPreferences.getString("plex_server_token", "");
     }
 
     public ArrayList<ArtistItem> getArtistData() {
@@ -138,11 +150,11 @@ public class MusicData  {
                 http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ"
                 */
                 //todo: erst mal nur ersten Teil, später alle Teile
-                String filename= "http://192.168.3.21:32400"+mPlex_FindData.mTracks.get(i).parts.get(0).key + "?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ";
+                String filename = "http://" + IP + ":" + Port + mPlex_FindData.mTracks.get(i).parts.get(0).key + "?X-Plex-Token=" + Token;
 
                 int duration = Integer.parseInt(mPlex_FindData.mTracks.get(i).duration);
 
-                TrackItem track = new TrackItem(name,album,artist,filename,duration);
+                TrackItem track = new TrackItem(name, album, artist, filename, duration);
                 mLocalTracks.add(track);
             }
         }

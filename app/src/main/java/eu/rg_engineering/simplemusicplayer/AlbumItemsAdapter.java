@@ -1,6 +1,7 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +45,9 @@ public class AlbumItemsAdapter extends
     private OnDeleteAlbumitemListener deleteListener;
     private int mFilterIdx = 0;
     Context mContext;
+    private String IP = "";
+    private String Port = "";
+    private String Token = "";
     AlbumItemsAdapterListener mCommunication;
 
 
@@ -92,6 +97,12 @@ public class AlbumItemsAdapter extends
 
         mCommunication = (AlbumItemsAdapterListener) context;
         mContext = context;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        IP = sharedPreferences.getString("plex_server_ip", "");
+        Port = sharedPreferences.getString("plex_server_port", "");
+        Token = sharedPreferences.getString("plex_server_token", "");
+
         return viewHolder;
     }
 
@@ -156,7 +167,7 @@ public class AlbumItemsAdapter extends
         }
 
         protected Bitmap doInBackground(String... urls) {
-            String fullURL = "http://192.168.3.21:32400"+urls[0]+"?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ";
+            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
             Bitmap icon = null;
 
             Log.d("TAG", "get image from " + fullURL);

@@ -16,52 +16,6 @@ public class Plex_TrackXmlParser {
     private String TAG = "Plex_TrackXmlParser";
     private static final String ns = null;
 
-    /*
-    <Track
-        ratingKey="49913"
-        key="/library/metadata/49913"
-        parentRatingKey="49906"
-        grandparentRatingKey="47871"
-        guid="plex://track/5d07cdb1403c640290f4978d"
-        parentGuid="plex://album/5d07c194403c640290857f1a"
-        grandparentGuid="plex://artist/5d07bbfc403c6402904a5ef4"
-        parentStudio="Epic"
-        type="track"
-        title="Hard as a Rock"
-        grandparentKey="/library/metadata/47871"
-        parentKey="/library/metadata/49906"
-        grandparentTitle="AC/DC"
-        parentTitle="Ballbreaker"
-        summary=""
-        index="1"
-        parentIndex="1"
-        ratingCount="228483"
-        parentYear="1995"
-        thumb="/library/metadata/49906/thumb/1702006391"
-        art="/library/metadata/47871/art/1702432917"
-        parentThumb="/library/metadata/49906/thumb/1702006391"
-        grandparentThumb="/library/metadata/47871/thumb/1702432917"
-        grandparentArt="/library/metadata/47871/art/1702432917"
-        duration="271220"
-        addedAt="1261258694"
-        updatedAt="1702006385">
-        <Media
-            id="48573"
-            duration="271220"
-            bitrate="192"
-            audioChannels="2"
-            audioCodec="mp3"
-            container="mp3">
-            <Part
-                id="48573"
-                key="/library/parts/48573/1261258694/file.mp3"
-                duration="271220"
-                file="/shares/familie/Musik/AC-DC/Ballbreaker/AC-DC-Hard as a Rock.mp3"
-                size="6513628"
-                container="mp3" />
-        </Media>
-    </Track>
-     */
     public List parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();

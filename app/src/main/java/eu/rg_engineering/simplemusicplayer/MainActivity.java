@@ -372,12 +372,6 @@ public class MainActivity extends AppCompatActivity
         //original:
         Uri uri = Uri.parse(filename);
 
-        //funktioniert:
-        //Uri uri = Uri.parse("http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ");
-
-        //funktioniert:
-        //Uri uri = Uri.parse("https://storage.googleapis.com/exoplayer-test-media-0/Jazz_In_Paris.mp3");
-
         // Build the media item.
         MediaItem mediaItem = MediaItem.fromUri(uri);
 
