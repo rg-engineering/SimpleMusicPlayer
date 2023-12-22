@@ -128,7 +128,14 @@ public class AlbumItemsAdapter extends
             artistTextView.setText(item.getArtist());
         }
         if (yearTextView != null) {
-            yearTextView.setText(String.valueOf(item.getYear()));
+
+            int year=item.getYear();
+
+            if (year>1900) {
+                Log.d(TAG, "year view should be visible ");
+                yearTextView.setVisibility(View.VISIBLE);
+                yearTextView.setText(String.valueOf(year));
+            }
         }
         if (infoButton != null) {
             String infoSummery = item.getInfo();
@@ -172,7 +179,7 @@ public class AlbumItemsAdapter extends
             String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
             Bitmap icon = null;
 
-            Log.d("TAG", "get image from " + fullURL);
+            Log.d(TAG, "get image from " + fullURL);
 
             try {
                 InputStream in = new java.net.URL(fullURL).openStream();

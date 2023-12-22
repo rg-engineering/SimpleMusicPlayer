@@ -16,7 +16,10 @@ import java.util.concurrent.TimeUnit;
 
 import eu.rg_engineering.simplemusicplayer.AlbumItem;
 import eu.rg_engineering.simplemusicplayer.ArtistItem;
+import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_Album;
+import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_Artist;
 import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindData;
+import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_Track;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 
 public class MusicData  {
@@ -53,17 +56,32 @@ public class MusicData  {
         if (mLocalArtists==null) {
             mLocalArtists = getDummyArtistData(0);
         }
+        else {
+            mLocalArtists.clear();
+        }
         if (mLocalAlbums==null) {
             mLocalAlbums = getDummyAlbumData(0);
+        }
+        else {
+            mLocalAlbums.clear();
         }
         if (mLocalAlbumsAll==null) {
             mLocalAlbumsAll = getDummyAlbumData(0);
         }
+        else {
+            mLocalAlbumsAll.clear();
+        }
         if (mLocalTracks==null) {
             mLocalTracks = getDummyTrackData(0);
         }
+        else {
+            mLocalTracks.clear();
+        }
         if (mLocalTracksAll==null) {
             mLocalTracksAll = getDummyTrackData(0);
+        }
+        else {
+            mLocalTracksAll.clear();
         }
 
         //now get artists
@@ -98,16 +116,16 @@ public class MusicData  {
 
         if (mPlex_FindData != null && mPlex_FindData.mArtists.size() > 0) {
 
-            for (int i = 0; i < mPlex_FindData.mArtists.size(); i++) {
+            for (Plex_Artist item : mPlex_FindData.mArtists) {
 
-                String name = mPlex_FindData.mArtists.get(i).title;
-                String genre = mPlex_FindData.mArtists.get(i).Genre;
-                String country = mPlex_FindData.mArtists.get(i).Country;
-                String path2image = mPlex_FindData.mArtists.get(i).thumb;
-                String summery = mPlex_FindData.mArtists.get(i).summary;
+                String name = item.title;
+                String genre = item.Genre;
+                String country = item.Country;
+                String path2image = item.thumb;
+                String summery = item.summary;
                 int ratingKey = -1;
                 try {
-                    ratingKey = Integer.parseInt(mPlex_FindData.mArtists.get(i).ratingKey);
+                    ratingKey = Integer.parseInt(item.ratingKey);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "ratingkey is not a number");
                 }
@@ -128,21 +146,21 @@ public class MusicData  {
                 mLocalAlbums.clear();
             }
 
-            for (int i = 0; i < mPlex_FindData.mAlbums.size(); i++) {
+            for (Plex_Album item : mPlex_FindData.mAlbums) {
 
-                String name = mPlex_FindData.mAlbums.get(i).title;
-                String artist = mPlex_FindData.mAlbums.get(i).parentTitle;
+                String name = item.title;
+                String artist = item.parentTitle;
                 int year = -1;
                 try {
-                    year = Integer.parseInt(mPlex_FindData.mAlbums.get(i).year);
+                    year = Integer.parseInt(item.year);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "year is not a number");
                 }
-                String path2image = mPlex_FindData.mAlbums.get(i).thumb;
-                String summery = mPlex_FindData.mAlbums.get(i).summary;
+                String path2image = item.thumb;
+                String summery = item.summary;
                 int ratingKey = -1;
                 try {
-                    ratingKey = Integer.parseInt(mPlex_FindData.mAlbums.get(i).ratingKey);
+                    ratingKey = Integer.parseInt(item.ratingKey);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "ratingkey is not a number");
                 }
@@ -165,20 +183,20 @@ public class MusicData  {
             }
 
 
-            for (int i = 0; i < mPlex_FindData.mTracks.size(); i++) {
+            for (Plex_Track item : mPlex_FindData.mTracks) {
 
-                String name = mPlex_FindData.mTracks.get(i).title;
-                String album = mPlex_FindData.mTracks.get(i).parentTitle;
-                String artist = mPlex_FindData.mTracks.get(i).grandparentTitle;
+                String name = item.title;
+                String album = item.parentTitle;
+                String artist = item.grandparentTitle;
 
                 /*
                 http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ"
                 */
                 //todo: erst mal nur ersten Teil, später alle Teile
-                String filename = "http://" + IP + ":" + Port + mPlex_FindData.mTracks.get(i).parts.get(0).key + "?X-Plex-Token=" + Token;
+                String filename = "http://" + IP + ":" + Port + item.parts.get(0).key + "?X-Plex-Token=" + Token;
                 int duration = 0;
                 try {
-                    duration = Integer.parseInt(mPlex_FindData.mTracks.get(i).duration);
+                    duration = Integer.parseInt(item.duration);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "dzration is not a number");
                 }
@@ -297,9 +315,9 @@ public class MusicData  {
         if (mArtist4Album.length()>0){
             mLocalAlbums.clear();
             //only albums of selected artist
-            for (int i=0; i<mLocalAlbumsAll.size();i++){
-                if (mLocalAlbumsAll.get(i).getArtist().contains(mArtist4Album)){
-                    mLocalAlbums.add(mLocalAlbumsAll.get(i));
+            for (AlbumItem item : mLocalAlbumsAll) {
+                if (item.getArtist().contains(mArtist4Album)){
+                    mLocalAlbums.add(item);
                 }
             }
         }
@@ -310,9 +328,10 @@ public class MusicData  {
         if (mAlbum4Track.length()>0){
             mLocalTracks.clear();
             //only tracks of selected album
-            for (int i=0; i<mLocalTracksAll.size();i++){
-                if (mLocalTracksAll.get(i).getAlbum().contains(mAlbum4Track)){
-                    mLocalTracks.add(mLocalTracksAll.get(i));
+            for (TrackItem item : mLocalTracksAll){
+
+                if (item.getAlbum().contains(mAlbum4Track)){
+                    mLocalTracks.add(item);
                 }
             }
         }
@@ -410,8 +429,9 @@ public class MusicData  {
     private boolean ArtistExists(String ArtistName) {
 
         boolean ret = false;
-        for (int i = 0; i < mLocalArtists.size(); i++) {
-            String name= mLocalArtists.get(i).getName();
+        for (ArtistItem item : mLocalArtists) {
+
+            String name= item.getName();
             if ( name.equals(ArtistName)) {
                 ret = true;
             }
@@ -422,8 +442,9 @@ public class MusicData  {
     private boolean AlbumExists(String AlbumName) {
 
         boolean ret = false;
-        for (int i = 0; i < mLocalAlbumsAll.size(); i++) {
-            String name= mLocalAlbumsAll.get(i).getName();
+        for (AlbumItem item: mLocalAlbumsAll){
+
+            String name= item.getName();
             if ( name.equals(AlbumName)) {
                 ret = true;
             }

@@ -172,7 +172,7 @@ public class ArtistItemsAdapter extends
             String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
             Bitmap icon = null;
 
-            Log.d("TAG", "get image from " + fullURL);
+            Log.d(TAG, "get image from " + fullURL);
 
             try {
                 InputStream in = new java.net.URL(fullURL).openStream();

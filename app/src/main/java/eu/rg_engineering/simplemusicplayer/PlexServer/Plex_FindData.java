@@ -75,7 +75,6 @@ public class Plex_FindData extends Thread {
             mCommunication.messageFromPlexFindArtist("config not okay");
         }
 
-
         Boolean usePlexServer = sharedPreferences.getBoolean("usePlexServer", false);
 
         if (usePlexServer && ConfigOk) {
