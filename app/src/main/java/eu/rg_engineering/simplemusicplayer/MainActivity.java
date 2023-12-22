@@ -1,7 +1,6 @@
 package eu.rg_engineering.simplemusicplayer;
 
 
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -30,9 +28,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -74,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     private AlbumsFragment mAlbumsFragment;
     private TracksFragment mTracksFragment;
 
-    private String nextSongFrom="";
+    private String nextSongFrom = "";
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -113,7 +109,7 @@ public class MainActivity extends AppCompatActivity
             case "StopMusic":
                 musicstop();
                 OnlyOneSong = true;
-                SongNotFinished=false;
+                SongNotFinished = false;
                 break;
 
             default:
@@ -121,6 +117,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
     @Override
     public void messageFromTracksFragment(String msg, String params) {
 
@@ -137,6 +134,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
     @Override
     public void messageFromAlbumsFragment(String msg, String params) {
 
@@ -153,16 +151,17 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
     @Override
-    public void messageFromArtistItemsAdapter(String msg, String params) {
-        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params);
+    public void messageFromArtistItemsAdapter(String msg, String params, String artistName) {
+        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params + " " + artistName);
 
         switch (msg) {
             case "ShowInfo":
                 Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
             case "ArtistSelected":
-                mMusicData.SetArtist4Album(params);
+                mMusicData.SetArtist4Album(params, artistName);
 
                 if (mAlbumsFragment == null) {
                     mAlbumsFragment = new AlbumsFragment();
@@ -177,15 +176,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void messageFromAlbumItemsAdapter(String msg, String params) {
-        Log.d(TAG, "got message from AlbumFragment " + msg + " " + params);
+    public void messageFromAlbumItemsAdapter(String msg, String params, String albumName) {
+        Log.d(TAG, "got message from AlbumFragment " + msg + " " + params + " " + albumName);
 
         switch (msg) {
             case "ShowInfo":
                 Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
             case "AlbumSelected":
-                mMusicData.SetAlbum4Track(params);
+                mMusicData.SetAlbum4Track(params, albumName);
 
                 if (mTracksFragment == null) {
                     mTracksFragment = new TracksFragment();
@@ -362,7 +361,7 @@ public class MainActivity extends AppCompatActivity
         //SaveData();
     }
 
-     // Playing the music
+    // Playing the music
     private void musicplay(String filename) {
 
         Log.d(TAG, "musicplay " + filename);
@@ -440,7 +439,7 @@ public class MainActivity extends AppCompatActivity
                         if (isPlaying) {
                             // Active playback.
                             Log.i(TAG, "is playing");
-                            SongNotFinished=true;
+                            SongNotFinished = true;
                         } else {
                             // Not playing because playback is paused, ended, suppressed, or the player
                             // is buffering, stopped or failed. Check player.getPlayWhenReady,
@@ -450,7 +449,7 @@ public class MainActivity extends AppCompatActivity
 
                             if (exoPlayer.getPlaybackState() == Player.STATE_ENDED) {
                                 Log.d(TAG, "Song Complete " + OnlyOneSong);
-                                SongNotFinished=false;
+                                SongNotFinished = false;
                                 if (!OnlyOneSong) {
                                     GetNextSong();
                                 } else {
@@ -475,14 +474,13 @@ public class MainActivity extends AppCompatActivity
     private void GetNextSong() {
         Log.d(TAG, "get next song from " + nextSongFrom);
 
-        switch (nextSongFrom){
+        switch (nextSongFrom) {
             case "TrackItemsAdapter":
                 if (mTracksFragment != null) {
                     //wenn noch nicht fertig, dann aktuellen Song holen
-                    if (SongNotFinished){
+                    if (SongNotFinished) {
                         mTracksFragment.GetCurrentSong();
-                    }
-                    else{
+                    } else {
                         mTracksFragment.GetNextSong();
                     }
                 }
@@ -490,6 +488,8 @@ public class MainActivity extends AppCompatActivity
 
             default:
                 Log.e(TAG, "no source of tracks");
+
+                Toast.makeText(this, "no track selected.", Toast.LENGTH_LONG).show();
                 break;
         }
 

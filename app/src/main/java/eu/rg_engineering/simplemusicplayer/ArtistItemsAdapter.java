@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -60,8 +59,9 @@ public class ArtistItemsAdapter extends
     }
 
     public interface ArtistItemsAdapterListener {
-        void messageFromArtistItemsAdapter(String msg, String params);
+        void messageFromArtistItemsAdapter(String msg, String params, String artistName);
     }
+
     public ArtistItemsAdapter(List<ArtistItem> items, OnDeleteArtistitemListener deleteListener) {
         this.deleteListener = deleteListener;
         mItemsFiltered = ArtistItem.createItemsList(0);
@@ -82,6 +82,7 @@ public class ArtistItemsAdapter extends
             mItemsFiltered.add(item);
         }
     }
+
     @NonNull
     @Override
     public ArtistItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -116,7 +117,7 @@ public class ArtistItemsAdapter extends
         TextView countryTextView = viewHolder.countryTextView;
         Button infoButton = viewHolder.infoButton;
         ImageView imageImageView = viewHolder.imageImageView;
-        viewHolder.Plex_RatingKey=item.getPlexRatingKey();
+        viewHolder.Plex_RatingKey = item.getPlexRatingKey();
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
@@ -128,9 +129,9 @@ public class ArtistItemsAdapter extends
             countryTextView.setText(item.getCountry());
         }
         if (infoButton != null) {
-            String infoSummery=item.getInfo();
+            String infoSummery = item.getInfo();
 
-            if (infoSummery!=null && infoSummery.length()>0){
+            if (infoSummery != null && infoSummery.length() > 0) {
                 Log.d(TAG, "info Button should be visible ");
                 infoButton.setVisibility(View.VISIBLE);
 
@@ -139,22 +140,20 @@ public class ArtistItemsAdapter extends
                     public void onClick(View view) {
                         Log.d(TAG, "infoButton pressed position " + position);
                         String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromArtistItemsAdapter("ShowInfo", info);
+                        mCommunication.messageFromArtistItemsAdapter("ShowInfo", info, "");
                     }
                 });
-            }
-            else {
+            } else {
                 Log.d(TAG, "info Button should be invisible ");
             }
         }
-        if (imageImageView!=null){
-            String path2image=item.getPath2Image();
+        if (imageImageView != null) {
+            String path2image = item.getPath2Image();
 
-            if (path2image!=null && path2image.length()>0) {
+            if (path2image != null && path2image.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(imageImageView) .execute(path2image);
-            }
-            else {
+                new DownloadImageTask(imageImageView).execute(path2image);
+            } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }
         }
@@ -164,6 +163,7 @@ public class ArtistItemsAdapter extends
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView mImage;
+
         public DownloadImageTask(ImageView image) {
             this.mImage = image;
         }
@@ -268,9 +268,6 @@ public class ArtistItemsAdapter extends
     };
 
 
-
-
-
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
 
@@ -345,8 +342,15 @@ public class ArtistItemsAdapter extends
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
-            int pos =this.getAdapterPosition();
-            mCommunication.messageFromArtistItemsAdapter("ArtistSelected", String.valueOf(Plex_RatingKey));
+            int pos = this.getAdapterPosition();
+
+            String ratingKey = "-1";
+            if (Plex_RatingKey > 0) {
+                ratingKey = String.valueOf(Plex_RatingKey);
+            }
+            String ArtistName = nameTextView.getText().toString();
+
+            mCommunication.messageFromArtistItemsAdapter("ArtistSelected", ratingKey, ArtistName);
             return true;
         }
 

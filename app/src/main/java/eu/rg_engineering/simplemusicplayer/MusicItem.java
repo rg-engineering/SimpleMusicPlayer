@@ -42,8 +42,12 @@ public class MusicItem implements Parcelable {
             mAlbum = separated[2];
             mArtist = separated[3];
             mFilename = separated[4];
-            mDuration = Integer.parseInt(separated[5]);
+            ;
+            try {
+                mDuration = Integer.parseInt(separated[5]);
+            } catch (NumberFormatException ex) {
 
+            }
             if (mID == null || mID.isEmpty() || mID.length() < 6) {
                 mID = UUID.randomUUID().toString();
             }

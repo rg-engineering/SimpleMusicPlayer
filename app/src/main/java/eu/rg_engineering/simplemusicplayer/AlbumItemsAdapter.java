@@ -61,8 +61,9 @@ public class AlbumItemsAdapter extends
     }
 
     public interface AlbumItemsAdapterListener {
-        void messageFromAlbumItemsAdapter(String msg, String params);
+        void messageFromAlbumItemsAdapter(String msg, String params, String albumName);
     }
+
     public AlbumItemsAdapter(List<AlbumItem> items, OnDeleteAlbumitemListener deleteListener) {
         this.deleteListener = deleteListener;
         mItemsFiltered = AlbumItem.createItemsList(0);
@@ -83,6 +84,7 @@ public class AlbumItemsAdapter extends
             mItemsFiltered.add(item);
         }
     }
+
     @NonNull
     @Override
     public AlbumItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -117,7 +119,7 @@ public class AlbumItemsAdapter extends
         TextView yearTextView = viewHolder.yearTextView;
         Button infoButton = viewHolder.infoButton;
         ImageView imageImageView = viewHolder.imageImageView;
-        viewHolder.Plex_RatingKey=item.getPlexRatingKey();
+        viewHolder.Plex_RatingKey = item.getPlexRatingKey();
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
@@ -129,9 +131,9 @@ public class AlbumItemsAdapter extends
             yearTextView.setText(String.valueOf(item.getYear()));
         }
         if (infoButton != null) {
-            String infoSummery=item.getInfo();
+            String infoSummery = item.getInfo();
 
-            if (infoSummery!=null && infoSummery.length()>0){
+            if (infoSummery != null && infoSummery.length() > 0) {
                 Log.d(TAG, "info Button should be visible ");
                 infoButton.setVisibility(View.VISIBLE);
 
@@ -140,28 +142,28 @@ public class AlbumItemsAdapter extends
                     public void onClick(View view) {
                         Log.d(TAG, "infoButton pressed position " + position);
                         String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromAlbumItemsAdapter("ShowInfo", info);
+                        mCommunication.messageFromAlbumItemsAdapter("ShowInfo", info, "");
                     }
                 });
-            }
-            else {
+            } else {
                 Log.d(TAG, "info Button should be invisible ");
             }
         }
-        if (imageImageView!=null){
-            String path2image=item.getPath2Image();
+        if (imageImageView != null) {
+            String path2image = item.getPath2Image();
 
-            if (path2image!=null && path2image.length()>0) {
+            if (path2image != null && path2image.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new AlbumItemsAdapter.DownloadImageTask(imageImageView) .execute(path2image);
-            }
-            else {
+                new AlbumItemsAdapter.DownloadImageTask(imageImageView).execute(path2image);
+            } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }
         }
     }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView mImage;
+
         public DownloadImageTask(ImageView image) {
             this.mImage = image;
         }
@@ -186,6 +188,7 @@ public class AlbumItemsAdapter extends
             mImage.setImageBitmap(result);
         }
     }
+
     @Override
     public int getItemCount() {
         int cnt = 0;
@@ -264,9 +267,6 @@ public class AlbumItemsAdapter extends
     };
 
 
-
-
-
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
 
@@ -340,9 +340,15 @@ public class AlbumItemsAdapter extends
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             Log.d(TAG, "onSingleTapUp position " + this.getAdapterPosition());
+            int pos = this.getAdapterPosition();
 
-            int pos =this.getAdapterPosition();
-            mCommunication.messageFromAlbumItemsAdapter("AlbumSelected", String.valueOf(Plex_RatingKey));
+            String ratingKey = "-1";
+            if (Plex_RatingKey > 0) {
+                ratingKey = String.valueOf(Plex_RatingKey);
+            }
+            String AlbumName = nameTextView.getText().toString();
+
+            mCommunication.messageFromAlbumItemsAdapter("AlbumSelected", ratingKey, AlbumName);
             return true;
         }
 

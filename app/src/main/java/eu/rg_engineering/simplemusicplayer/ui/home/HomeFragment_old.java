@@ -477,8 +477,13 @@ public class HomeFragment_old extends Fragment implements
                 String ArtistId = cur.getString(6);
                 String Title = cur.getString(2);
                 String fileName = cur.getString(3);
-                int nDuration = Integer.parseInt(cur.getString(4));
+                int nDuration=0;
+                try {
+                nDuration = Integer.parseInt(cur.getString(4));
+                }
+                catch (NumberFormatException ex){
 
+                }
                 String sDuration = String.format("%02d:%02d:%02d",
                         TimeUnit.MILLISECONDS.toHours(nDuration),
                         TimeUnit.MILLISECONDS.toMinutes(nDuration) -

@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class ArtistItem implements Parcelable  {
+public class ArtistItem implements Parcelable {
 
     private String mID;
     private String mName;
@@ -16,42 +16,49 @@ public class ArtistItem implements Parcelable  {
     private String mCountry;
     private String mPath2Image;
     private String mSummery;
-    private int mPlex_ratingKey=46267;
+    private int mPlex_ratingKey = -1;
 
     protected ArtistItem(Parcel in) {
         mID = in.readString();
         mName = in.readString();
     }
-    public ArtistItem(String name, String genre, String country, String path2image, String summery, int plex_ratingkey ) {
+
+    public ArtistItem(String name, String genre, String country, String path2image, String summery, int plex_ratingkey) {
         mID = UUID.randomUUID().toString();
         mName = name;
         mGenre = genre;
-        mCountry=country;
+        mCountry = country;
         mPath2Image = path2image;
         mSummery = summery;
-        if (plex_ratingkey>0){
-            mPlex_ratingKey=plex_ratingkey;
+        if (plex_ratingkey > 0) {
+            mPlex_ratingKey = plex_ratingkey;
         }
     }
 
     public String getId() {
         return mID;
     }
+
     public String getName() {
         return mName;
     }
+
     public String getGenre() {
         return mGenre;
     }
+
     public String getCountry() {
         return mCountry;
     }
+
     public String getPath2Image() {
         return mPath2Image;
     }
+
     public String getInfo() {
         return mSummery;
     }
+
     public int getPlexRatingKey() {
         return mPlex_ratingKey;
     }
@@ -61,6 +68,7 @@ public class ArtistItem implements Parcelable  {
         public ArtistItem createFromParcel(Parcel in) {
             return new ArtistItem(in);
         }
+
         @Override
         public ArtistItem[] newArray(int size) {
             return new ArtistItem[size];
@@ -87,7 +95,7 @@ public class ArtistItem implements Parcelable  {
         ArrayList<ArtistItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new ArtistItem("artist"+i, "Jazz", "Germany", "", "no info",-1));
+            items.add(new ArtistItem("artist" + i, "Jazz", "Germany", "", "no info", -1));
         }
         return items;
     }

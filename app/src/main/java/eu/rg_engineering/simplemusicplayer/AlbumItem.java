@@ -16,7 +16,7 @@ public class AlbumItem implements Parcelable {
     private int mYear;
     private String mPath2Image;
     private String mSummery;
-    private int mPlex_ratingKey = 47872;
+    private int mPlex_ratingKey = -1;
 
 
     protected AlbumItem(Parcel in) {
