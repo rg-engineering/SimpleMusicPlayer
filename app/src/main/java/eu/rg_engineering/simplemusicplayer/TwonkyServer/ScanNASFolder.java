@@ -12,6 +12,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.sentry.Sentry;
+
 
 public class ScanNASFolder extends AsyncTask<String, String, String> {
     private String TAG = "ScanNASFolder";
@@ -57,7 +59,9 @@ public class ScanNASFolder extends AsyncTask<String, String, String> {
         try {
             start();
         } catch (IOException e) {
+            Sentry.captureException(e);
             throw new RuntimeException(e);
+
         }
 
         return null;

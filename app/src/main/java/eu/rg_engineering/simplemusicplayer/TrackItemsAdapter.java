@@ -25,6 +25,7 @@ import java.util.List;
 
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
+import io.sentry.Sentry;
 
 
 public class TrackItemsAdapter extends
@@ -427,6 +428,7 @@ public class TrackItemsAdapter extends
             }
         } catch (Exception ex) {
             Log.e(TAG, "exception in FindItemInList " + ex.toString());
+            Sentry.captureException(ex);
         }
         return nRet;
     }

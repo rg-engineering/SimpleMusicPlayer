@@ -28,7 +28,11 @@ import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteArtistitemListener;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
+import io.sentry.Sentry;
 
+
+//todo Anzeige Anzahl Artists
+//todo Info-Anzeige optimieren
 public class ArtistsFragment extends Fragment implements
         OnDeleteArtistitemListener {
 
@@ -105,6 +109,7 @@ public class ArtistsFragment extends Fragment implements
             });
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Sentry.captureException(ex);
         }
         return root;
     }

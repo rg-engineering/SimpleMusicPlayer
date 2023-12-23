@@ -27,7 +27,11 @@ import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
+import io.sentry.Sentry;
 
+//todo Anzeige Anzahl Albums
+//todo Info-Anzeige optimieren
+// Bild von Artist einfügen
 public class AlbumsFragment extends Fragment implements
         OnDeleteAlbumitemListener {
 
@@ -132,6 +136,7 @@ public class AlbumsFragment extends Fragment implements
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Sentry.captureException(ex);
         }
         return root;
 

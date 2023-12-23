@@ -38,6 +38,7 @@ import eu.rg_engineering.simplemusicplayer.ui.home.AlbumsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.ArtistsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment;
+import io.sentry.Sentry;
 
 
 //todo: car intergration https://github.com/google/ExoPlayer/issues/8561
@@ -303,6 +304,7 @@ public class MainActivity extends AppCompatActivity
             packageinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, "exception in onCreate " + e.getMessage());
+            Sentry.captureException(e);
         }
         String Version = packageinfo.versionName.toString();
 
@@ -336,6 +338,9 @@ public class MainActivity extends AppCompatActivity
 
         mArtistsFragment = new ArtistsFragment();
         replaceFragment(mArtistsFragment);
+
+
+
 
     }
 
@@ -390,6 +395,7 @@ public class MainActivity extends AppCompatActivity
             exoPlayer.play();
         } catch (Exception e) {
             Log.e(TAG, "exception in musicplay " + e.getMessage());
+            Sentry.captureException(e);
         }
 
 

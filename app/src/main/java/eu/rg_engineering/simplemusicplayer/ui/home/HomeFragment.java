@@ -50,6 +50,7 @@ import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
+import io.sentry.Sentry;
 
 
 public class HomeFragment extends Fragment {
@@ -111,6 +112,7 @@ public class HomeFragment extends Fragment {
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Sentry.captureException(ex);
         }
         return root;
     }

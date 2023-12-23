@@ -21,6 +21,7 @@ import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_Artist;
 import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindData;
 import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_Track;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
+import io.sentry.Sentry;
 
 public class MusicData  {
 
@@ -128,6 +129,7 @@ public class MusicData  {
                     ratingKey = Integer.parseInt(item.ratingKey);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "ratingkey is not a number");
+                    Sentry.captureException(ex);
                 }
                 ArtistItem artist = new ArtistItem(name, genre, country, path2image, summery, ratingKey);
                 mLocalArtists.add(artist);
@@ -155,6 +157,7 @@ public class MusicData  {
                     year = Integer.parseInt(item.year);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "year is not a number");
+                    Sentry.captureException(ex);
                 }
                 String path2image = item.thumb;
                 String summery = item.summary;
@@ -163,6 +166,7 @@ public class MusicData  {
                     ratingKey = Integer.parseInt(item.ratingKey);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "ratingkey is not a number");
+                    Sentry.captureException(ex);
                 }
                 AlbumItem album = new AlbumItem(name, artist, year, path2image, summery, ratingKey);
 
@@ -198,7 +202,8 @@ public class MusicData  {
                 try {
                     duration = Integer.parseInt(item.duration);
                 } catch (NumberFormatException ex) {
-                    Log.e(TAG, "dzration is not a number");
+                    Log.e(TAG, "duration is not a number");
+                    Sentry.captureException(ex);
                 }
                 TrackItem track = new TrackItem(name, album, artist, filename, duration);
                 mLocalTracks.add(track);
@@ -373,6 +378,7 @@ public class MusicData  {
                 }
                 catch (NumberFormatException ex) {
                     Log.e(TAG, "duration is not a number");
+                    Sentry.captureException(ex);
                 }
                 String sDuration = String.format("%02d:%02d:%02d",
                         TimeUnit.MILLISECONDS.toHours(nDuration),

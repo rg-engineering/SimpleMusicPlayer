@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import io.sentry.Sentry;
+
 
 public class MusicItem implements Parcelable {
 
@@ -46,7 +48,7 @@ public class MusicItem implements Parcelable {
             try {
                 mDuration = Integer.parseInt(separated[5]);
             } catch (NumberFormatException ex) {
-
+                Sentry.captureException(ex);
             }
             if (mID == null || mID.isEmpty() || mID.length() < 6) {
                 mID = UUID.randomUUID().toString();
@@ -56,6 +58,7 @@ public class MusicItem implements Parcelable {
             mProgress = 0;
         } catch (Exception ex) {
             Log.v(TAG, "Exception in MusicItem deserialize " + ex.getLocalizedMessage());
+            Sentry.captureException(ex);
         }
     }
 
@@ -71,6 +74,7 @@ public class MusicItem implements Parcelable {
             mProgress = 0;
         } catch (Exception ex) {
             Log.v(TAG, "Exception in MusicItem deparcel " + ex.getLocalizedMessage());
+            Sentry.captureException(ex);
         }
     }
 

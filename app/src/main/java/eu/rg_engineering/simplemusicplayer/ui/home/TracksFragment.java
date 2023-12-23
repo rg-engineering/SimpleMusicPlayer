@@ -26,6 +26,10 @@ import eu.rg_engineering.simplemusicplayer.TrackItem;
 import eu.rg_engineering.simplemusicplayer.TrackItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
+import io.sentry.Sentry;
+
+//todo Anzeige Anzahl Tracks
+// Bild von Artist und Album einfügen
 
 public class TracksFragment extends Fragment implements
         OnDeleteTrackitemListener {
@@ -130,6 +134,7 @@ public class TracksFragment extends Fragment implements
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Sentry.captureException(ex);
         }
         return root;
 

@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import io.sentry.Sentry;
+
 //https://www.plexopedia.com/plex-media-server/api/
 public class Plex_FindData extends Thread {
 
@@ -124,6 +126,7 @@ public class Plex_FindData extends Thread {
             downloadXml(url);
         } catch (MalformedURLException ex) {
             Log.e(TAG, "wrong url: " + ex.toString());
+            Sentry.captureException(ex);
         }
     }
 
@@ -136,6 +139,7 @@ public class Plex_FindData extends Thread {
             downloadXml(url);
         } catch (MalformedURLException ex) {
             Log.e(TAG, "wrong url: " + ex.toString());
+            Sentry.captureException(ex);
         }
     }
     public void startFindTracks() {
@@ -147,6 +151,7 @@ public class Plex_FindData extends Thread {
             downloadXml(url);
         } catch (MalformedURLException ex) {
             Log.e(TAG, "wrong url: " + ex.toString());
+            Sentry.captureException(ex);
         }
     }
 
@@ -163,6 +168,7 @@ public class Plex_FindData extends Thread {
 
         } catch (XmlPullParserException ex) {
             Log.e(TAG, "exception in downloadXml " +ex.toString());
+            Sentry.captureException(ex);
         }
     }
 

@@ -27,6 +27,7 @@ import java.util.List;
 
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
+import io.sentry.Sentry;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
@@ -502,6 +503,7 @@ public class MusicItemsAdapter extends
             }
         } catch (Exception ex) {
             Log.e(TAG, "exception in FindItemInList " + ex.toString());
+            Sentry.captureException(ex);
         }
         return nRet;
     }

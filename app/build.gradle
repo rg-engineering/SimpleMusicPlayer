@@ -1,4 +1,7 @@
-apply plugin: 'com.android.application'
+plugins {
+    id "com.android.application"
+    id "io.sentry.android.gradle" version "4.1.0"
+}
 
 android {
     compileSdk 34
@@ -7,8 +10,8 @@ android {
         applicationId "eu.rg_engineering.simplemusicplayer"
         minSdkVersion 27
         targetSdkVersion 33
-        versionCode 70
-        versionName '0.7.0'
+        versionCode 80
+        versionName '0.8.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,6 +46,8 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.7.1'
     implementation 'androidx.activity:activity:1.8.2'
     implementation 'androidx.fragment:fragment:1.6.2'
+
+
 
     // ExoPlayer
     //https://developer.android.com/guide/topics/media/exoplayer/hello-world

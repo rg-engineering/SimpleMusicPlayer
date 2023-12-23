@@ -50,6 +50,7 @@ import eu.rg_engineering.simplemusicplayer.MusicItem;
 import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
+import io.sentry.Sentry;
 
 
 public class HomeFragment_old extends Fragment implements
@@ -301,6 +302,7 @@ public class HomeFragment_old extends Fragment implements
 
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, "image not found " + backGroundImage);
+                    Sentry.captureException(e);
                 }
             }
 
@@ -310,6 +312,7 @@ public class HomeFragment_old extends Fragment implements
             FillFilters();
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Sentry.captureException(ex);
         }
         return root;
 
@@ -397,6 +400,7 @@ public class HomeFragment_old extends Fragment implements
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in save file " + ex.toString());
+            Sentry.captureException(ex);
         }
     }
 
@@ -408,6 +412,7 @@ public class HomeFragment_old extends Fragment implements
             outputStreamWriter.close();
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
+            Sentry.captureException(e);
         }
 
 
@@ -441,8 +446,10 @@ public class HomeFragment_old extends Fragment implements
             }
         } catch (FileNotFoundException e) {
             Log.e(TAG, "File not found: " + e.toString());
+            Sentry.captureException(e);
         } catch (IOException e) {
             Log.e(TAG, "Can not read file: " + e.toString());
+            Sentry.captureException(e);
         }
 
 
