@@ -42,4 +42,5 @@
     <string name="settings_general" >Allgemeine Einstellungen</string>
     <string name="usePlexServer" >Plex Server verwenden</string>
     <string name="plex_server_libid" >Plex Server Bibliotheks-ID</string>
+    <string name="sentry_hint" >Diese App nutzt Sentry-Bibliotheken, um Ausnahmen und Codefehler automatisch an die Entwickler zu melden.</string>
 </resources>

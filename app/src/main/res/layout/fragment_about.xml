@@ -6,6 +6,16 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tCompany"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/rg_engineering_eu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/tEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,14 +26,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tCompany" />
 
     <TextView
-        android:id="@+id/tCompany"
+        android:id="@+id/tSentryHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/rg_engineering_eu"
+        android:text="@string/sentry_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btnDataPrivacy" />
 
     <Button
         android:id="@+id/btnDataPrivacy"
