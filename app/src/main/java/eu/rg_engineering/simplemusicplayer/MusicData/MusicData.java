@@ -25,8 +25,8 @@ import io.sentry.Sentry;
 
 public class MusicData  {
 
-    private String TAG = "MusicData";
-    private Activity mActivity;
+    private final String TAG = "MusicData";
+    private final Activity mActivity;
     private Plex_FindData mPlex_FindData=null;
     private String mArtist4Album="";
     private Boolean mSearchAlbumOnServer = false;
@@ -438,8 +438,9 @@ public class MusicData  {
         for (ArtistItem item : mLocalArtists) {
 
             String name= item.getName();
-            if ( name.equals(ArtistName)) {
+            if (name.equals(ArtistName)) {
                 ret = true;
+                break;
             }
         }
         return ret;
@@ -451,8 +452,9 @@ public class MusicData  {
         for (AlbumItem item: mLocalAlbumsAll){
 
             String name= item.getName();
-            if ( name.equals(AlbumName)) {
+            if (name.equals(AlbumName)) {
                 ret = true;
+                break;
             }
         }
         return ret;

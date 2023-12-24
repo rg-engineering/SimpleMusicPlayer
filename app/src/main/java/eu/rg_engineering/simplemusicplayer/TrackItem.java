@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TrackItem implements Parcelable  {
 
-    private String mID;
-    private String mName;
+    private final String mID;
+    private final String mName;
     private String mAlbum;
     private String mArtist;
     private String mFileName;

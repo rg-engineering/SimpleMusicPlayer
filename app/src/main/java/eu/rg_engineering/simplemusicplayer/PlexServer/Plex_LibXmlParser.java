@@ -13,7 +13,7 @@ import java.util.List;
 
 
 public class Plex_LibXmlParser {
-    private String TAG = "Plex_LibXmlParser";
+    private final String TAG = "Plex_LibXmlParser";
     private static final String ns = null;
 
     public List parse(InputStream in) throws XmlPullParserException, IOException {

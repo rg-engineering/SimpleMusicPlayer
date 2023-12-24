@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
 
-    private String TAG = "Main";
+    private final String TAG = "Main";
     private ExoPlayer exoPlayer;
     private Timer progressTimer;
     //private discoverServer  discover;
@@ -124,15 +124,10 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "got message from TracksFragment " + msg + " " + params);
 
-        switch (msg) {
-
-            case "btnBack":
-                replaceFragment(mAlbumsFragment);
-                break;
-
-            default:
-                Log.e(TAG, "unknown message " + msg);
-                break;
+        if (msg.equals("btnBack")) {
+            replaceFragment(mAlbumsFragment);
+        } else {
+            Log.e(TAG, "unknown message " + msg);
         }
     }
 
@@ -141,15 +136,10 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "got message from AlbumsFragment " + msg + " " + params);
 
-        switch (msg) {
-
-            case "btnBack":
-                replaceFragment(mArtistsFragment);
-                break;
-
-            default:
-                Log.e(TAG, "unknown message " + msg);
-                break;
+        if (msg.equals("btnBack")) {
+            replaceFragment(mArtistsFragment);
+        } else {
+            Log.e(TAG, "unknown message " + msg);
         }
     }
 
@@ -203,15 +193,11 @@ public class MainActivity extends AppCompatActivity
     public void messageFromTrackItemsAdapter(String msg, String params) {
         Log.d(TAG, "got message from TrackFragment " + msg + " " + params);
 
-        switch (msg) {
-
-            case "PlayMusic":
-                musicplay(params);
-                nextSongFrom = "TrackItemsAdapter";
-                break;
-            default:
-                Log.e(TAG, "unknown message " + msg);
-                break;
+        if (msg.equals("PlayMusic")) {
+            musicplay(params);
+            nextSongFrom = "TrackItemsAdapter";
+        } else {
+            Log.e(TAG, "unknown message " + msg);
         }
 
     }
@@ -306,7 +292,7 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "exception in onCreate " + e.getMessage());
             Sentry.captureException(e);
         }
-        String Version = packageinfo.versionName.toString();
+        String Version = packageinfo.versionName;
 
         View header = navigationView.getHeaderView(0);
         TextView text = (TextView) header.findViewById(R.id.VersionView);
@@ -480,23 +466,19 @@ public class MainActivity extends AppCompatActivity
     private void GetNextSong() {
         Log.d(TAG, "get next song from " + nextSongFrom);
 
-        switch (nextSongFrom) {
-            case "TrackItemsAdapter":
-                if (mTracksFragment != null) {
-                    //wenn noch nicht fertig, dann aktuellen Song holen
-                    if (SongNotFinished) {
-                        mTracksFragment.GetCurrentSong();
-                    } else {
-                        mTracksFragment.GetNextSong();
-                    }
+        if (nextSongFrom.equals("TrackItemsAdapter")) {
+            if (mTracksFragment != null) {
+                //wenn noch nicht fertig, dann aktuellen Song holen
+                if (SongNotFinished) {
+                    mTracksFragment.GetCurrentSong();
+                } else {
+                    mTracksFragment.GetNextSong();
                 }
-                break;
+            }
+        } else {
+            Log.e(TAG, "no source of tracks");
 
-            default:
-                Log.e(TAG, "no source of tracks");
-
-                Toast.makeText(this, "no track selected.", Toast.LENGTH_LONG).show();
-                break;
+            Toast.makeText(this, "no track selected.", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -508,7 +490,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private Runnable UpdateProgress = new Runnable() {
+    private final Runnable UpdateProgress = new Runnable() {
         public void run() {
             long position = exoPlayer.getCurrentPosition();
             if (mTracksFragment != null) {

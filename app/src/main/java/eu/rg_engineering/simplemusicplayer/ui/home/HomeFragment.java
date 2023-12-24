@@ -55,7 +55,7 @@ import io.sentry.Sentry;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
-    private String TAG = "HomeFragment";
+    private final String TAG = "HomeFragment";
     HomeFragmentListener mCommunication;
     Context mContext;
     public interface HomeFragmentListener {
@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment {
             });
 
         } catch (Exception ex) {
-            Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
         }
         return root;

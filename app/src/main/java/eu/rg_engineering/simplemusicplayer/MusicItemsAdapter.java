@@ -35,11 +35,11 @@ public class MusicItemsAdapter extends
         RecyclerView.Adapter<MusicItemsAdapter.ViewHolder> implements
         Filterable,
         ItemTouchHelperAdapter {
-    private String TAG = "MusicItemsAdapter";
-    private List<MusicItem> mItemsFiltered;
-    private List<MusicItem> mItemsAll;
+    private final String TAG = "MusicItemsAdapter";
+    private final List<MusicItem> mItemsFiltered;
+    private final List<MusicItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private OnDeleteMusicitemListener deleteListener;
+    private final OnDeleteMusicitemListener deleteListener;
     private int mFilterIdx = 0;
     private int currentPlayedMusicPosition = -1;
     Context mContext;
@@ -239,7 +239,7 @@ public class MusicItemsAdapter extends
                 filteredList.addAll(mItemsAll);
 
             } else {
-                Log.d(TAG, "artist filter set " + constraint.toString() + " " + mItemsAll.size());
+                Log.d(TAG, "artist filter set " + constraint + " " + mItemsAll.size());
 
                 for (MusicItem item : mItemsAll) {
 
@@ -277,7 +277,7 @@ public class MusicItemsAdapter extends
                 filteredList.addAll(mItemsAll);
 
             } else {
-                Log.d(TAG, "album filter set " + constraint.toString() + " " + mItemsAll.size());
+                Log.d(TAG, "album filter set " + constraint + " " + mItemsAll.size());
 
                 for (MusicItem item : mItemsAll) {
 
@@ -315,7 +315,7 @@ public class MusicItemsAdapter extends
                 filteredList.addAll(mItemsAll);
 
             } else {
-                Log.d(TAG, "title filter set " + constraint.toString() + " " + mItemsAll.size());
+                Log.d(TAG, "title filter set " + constraint + " " + mItemsAll.size());
 
                 for (MusicItem item : mItemsAll) {
 
@@ -502,7 +502,7 @@ public class MusicItemsAdapter extends
                 }
             }
         } catch (Exception ex) {
-            Log.e(TAG, "exception in FindItemInList " + ex.toString());
+            Log.e(TAG, "exception in FindItemInList " + ex);
             Sentry.captureException(ex);
         }
         return nRet;

@@ -13,9 +13,9 @@ import android.util.Log;
 
 public class discoverServer {
 
-    private String TAG = "discoverServer";
+    private final String TAG = "discoverServer";
 
-    private Context mContext;
+    private final Context mContext;
 
     public discoverServer(Context context){
         mContext = context;

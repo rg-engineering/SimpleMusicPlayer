@@ -20,7 +20,7 @@ import io.sentry.Sentry;
 //https://www.plexopedia.com/plex-media-server/api/
 public class Plex_FindData extends Thread {
 
-    private String TAG = "plex_findArtists";
+    private final String TAG = "plex_findArtists";
     private String IP = "";
     private String Port = "";
     private String Token = "";
@@ -125,7 +125,7 @@ public class Plex_FindData extends Thread {
             URL url = new URL("http://" + IP + ":" + Port + "/library/sections/" + LibID + "/all?X-Plex-Token=" + Token);
             downloadXml(url);
         } catch (MalformedURLException ex) {
-            Log.e(TAG, "wrong url: " + ex.toString());
+            Log.e(TAG, "wrong url: " + ex);
             Sentry.captureException(ex);
         }
     }
@@ -138,7 +138,7 @@ public class Plex_FindData extends Thread {
             URL url = new URL("http://" + IP + ":" + Port + "/library/sections/" + LibID + "/all?artist.id=" + artistID + "&type=9&X-Plex-Token=" + Token);
             downloadXml(url);
         } catch (MalformedURLException ex) {
-            Log.e(TAG, "wrong url: " + ex.toString());
+            Log.e(TAG, "wrong url: " + ex);
             Sentry.captureException(ex);
         }
     }
@@ -150,7 +150,7 @@ public class Plex_FindData extends Thread {
             URL url = new URL("http://" + IP + ":" + Port + "/library/metadata/" + albumID + "/children?X-Plex-Token=" + Token);
             downloadXml(url);
         } catch (MalformedURLException ex) {
-            Log.e(TAG, "wrong url: " + ex.toString());
+            Log.e(TAG, "wrong url: " + ex);
             Sentry.captureException(ex);
         }
     }
@@ -167,7 +167,7 @@ public class Plex_FindData extends Thread {
         } catch (IOException e) {
 
         } catch (XmlPullParserException ex) {
-            Log.e(TAG, "exception in downloadXml " +ex.toString());
+            Log.e(TAG, "exception in downloadXml " + ex);
             Sentry.captureException(ex);
         }
     }

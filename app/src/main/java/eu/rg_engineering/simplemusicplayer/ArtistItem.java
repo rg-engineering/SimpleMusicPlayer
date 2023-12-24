@@ -10,8 +10,8 @@ import java.util.UUID;
 
 public class ArtistItem implements Parcelable {
 
-    private String mID;
-    private String mName;
+    private final String mID;
+    private final String mName;
     private String mGenre;
     private String mCountry;
     private String mPath2Image;

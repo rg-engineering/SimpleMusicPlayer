@@ -16,7 +16,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private static int SELECT_IMAGE = 1;
+    private static final int SELECT_IMAGE = 1;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

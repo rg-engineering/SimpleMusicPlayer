@@ -35,7 +35,7 @@ import io.sentry.Sentry;
 public class AlbumsFragment extends Fragment implements
         OnDeleteAlbumitemListener {
 
-    private String TAG = "AlbumsFragment";
+    private final String TAG = "AlbumsFragment";
     AlbumsFragmentListener mCommunication;
     Context mContext;
     private RecyclerView rvAlbumItems = null;
@@ -135,7 +135,7 @@ public class AlbumsFragment extends Fragment implements
             });
 
         } catch (Exception ex) {
-            Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
         }
         return root;

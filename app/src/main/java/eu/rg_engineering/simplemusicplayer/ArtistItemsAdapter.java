@@ -38,11 +38,11 @@ public class ArtistItemsAdapter extends
         Filterable,
         ItemTouchHelperAdapter {
 
-    private String TAG = "ArtistItemsAdapter";
-    private List<ArtistItem> mItemsFiltered;
+    private final String TAG = "ArtistItemsAdapter";
+    private final List<ArtistItem> mItemsFiltered;
     private List<ArtistItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private OnDeleteArtistitemListener deleteListener;
+    private final OnDeleteArtistitemListener deleteListener;
     private int mFilterIdx = 0;
     Context mContext;
     private String IP = "";
@@ -217,15 +217,10 @@ public class ArtistItemsAdapter extends
 
         Filter oRet = null;
 
-        switch (mFilterIdx) {
-            case 1: // artist name filter
-                oRet = filterArtist;
-                break;
-
-            default:
-                Log.e(TAG, "no Filter #" + mFilterIdx);
-                break;
-
+        if (mFilterIdx == 1) { // artist name filter
+            oRet = filterArtist;
+        } else {
+            Log.e(TAG, "no Filter #" + mFilterIdx);
         }
 
         return oRet;
@@ -242,7 +237,7 @@ public class ArtistItemsAdapter extends
                 filteredList.addAll(mItemsAll);
 
             } else {
-                Log.d(TAG, "artist filter set " + constraint.toString() + " " + mItemsAll.size());
+                Log.d(TAG, "artist filter set " + constraint + " " + mItemsAll.size());
 
                 for (ArtistItem item : mItemsAll) {
 
@@ -431,7 +426,7 @@ public class ArtistItemsAdapter extends
                 }
             }
         } catch (Exception ex) {
-            Log.e(TAG, "exception in FindItemInList " + ex.toString());
+            Log.e(TAG, "exception in FindItemInList " + ex);
             Sentry.captureException(ex);
         }
         return nRet;

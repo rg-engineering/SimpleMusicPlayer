@@ -17,7 +17,7 @@ import eu.rg_engineering.simplemusicplayer.R;
 
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 
-    private  String TAG = "MyItemTouchHelper";
+    private final String TAG = "MyItemTouchHelper";
     private final ItemTouchHelperAdapter mAdapter;
 
     public MyItemTouchHelper(ItemTouchHelperAdapter mAdapter) {

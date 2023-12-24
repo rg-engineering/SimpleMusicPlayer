@@ -21,7 +21,7 @@ public class MusicItem implements Parcelable {
     private int mDuration;
     private long mCurrentPlaytime;
     private int mProgress;
-    private String TAG = "MusicItem";
+    private final String TAG = "MusicItem";
 
     public MusicItem(String title, String album, String artist, String filename, int duration) {
         mID = UUID.randomUUID().toString();
@@ -44,7 +44,6 @@ public class MusicItem implements Parcelable {
             mAlbum = separated[2];
             mArtist = separated[3];
             mFilename = separated[4];
-            ;
             try {
                 mDuration = Integer.parseInt(separated[5]);
             } catch (NumberFormatException ex) {
@@ -150,7 +149,7 @@ public class MusicItem implements Parcelable {
         return sRet;
     }
 
-    private static int lastItemId = 0;
+    private static final int lastItemId = 0;
 
     public static ArrayList<MusicItem> createItemsList(int numItems) {
         ArrayList<MusicItem> items = new ArrayList<>();
@@ -187,7 +186,7 @@ public class MusicItem implements Parcelable {
         sRet += "," + mAlbum;
         sRet += "," + mArtist;
         sRet += "," + mFilename;
-        sRet += "," + String.valueOf(mDuration);
+        sRet += "," + mDuration;
         sRet += System.getProperty("line.separator");
         return sRet;
     }

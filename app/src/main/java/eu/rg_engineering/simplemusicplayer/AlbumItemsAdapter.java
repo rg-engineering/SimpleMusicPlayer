@@ -39,11 +39,11 @@ public class AlbumItemsAdapter extends
         Filterable,
         ItemTouchHelperAdapter {
 
-    private String TAG = "AlbumItemsAdapter";
-    private List<AlbumItem> mItemsFiltered;
+    private final String TAG = "AlbumItemsAdapter";
+    private final List<AlbumItem> mItemsFiltered;
     private List<AlbumItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private OnDeleteAlbumitemListener deleteListener;
+    private final OnDeleteAlbumitemListener deleteListener;
     private int mFilterIdx = 0;
     Context mContext;
     private String IP = "";
@@ -223,15 +223,10 @@ public class AlbumItemsAdapter extends
 
         Filter oRet = null;
 
-        switch (mFilterIdx) {
-            case 1: // album name filter
-                oRet = filterAlbum;
-                break;
-
-            default:
-                Log.e(TAG, "no Filter #" + mFilterIdx);
-                break;
-
+        if (mFilterIdx == 1) { // album name filter
+            oRet = filterAlbum;
+        } else {
+            Log.e(TAG, "no Filter #" + mFilterIdx);
         }
 
         return oRet;
@@ -248,7 +243,7 @@ public class AlbumItemsAdapter extends
                 filteredList.addAll(mItemsAll);
 
             } else {
-                Log.d(TAG, "album filter set " + constraint.toString() + " " + mItemsAll.size());
+                Log.d(TAG, "album filter set " + constraint + " " + mItemsAll.size());
 
                 for (AlbumItem item : mItemsAll) {
 
@@ -436,7 +431,7 @@ public class AlbumItemsAdapter extends
                 }
             }
         } catch (Exception ex) {
-            Log.e(TAG, "exception in FindItemInList " + ex.toString());
+            Log.e(TAG, "exception in FindItemInList " + ex);
             Sentry.captureException(ex);
         }
         return nRet;

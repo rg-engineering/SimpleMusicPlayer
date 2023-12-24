@@ -60,10 +60,9 @@ public class HomeFragment_old extends Fragment implements
     ArrayList<MusicItem> items;
     private RecyclerView rvMusicItems = null;
     private MusicItemsAdapter MusicItemsAdapter = null;
-    private SearchView searchView = null;
-    ;
-    private String TAG = "HomeFragment";
-    private String filename = "ShoppingList";
+    private final SearchView searchView = null;
+    private final String TAG = "HomeFragment";
+    private final String filename = "ShoppingList";
     private final int REQUEST_CODE_EDIT = 101;
     HomeFragmentListener mCommunication;
     Context mContext;
@@ -311,7 +310,7 @@ public class HomeFragment_old extends Fragment implements
 
             FillFilters();
         } catch (Exception ex) {
-            Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
         }
         return root;
@@ -399,7 +398,7 @@ public class HomeFragment_old extends Fragment implements
             writeToFile(Contents, filename);
 
         } catch (Exception ex) {
-            Log.e(TAG, "exception in save file " + ex.toString());
+            Log.e(TAG, "exception in save file " + ex);
             Sentry.captureException(ex);
         }
     }
@@ -411,7 +410,7 @@ public class HomeFragment_old extends Fragment implements
             outputStreamWriter.write(data);
             outputStreamWriter.close();
         } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
+            Log.e("Exception", "File write failed: " + e);
             Sentry.captureException(e);
         }
 
@@ -445,10 +444,10 @@ public class HomeFragment_old extends Fragment implements
                 //ret = stringBuilder.toString();
             }
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found: " + e.toString());
+            Log.e(TAG, "File not found: " + e);
             Sentry.captureException(e);
         } catch (IOException e) {
-            Log.e(TAG, "Can not read file: " + e.toString());
+            Log.e(TAG, "Can not read file: " + e);
             Sentry.captureException(e);
         }
 

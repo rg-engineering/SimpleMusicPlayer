@@ -16,12 +16,12 @@ import io.sentry.Sentry;
 
 
 public class ScanNASFolder extends AsyncTask<String, String, String> {
-    private String TAG = "ScanNASFolder";
-    private String ServerName = "MYCLOUDEX2ULTRA";
-    private String UserName = "rene";
-    private String Password = "kenn11wort";
-    private String Path = "familie";
-    private String Path2 = "Musik\\Diane\\Das Beste";
+    private final String TAG = "ScanNASFolder";
+    private final String ServerName = "MYCLOUDEX2ULTRA";
+    private final String UserName = "rene";
+    private final String Password = "kenn11wort";
+    private final String Path = "familie";
+    private final String Path2 = "Musik\\Diane\\Das Beste";
 
     private void start() throws IOException {
         Log.d(TAG, "start scanning ");

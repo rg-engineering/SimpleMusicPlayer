@@ -36,7 +36,7 @@ import io.sentry.Sentry;
 public class ArtistsFragment extends Fragment implements
         OnDeleteArtistitemListener {
 
-    private String TAG = "ArtistsFragment";
+    private final String TAG = "ArtistsFragment";
     private RecyclerView rvArtistItems = null;
     private ArtistItemsAdapter ArtistItemsAdapter = null;
     ArrayList<ArtistItem> mArtists;
@@ -108,7 +108,7 @@ public class ArtistsFragment extends Fragment implements
                 }
             });
         } catch (Exception ex) {
-            Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
         }
         return root;

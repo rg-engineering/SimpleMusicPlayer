@@ -33,11 +33,11 @@ public class TrackItemsAdapter extends
         Filterable,
         ItemTouchHelperAdapter {
 
-    private String TAG = "TrackItemsAdapter";
-    private List<TrackItem> mItemsFiltered;
+    private final String TAG = "TrackItemsAdapter";
+    private final List<TrackItem> mItemsFiltered;
     private List<TrackItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private OnDeleteTrackitemListener deleteListener;
+    private final OnDeleteTrackitemListener deleteListener;
     private int mFilterIdx = 0;
     private int currentPlayedMusicPosition = -1;
     Context mContext;
@@ -209,15 +209,10 @@ public class TrackItemsAdapter extends
 
         Filter oRet = null;
 
-        switch (mFilterIdx) {
-            case 1: // track name filter
-                oRet = filterTrack;
-                break;
-
-            default:
-                Log.e(TAG, "no Filter #" + mFilterIdx);
-                break;
-
+        if (mFilterIdx == 1) { // track name filter
+            oRet = filterTrack;
+        } else {
+            Log.e(TAG, "no Filter #" + mFilterIdx);
         }
 
         return oRet;
@@ -234,7 +229,7 @@ public class TrackItemsAdapter extends
                 filteredList.addAll(mItemsAll);
 
             } else {
-                Log.d(TAG, "track filter set " + constraint.toString() + " " + mItemsAll.size());
+                Log.d(TAG, "track filter set " + constraint + " " + mItemsAll.size());
 
                 for (TrackItem item : mItemsAll) {
 
@@ -427,7 +422,7 @@ public class TrackItemsAdapter extends
                 }
             }
         } catch (Exception ex) {
-            Log.e(TAG, "exception in FindItemInList " + ex.toString());
+            Log.e(TAG, "exception in FindItemInList " + ex);
             Sentry.captureException(ex);
         }
         return nRet;

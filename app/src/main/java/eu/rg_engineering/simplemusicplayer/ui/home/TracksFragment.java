@@ -34,7 +34,7 @@ import io.sentry.Sentry;
 public class TracksFragment extends Fragment implements
         OnDeleteTrackitemListener {
 
-    private String TAG = "TracksFragment";
+    private final String TAG = "TracksFragment";
     TracksFragmentListener mCommunication;
     Context mContext;
     private RecyclerView rvTrackItems = null;
@@ -133,7 +133,7 @@ public class TracksFragment extends Fragment implements
             });
 
         } catch (Exception ex) {
-            Log.e(TAG, "exception in onCreateView " + ex.toString());
+            Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
         }
         return root;
