@@ -67,12 +67,14 @@ public class HomeFragment extends Fragment {
         super.onAttach(context);
         mCommunication = (HomeFragmentListener) context;
         mContext = context;
+        Log.d(TAG, "attached");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mCommunication = null;
+        Log.d(TAG, "detached");
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -110,10 +112,14 @@ public class HomeFragment extends Fragment {
                 }
             });
 
+            mCommunication.messageFromHomeFragment("created", "");
+
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
         }
+
+        Log.d(TAG, "view created");
         return root;
     }
 

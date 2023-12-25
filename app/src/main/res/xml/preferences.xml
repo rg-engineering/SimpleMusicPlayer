@@ -15,22 +15,26 @@
         <EditTextPreference
             app:key="plex_server_ip"
             app:title="@string/plex_server_ip"
-            app:defaultValue="192.168.3.21"/>
+            app:defaultValue="192.168.3.21"
+            app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
             app:key="plex_server_port"
             app:title="@string/plex_server_port"
-            app:defaultValue="32400"/>
+            app:defaultValue="32400"
+            app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
             app:key="plex_server_token"
             app:title="@string/plex_server_token"
-            app:defaultValue="LAtVbxshNWzuGUwtm8bJ"/>
+            app:defaultValue="LAtVbxshNWzuGUwtm8bJ"
+            app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
             app:key="plex_server_libid"
             app:title="@string/plex_server_libid"
-            app:defaultValue="2"/>
+            app:defaultValue="2"
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 
@@ -48,12 +52,13 @@
             app:entries="@array/background_color_names_array"
             app:entryValues="@array/background_color_values_array"
             app:defaultValue=""
-            app:summary="%s"/>
+            app:useSimpleSummaryProvider="true"/>
 
         <Preference
             app:key="BackgroundImage"
             app:title="@string/BackgroundImage"
-            app:defaultValue=""/>
+            app:defaultValue=""
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 

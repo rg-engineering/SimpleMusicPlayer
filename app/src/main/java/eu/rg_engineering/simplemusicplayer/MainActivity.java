@@ -29,6 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,21 +57,17 @@ public class MainActivity extends AppCompatActivity
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
-
     private final String TAG = "Main";
     private ExoPlayer exoPlayer;
     private Timer progressTimer;
     //private discoverServer  discover;
     //private ScanNASFolder scanNASFolder;
     public MusicData mMusicData;
-
     private boolean OnlyOneSong = true;
     private boolean SongNotFinished = true;
-
     private ArtistsFragment mArtistsFragment;
     private AlbumsFragment mAlbumsFragment;
     private TracksFragment mTracksFragment;
-
     private String nextSongFrom = "";
 
     @Override
@@ -99,7 +96,9 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from HomeFragment " + msg + " " + params);
 
         switch (msg) {
-
+            case "created":
+                replaceFragment(mArtistsFragment);
+                break;
             case "PlayMusic":
                 GetNextSong();
                 OnlyOneSong = false;
@@ -242,13 +241,26 @@ public class MainActivity extends AppCompatActivity
 
     public void replaceFragment(Fragment fragmentName) {
 
-
         if (fragmentName != null) {
+
+            boolean toShow = false;
+
             Log.d(TAG, "replace fragment " + fragmentName);
             // create a FragmentManager
             FragmentManager fm = getSupportFragmentManager();
+
+            //debug only
+            //List<Fragment> fragments = fm.getFragments();
+
+            //for (Fragment frag : fragments) {
+            //    if (frag.equals(fragmentName)) {
+            //        toShow = true;
+            //    }
+            //}
+
             // create a FragmentTransaction to begin the transaction and replace the Fragment
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
+
             // replace the FrameLayout with new Fragment
             fragmentTransaction.replace(R.id.mainframeLayout, fragmentName);
             fragmentTransaction.commit(); // save the changes
@@ -258,14 +270,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         mMusicData = new MusicData(this);
 
@@ -324,10 +334,6 @@ public class MainActivity extends AppCompatActivity
 
         mArtistsFragment = new ArtistsFragment();
         replaceFragment(mArtistsFragment);
-
-
-
-
     }
 
     @Override

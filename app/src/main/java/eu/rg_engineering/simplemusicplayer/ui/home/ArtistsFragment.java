@@ -111,6 +111,8 @@ public class ArtistsFragment extends Fragment implements
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
         }
+
+        Log.d(TAG, "view created");
         return root;
     }
 
