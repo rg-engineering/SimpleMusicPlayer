@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Shopping List</string>
+    <string name="app_name">SimpleMusicPlayer</string>
     <string name="my_logo">my logo</string>
     <string name="my_shopping_list_by_rg_engineering">My Shopping List by rg-engineering</string>
     <string name="action_settings">Settings</string>
-    <string name="menu_home">Shopping List</string>
+    <string name="menu_home">Home</string>
     <string name="menu_settings">Settings</string>
     <string name="button_add">Add</string>
     <string name="button_edit">Edit</string>

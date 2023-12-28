@@ -28,6 +28,8 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -58,6 +60,7 @@ public class HomeFragment extends Fragment {
     private final String TAG = "HomeFragment";
     HomeFragmentListener mCommunication;
     Context mContext;
+
     public interface HomeFragmentListener {
         void messageFromHomeFragment(String msg, String params);
     }
@@ -122,6 +125,11 @@ public class HomeFragment extends Fragment {
         Log.d(TAG, "view created");
         return root;
     }
+
+
+
+
+
 
     //todo wma kann nicht interpretiert werden
 }

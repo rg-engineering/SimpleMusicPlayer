@@ -1,8 +1,11 @@
 package eu.rg_engineering.simplemusicplayer;
 
 
+import android.app.UiModeManager;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,7 +45,7 @@ import eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment;
 import io.sentry.Sentry;
 
 
-//todo: car intergration https://github.com/google/ExoPlayer/issues/8561
+
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -243,7 +246,7 @@ public class MainActivity extends AppCompatActivity
 
         if (fragmentName != null) {
 
-            boolean toShow = false;
+            //boolean toShow = false;
 
             Log.d(TAG, "replace fragment " + fragmentName);
             // create a FragmentManager
@@ -261,8 +264,14 @@ public class MainActivity extends AppCompatActivity
             // create a FragmentTransaction to begin the transaction and replace the Fragment
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
 
-            // replace the FrameLayout with new Fragment
+            //if (toShow){
+            //    fragmentTransaction.attach(fragmentName);
+            //}
+            //else {
+                // replace the FrameLayout with new Fragment
             fragmentTransaction.replace(R.id.mainframeLayout, fragmentName);
+            fragmentTransaction.addToBackStack(null);
+            //}
             fragmentTransaction.commit(); // save the changes
 
         } else {
@@ -334,6 +343,9 @@ public class MainActivity extends AppCompatActivity
 
         mArtistsFragment = new ArtistsFragment();
         replaceFragment(mArtistsFragment);
+
+        isCarUiMode(this);
+
     }
 
     @Override
@@ -341,6 +353,17 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    public boolean isCarUiMode(Context c) {
+        UiModeManager uiModeManager = (UiModeManager) c.getSystemService(Context.UI_MODE_SERVICE);
+        if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_CAR) {
+            Log.d(TAG, "Running in Car mode");
+            return true;
+        } else {
+            Log.d(TAG, "Running on a non-Car mode");
+            return false;
+        }
     }
 
     @Override
