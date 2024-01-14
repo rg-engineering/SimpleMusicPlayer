@@ -3,12 +3,14 @@ package eu.rg_engineering.simplemusicplayer;
 
 import android.app.UiModeManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -16,14 +18,26 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.media3.common.AudioAttributes;
+import androidx.media3.common.C;
+import androidx.media3.common.ErrorMessageProvider;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
+import androidx.media3.common.Tracks;
+import androidx.media3.common.TrackSelectionParameters;
+
+
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.source.ads.AdsLoader;
+import androidx.media3.exoplayer.util.EventLogger;
+import androidx.media3.ui.PlayerView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,6 +46,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,7 +71,8 @@ public class MainActivity extends AppCompatActivity
             HomeFragment.HomeFragmentListener,
             TracksFragment.TracksFragmentListener,
             AlbumsFragment.AlbumsFragmentListener,
-            Plex_FindData.PlexFindArtistListener {
+            Plex_FindData.PlexFindArtistListener ,
+        PlayerView.ControllerVisibilityListener{
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
@@ -66,12 +82,26 @@ public class MainActivity extends AppCompatActivity
     //private discoverServer  discover;
     //private ScanNASFolder scanNASFolder;
     public MusicData mMusicData;
-    private boolean OnlyOneSong = true;
-    private boolean SongNotFinished = true;
+    //private boolean OnlyOneSong = true;
+    //private boolean SongNotFinished = true;
     private ArtistsFragment mArtistsFragment;
     private AlbumsFragment mAlbumsFragment;
     private TracksFragment mTracksFragment;
-    private String nextSongFrom = "";
+    //private String nextSongFrom = "";
+    protected PlayerView playerView;
+
+    private List<MediaItem> mediaItems;
+    private Tracks lastSeenTracks;
+    private TrackSelectionParameters trackSelectionParameters;
+    private boolean startAutoPlay;
+    private int startItemIndex;
+    private long startPosition;
+    @Nullable
+    private AdsLoader clientSideAdsLoader;
+
+   // @Nullable private ImaServerSideAdInsertionMediaSource.AdsLoader serverSideAdsLoader;
+
+   // private ImaServerSideAdInsertionMediaSource.AdsLoader.@MonotonicNonNull State serverSideAdsLoaderState;
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -81,7 +111,7 @@ public class MainActivity extends AppCompatActivity
         switch (msg) {
 
             case "PlayMusic":
-                musicplay(params);
+                //musicplay(params);
                 break;
             case "NoSongs":
                 Toast.makeText(this, "This is my Toast message!",
@@ -103,16 +133,16 @@ public class MainActivity extends AppCompatActivity
                 replaceFragment(mArtistsFragment);
                 break;
             case "PlayMusic":
-                GetNextSong();
-                OnlyOneSong = false;
+                //GetNextSong();
+                //OnlyOneSong = false;
                 break;
             case "PauseMusic":
-                musicpause();
+                //musicpause();
                 break;
             case "StopMusic":
-                musicstop();
-                OnlyOneSong = true;
-                SongNotFinished = false;
+                //musicstop();
+                //OnlyOneSong = true;
+                //SongNotFinished = false;
                 break;
 
             default:
@@ -196,8 +226,8 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from TrackFragment " + msg + " " + params);
 
         if (msg.equals("PlayMusic")) {
-            musicplay(params);
-            nextSongFrom = "TrackItemsAdapter";
+            //musicplay(params);
+            //nextSongFrom = "TrackItemsAdapter";
         } else {
             Log.e(TAG, "unknown message " + msg);
         }
@@ -288,6 +318,12 @@ public class MainActivity extends AppCompatActivity
 
         mMusicData = new MusicData(this);
 
+
+        playerView = findViewById(R.id.player_view);
+        playerView.setControllerVisibilityListener(this);
+        playerView.setErrorMessageProvider(new PlayerErrorMessageProvider());
+        playerView.requestFocus();
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -346,6 +382,21 @@ public class MainActivity extends AppCompatActivity
 
         isCarUiMode(this);
 
+
+        //todo saved instance
+        //if (savedInstanceState != null) {
+        //    trackSelectionParameters =
+        //            TrackSelectionParameters.fromBundle(
+        //                    savedInstanceState.getBundle(KEY_TRACK_SELECTION_PARAMETERS));
+        //    startAutoPlay = savedInstanceState.getBoolean(KEY_AUTO_PLAY);
+        //    startItemIndex = savedInstanceState.getInt(KEY_ITEM_INDEX);
+        //    startPosition = savedInstanceState.getLong(KEY_POSITION);
+        //    restoreServerSideAdsLoaderState(savedInstanceState);
+        //} else {
+            trackSelectionParameters = new TrackSelectionParameters.Builder( this).build();
+            clearStartPosition();
+        //}
+
     }
 
     @Override
@@ -381,6 +432,7 @@ public class MainActivity extends AppCompatActivity
         //SaveData();
     }
 
+    /*
     // Playing the music
     private void musicplay(String filename) {
 
@@ -416,6 +468,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+     */
+
+    /*
     private void musicplay() {
 
         if (exoPlayer != null) {
@@ -430,6 +485,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+     */
+
+/*
     // Pausing the music
     private void musicpause() {
 
@@ -438,6 +497,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+ */
+
+    /*
     // Stopping the music
     private void musicstop() {
 
@@ -451,6 +514,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+     */
+
+/*
     private void CreateMusic() {
 
         exoPlayer.addListener(
@@ -481,6 +548,8 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
+        playerView.setPlayer(exoPlayer);
+
         if (progressTimer != null) {
             progressTimer.cancel();
             progressTimer.purge();
@@ -492,6 +561,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+ */
+
+    /*
     private void GetNextSong() {
         Log.d(TAG, "get next song from " + nextSongFrom);
 
@@ -513,6 +585,13 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+     */
+    @Override
+    public void onVisibilityChanged(int visibility) {
+        //todo
+    }
+
+
     class UpdateProgressTask extends TimerTask {
         public void run() {
             runOnUiThread(UpdateProgress);
@@ -527,5 +606,271 @@ public class MainActivity extends AppCompatActivity
             }
         }
     };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT > 23) {
+            initializePlayer();
+            if (playerView != null) {
+                playerView.onResume();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT <= 23 || exoPlayer == null) {
+            initializePlayer();
+            if (playerView != null) {
+                playerView.onResume();
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Build.VERSION.SDK_INT <= 23) {
+            if (playerView != null) {
+                playerView.onPause();
+            }
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Build.VERSION.SDK_INT > 23) {
+            if (playerView != null) {
+                playerView.onPause();
+            }
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        releaseClientSideAdsLoader();
+    }
+
+    protected boolean initializePlayer() {
+        if (exoPlayer == null) {
+            Intent intent = getIntent();
+
+            mediaItems = createMediaItems();
+            if (mediaItems.isEmpty()) {
+                return false;
+            }
+
+            lastSeenTracks = Tracks.EMPTY;
+            ExoPlayer.Builder playerBuilder =
+                    new ExoPlayer.Builder(/* context= */ this);
+                            //.setMediaSourceFactory(createMediaSourceFactory());
+            //setRenderersFactory( playerBuilder, intent.getBooleanExtra(IntentUtil.PREFER_EXTENSION_DECODERS_EXTRA, false));
+            exoPlayer = playerBuilder.build();
+            exoPlayer.setTrackSelectionParameters(trackSelectionParameters);
+            exoPlayer.addListener(new PlayerEventListener());
+            exoPlayer.addAnalyticsListener(new EventLogger());
+            exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true);
+            exoPlayer.setPlayWhenReady(startAutoPlay);
+            playerView.setPlayer(exoPlayer);
+            configurePlayerWithServerSideAdsLoader();
+            //debugViewHelper = new DebugTextViewHelper(player, debugTextView);
+            //debugViewHelper.start();
+        }
+        boolean haveStartPosition = startItemIndex != C.INDEX_UNSET;
+        if (haveStartPosition) {
+            exoPlayer.seekTo(startItemIndex, startPosition);
+        }
+        exoPlayer.setMediaItems(mediaItems, /* resetPosition= */ !haveStartPosition);
+        exoPlayer.prepare();
+        updateButtonVisibility();
+        return true;
+    }
+    protected void releasePlayer() {
+        if (exoPlayer != null) {
+            updateTrackSelectorParameters();
+            updateStartPosition();
+            releaseServerSideAdsLoader();
+            //debugViewHelper.stop();
+            //debugViewHelper = null;
+            exoPlayer.release();
+            exoPlayer = null;
+            playerView.setPlayer(/* player= */ null);
+            mediaItems = Collections.emptyList();
+        }
+        if (clientSideAdsLoader != null) {
+            clientSideAdsLoader.setPlayer(null);
+        } else {
+            playerView.getAdViewGroup().removeAllViews();
+        }
+    }
+
+    private void releaseServerSideAdsLoader() {
+        //serverSideAdsLoaderState = serverSideAdsLoader.release();
+        //serverSideAdsLoader = null;
+    }
+
+    private void releaseClientSideAdsLoader() {
+        if (clientSideAdsLoader != null) {
+            clientSideAdsLoader.release();
+            clientSideAdsLoader = null;
+            playerView.getAdViewGroup().removeAllViews();
+        }
+    }
+    private void configurePlayerWithServerSideAdsLoader() {
+        //serverSideAdsLoader.setPlayer(player);
+    }
+    private List<MediaItem> createMediaItems() {
+
+        mediaItems = mMusicData.createMediaItems();
+
+        return mediaItems;
+    }
+
+
+
+    /*
+    @OptIn(markerClass = UnstableApi.class) private MediaSource.Factory createMediaSourceFactory() {
+        DefaultDrmSessionManagerProvider drmSessionManagerProvider = new DefaultDrmSessionManagerProvider();
+        drmSessionManagerProvider.setDrmHttpDataSourceFactory(DemoUtil.getHttpDataSourceFactory( this));
+        ImaServerSideAdInsertionMediaSource.AdsLoader.Builder serverSideAdLoaderBuilder =
+                new ImaServerSideAdInsertionMediaSource.AdsLoader.Builder( this, playerView);
+        if (serverSideAdsLoaderState != null) {
+            serverSideAdLoaderBuilder.setAdsLoaderState(serverSideAdsLoaderState);
+        }
+        serverSideAdsLoader = serverSideAdLoaderBuilder.build();
+        ImaServerSideAdInsertionMediaSource.Factory imaServerSideAdInsertionMediaSourceFactory =
+                new ImaServerSideAdInsertionMediaSource.Factory(
+                        serverSideAdsLoader,
+                        new DefaultMediaSourceFactory( this)
+                                .setDataSourceFactory(dataSourceFactory));
+        return new DefaultMediaSourceFactory( this)
+                .setDataSourceFactory(dataSourceFactory)
+                .setDrmSessionManagerProvider(drmSessionManagerProvider)
+                .setLocalAdInsertionComponents(
+                        this::getClientSideAdsLoader,  playerView)
+                .setServerSideAdInsertionMediaSourceFactory(imaServerSideAdInsertionMediaSourceFactory);
+    }
+*/
+    /*
+    private void setRenderersFactory(
+            ExoPlayer.Builder playerBuilder, boolean preferExtensionDecoders) {
+        RenderersFactory renderersFactory =
+                DemoUtil.buildRenderersFactory( this, preferExtensionDecoders);
+        playerBuilder.setRenderersFactory(renderersFactory);
+    }
+    */
+    private class PlayerErrorMessageProvider implements ErrorMessageProvider<PlaybackException> {
+
+        @Override
+        public Pair<Integer, String> getErrorMessage(PlaybackException e) {
+
+            String errorString = "playback error, todo";
+            /*
+            String errorString = getString(R.string.error_generic);
+
+            Throwable cause = e.getCause();
+            if (cause instanceof DecoderInitializationException) {
+                // Special case for decoder initialization failures.
+                DecoderInitializationException decoderInitializationException =
+                        (DecoderInitializationException) cause;
+                if (decoderInitializationException.codecInfo == null) {
+                    if (decoderInitializationException.getCause() instanceof DecoderQueryException) {
+                        errorString = getString(R.string.error_querying_decoders);
+                    } else if (decoderInitializationException.secureDecoderRequired) {
+                        errorString =
+                                getString(
+                                        R.string.error_no_secure_decoder, decoderInitializationException.mimeType);
+                    } else {
+                        errorString =
+                                getString(R.string.error_no_decoder, decoderInitializationException.mimeType);
+                    }
+                } else {
+                    errorString =
+                            getString(
+                                    R.string.error_instantiating_decoder,
+                                    decoderInitializationException.codecInfo.name);
+                }
+            }
+
+             */
+            return Pair.create(0, errorString);
+        }
+    }
+
+
+    private class PlayerEventListener implements Player.Listener {
+
+        @Override
+        public void onPlaybackStateChanged(@Player.State int playbackState) {
+            if (playbackState == Player.STATE_ENDED) {
+                showControls();
+            }
+            updateButtonVisibility();
+        }
+
+        @Override
+        public void onPlayerError(PlaybackException error) {
+            if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
+                exoPlayer.seekToDefaultPosition();
+                exoPlayer.prepare();
+            } else {
+                updateButtonVisibility();
+                showControls();
+            }
+        }
+
+        @Override
+        @SuppressWarnings("ReferenceEquality")
+        public void onTracksChanged(Tracks tracks) {
+            updateButtonVisibility();
+            if (tracks == lastSeenTracks) {
+                return;
+            }
+            if (tracks.containsType(C.TRACK_TYPE_VIDEO)
+                    && !tracks.isTypeSupported(C.TRACK_TYPE_VIDEO, /* allowExceedsCapabilities= */ true)) {
+
+                Toast.makeText(getApplicationContext(), "error_unsupported_video", Toast.LENGTH_LONG).show();
+            }
+            if (tracks.containsType(C.TRACK_TYPE_AUDIO)
+                    && !tracks.isTypeSupported(C.TRACK_TYPE_AUDIO, /* allowExceedsCapabilities= */ true)) {
+                Toast.makeText(getApplicationContext(), "error_unsupported_audio", Toast.LENGTH_LONG).show();
+            }
+            lastSeenTracks = tracks;
+        }
+    }
+
+    private void updateTrackSelectorParameters() {
+        if (exoPlayer != null) {
+            trackSelectionParameters = exoPlayer.getTrackSelectionParameters();
+        }
+    }
+
+    private void updateStartPosition() {
+        if (exoPlayer != null) {
+            startAutoPlay = exoPlayer.getPlayWhenReady();
+            startItemIndex = exoPlayer.getCurrentMediaItemIndex();
+            startPosition = Math.max(0, exoPlayer.getContentPosition());
+        }
+    }
+
+    protected void clearStartPosition() {
+        startAutoPlay = true;
+        startItemIndex = C.INDEX_UNSET;
+        startPosition = C.TIME_UNSET;
+    }
+
+    private void updateButtonVisibility() {
+        //selectTracksButton.setEnabled(player != null && TrackSelectionDialog.willHaveContent(player));
+    }
+
+    private void showControls() {
+        //debugRootView.setVisibility(View.VISIBLE);
+    }
 
 }

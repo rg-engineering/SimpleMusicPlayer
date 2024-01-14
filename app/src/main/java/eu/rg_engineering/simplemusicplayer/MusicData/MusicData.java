@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.browse.MediaBrowser;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import androidx.media3.common.MediaItem;
 import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
@@ -50,6 +52,22 @@ public class MusicData  {
         Port = sharedPreferences.getString("plex_server_port", "");
         Token = sharedPreferences.getString("plex_server_token", "");
     }
+
+    public List<MediaItem> createMediaItems(){
+
+        ArrayList<MediaItem> items = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+
+            //see https://developer.android.com/media/media3/exoplayer/media-items
+            MediaItem item = MediaItem.fromUri("http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ");
+            items.add(item);
+        }
+
+        return items;
+    }
+
+
 
     public ArrayList<ArtistItem> getArtistData() {
 

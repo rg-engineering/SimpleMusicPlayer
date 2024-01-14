@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.media3.common.ErrorMessageProvider;
+import androidx.media3.ui.PlayerView;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,11 +58,16 @@ import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
 import io.sentry.Sentry;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment
+   {
     private HomeViewModel homeViewModel;
     private final String TAG = "HomeFragment";
     HomeFragmentListener mCommunication;
+
+
     Context mContext;
+
+
 
     public interface HomeFragmentListener {
         void messageFromHomeFragment(String msg, String params);
@@ -88,6 +96,7 @@ public class HomeFragment extends Fragment {
 
         try {
 
+            /*
             Button btnPauseMusic = (Button) root.findViewById(R.id.PauseMusic);
             btnPauseMusic.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -114,6 +123,8 @@ public class HomeFragment extends Fragment {
                     mCommunication.messageFromHomeFragment("StopMusic", "");
                 }
             });
+*/
+
 
             mCommunication.messageFromHomeFragment("created", "");
 
