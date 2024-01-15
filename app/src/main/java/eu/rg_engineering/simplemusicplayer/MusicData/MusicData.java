@@ -57,12 +57,14 @@ public class MusicData  {
 
         ArrayList<MediaItem> items = new ArrayList<>();
 
+        /*
         for (int i = 1; i <= 10; i++) {
 
             //see https://developer.android.com/media/media3/exoplayer/media-items
             MediaItem item = MediaItem.fromUri("http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ");
             items.add(item);
         }
+        */
 
         return items;
     }

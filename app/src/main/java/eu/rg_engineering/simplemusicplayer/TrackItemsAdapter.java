@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.media3.common.MediaItem;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,7 +54,7 @@ public class TrackItemsAdapter extends
     }
 
     public interface TrackItemsAdapterListener {
-        void messageFromTrackItemsAdapter(String msg, String params);
+        void messageFromTrackItemsAdapter(String msg, ArrayList<String> params);
     }
     public TrackItemsAdapter(List<TrackItem> items, OnDeleteTrackitemListener deleteListener) {
         this.deleteListener = deleteListener;
@@ -62,17 +63,34 @@ public class TrackItemsAdapter extends
         mItemsAll = items;
         UpdateData();
 
+
+
         //todo load playlist
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        Context context = recyclerView.getContext();
+
+        mCommunication = (TrackItemsAdapterListener) context;
+        if (mCommunication != null) {
+            mCommunication.messageFromTrackItemsAdapter("IsAlmostReady", null);
+        }
     }
 
     public void UpdateData() {
 
-        Log.d(TAG, "UpdateData called ");
+        Log.d(TAG, "UpdateData Tracks called ");
         mItemsFiltered.clear();
         for (TrackItem item : mItemsAll) {
 
             //todo filter beachten???
             mItemsFiltered.add(item);
+        }
+
+        if (mCommunication != null) {
+            mCommunication.messageFromTrackItemsAdapter("IsReady", null);
         }
     }
     @NonNull
@@ -89,7 +107,11 @@ public class TrackItemsAdapter extends
 
         mCommunication = (TrackItemsAdapterListener) context;
         mContext = context;
+
+
         return viewHolder;
+
+
     }
 
     @Override
@@ -97,7 +119,7 @@ public class TrackItemsAdapter extends
 // Get the data model based on position
         TrackItem item = mItemsFiltered.get(position);
 
-        Log.d(TAG, "onBindViewHolder called, position " + position);
+        Log.d(TAG, "onBindViewHolder tracks called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
 
         TextView albumTextView = viewHolder.albumTextView;
@@ -140,7 +162,8 @@ public class TrackItemsAdapter extends
             public void onClick(View view) {
                 Log.d(TAG, "PlayMusic pressed position " + position);
                 currentPlayedMusicPosition = position;
-                GetCurrentSong();
+                //GetCurrentSong();
+                PlayCurrentSong(position);
             }
         });
 
@@ -163,6 +186,7 @@ public class TrackItemsAdapter extends
         }
     }
 
+    /*
     public void GetNextSong() {
         Log.d(TAG, "GetNextSong  " + currentPlayedMusicPosition);
 
@@ -173,7 +197,8 @@ public class TrackItemsAdapter extends
         String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFileName();
         mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
     }
-
+     */
+/*
     public void GetCurrentSong() {
         Log.d(TAG, "GetCurrentSong  " + currentPlayedMusicPosition);
 
@@ -183,6 +208,29 @@ public class TrackItemsAdapter extends
         String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFileName();
         mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
     }
+ */
+    public void GetSongs() {
+        Log.d(TAG, "GetSongs  " );
+
+        ArrayList<String> filenames = new ArrayList<>();
+
+        for (TrackItem item : mItemsFiltered) {
+
+            filenames.add(item.getFileName());
+
+        }
+
+        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", filenames);
+    }
+
+    private void PlayCurrentSong(int pos){
+
+        TrackItem item = mItemsFiltered.get(pos);
+        ArrayList<String> filenames = new ArrayList<>();
+        filenames.add(item.getFileName());
+        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", filenames);
+    }
+
 
     @Override
     public int getItemCount() {
@@ -342,7 +390,11 @@ public class TrackItemsAdapter extends
 
             int pos =this.getAdapterPosition();
 
-            mCommunication.messageFromTrackItemsAdapter("TrackSelected", String.valueOf(pos));
+            ArrayList<String> items = new ArrayList<>();
+
+            items.add(String.valueOf(pos));
+
+            mCommunication.messageFromTrackItemsAdapter("TrackSelected",items );
 
             return true;
         }

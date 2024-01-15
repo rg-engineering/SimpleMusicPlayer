@@ -13,12 +13,14 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -34,6 +36,7 @@ import androidx.media3.common.Tracks;
 import androidx.media3.common.TrackSelectionParameters;
 
 
+import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.ads.AdsLoader;
 import androidx.media3.exoplayer.util.EventLogger;
@@ -46,6 +49,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
@@ -72,7 +76,8 @@ public class MainActivity extends AppCompatActivity
             TracksFragment.TracksFragmentListener,
             AlbumsFragment.AlbumsFragmentListener,
             Plex_FindData.PlexFindArtistListener ,
-        PlayerView.ControllerVisibilityListener{
+        PlayerView.ControllerVisibilityListener
+         {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
@@ -98,6 +103,7 @@ public class MainActivity extends AppCompatActivity
     private long startPosition;
     @Nullable
     private AdsLoader clientSideAdsLoader;
+
 
    // @Nullable private ImaServerSideAdInsertionMediaSource.AdsLoader serverSideAdsLoader;
 
@@ -156,10 +162,15 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "got message from TracksFragment " + msg + " " + params);
 
-        if (msg.equals("btnBack")) {
-            replaceFragment(mAlbumsFragment);
-        } else {
-            Log.e(TAG, "unknown message " + msg);
+        switch (msg) {
+            case "btnBack":
+                replaceFragment(mAlbumsFragment);
+                break;
+            case "PlexDataRead":
+                break;
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
         }
     }
 
@@ -222,16 +233,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void messageFromTrackItemsAdapter(String msg, String params) {
-        Log.d(TAG, "got message from TrackFragment " + msg + " " + params);
+    public void messageFromTrackItemsAdapter(String msg, ArrayList<String> params) {
+        Log.d(TAG, "got message from TrackItemsFragment " + msg + " " + params);
 
-        if (msg.equals("PlayMusic")) {
-            //musicplay(params);
-            //nextSongFrom = "TrackItemsAdapter";
-        } else {
-            Log.e(TAG, "unknown message " + msg);
+        switch (msg) {
+            case "PlayMusic":
+                //musicplay(params);
+                //nextSongFrom = "TrackItemsAdapter";
+                break;
+            case "IsAlmostReady":
+                break;
+
+            case "IsReady":
+                GetSongs();
+                break;
+
+            case "UpdatePlayList":
+                UpdatePlayList(params);
+                break;
+
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
         }
-
     }
 
     @Override
@@ -309,7 +333,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+    @OptIn(markerClass = UnstableApi.class) @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -318,10 +342,20 @@ public class MainActivity extends AppCompatActivity
 
         mMusicData = new MusicData(this);
 
-
         playerView = findViewById(R.id.player_view);
         playerView.setControllerVisibilityListener(this);
         playerView.setErrorMessageProvider(new PlayerErrorMessageProvider());
+
+        playerView.setControllerHideOnTouch(false);
+        playerView.setControllerShowTimeoutMs(0);
+
+        playerView.setControllerAutoShow(true);
+        playerView.setShowRewindButton(true);
+        playerView.setShowFastForwardButton(true);
+        playerView.setShowNextButton(true);
+        playerView.setShowPreviousButton(true);
+
+
         playerView.requestFocus();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -398,6 +432,8 @@ public class MainActivity extends AppCompatActivity
         //}
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -586,9 +622,36 @@ public class MainActivity extends AppCompatActivity
 
 
      */
+
+    private void GetSongs() {
+        Log.d(TAG, "get songs ");
+        if (mTracksFragment != null) {
+            mTracksFragment.GetSongs();
+        }
+    }
+
+    private void UpdatePlayList(ArrayList<String> filenames){
+
+        mediaItems.clear();
+
+        for (String filename : filenames) {
+            MediaItem item = MediaItem.fromUri(filename);
+            mediaItems.add(item);
+        }
+
+        if (exoPlayer!=null) {
+            exoPlayer.setMediaItems(mediaItems);
+        }
+        else{
+            initializePlayer();
+        }
+
+    }
+
     @Override
     public void onVisibilityChanged(int visibility) {
         //todo
+        Log.w(TAG, "onVisibilityChanged called " + visibility);
     }
 
 
@@ -661,8 +724,11 @@ public class MainActivity extends AppCompatActivity
         if (exoPlayer == null) {
             Intent intent = getIntent();
 
-            mediaItems = createMediaItems();
+            if (mediaItems==null) {
+                mediaItems = createMediaItems();
+            }
             if (mediaItems.isEmpty()) {
+                Log.e(TAG, "no media items");
                 return false;
             }
 
@@ -675,7 +741,7 @@ public class MainActivity extends AppCompatActivity
             exoPlayer.setTrackSelectionParameters(trackSelectionParameters);
             exoPlayer.addListener(new PlayerEventListener());
             exoPlayer.addAnalyticsListener(new EventLogger());
-            exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true);
+            exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT,  true);
             exoPlayer.setPlayWhenReady(startAutoPlay);
             playerView.setPlayer(exoPlayer);
             configurePlayerWithServerSideAdsLoader();
@@ -686,7 +752,7 @@ public class MainActivity extends AppCompatActivity
         if (haveStartPosition) {
             exoPlayer.seekTo(startItemIndex, startPosition);
         }
-        exoPlayer.setMediaItems(mediaItems, /* resetPosition= */ !haveStartPosition);
+        exoPlayer.setMediaItems(mediaItems,  !haveStartPosition);
         exoPlayer.prepare();
         updateButtonVisibility();
         return true;
@@ -866,7 +932,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateButtonVisibility() {
-        //selectTracksButton.setEnabled(player != null && TrackSelectionDialog.willHaveContent(player));
+        //selectTracksButton.setEnabled(exoPlayer != null && TrackSelectionDialog.willHaveContent(exoPlayer));
     }
 
     private void showControls() {

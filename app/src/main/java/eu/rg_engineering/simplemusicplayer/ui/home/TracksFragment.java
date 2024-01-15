@@ -157,6 +157,7 @@ public class TracksFragment extends Fragment implements
                 }
             });
 
+            mCommunication.messageFromTracksFragment("PlexDataRead", "");
             Log.d(TAG, "adapter notified ");
         }
     }
@@ -165,11 +166,17 @@ public class TracksFragment extends Fragment implements
         TrackItemsAdapter.SetCurrentPlaytime(duration);
     }
 
+    /*
     public void GetNextSong(){
         TrackItemsAdapter.GetNextSong();
     }
 
     public void GetCurrentSong(){
         TrackItemsAdapter.GetCurrentSong();
+    }
+     */
+
+    public void GetSongs(){
+        TrackItemsAdapter.GetSongs();
     }
 }
