@@ -54,6 +54,7 @@ dependencies {
     implementation 'androidx.media3:media3-exoplayer:1.2.0'
     implementation 'androidx.media3:media3-exoplayer-dash:1.2.0'
     implementation 'androidx.media3:media3-ui:1.2.0'
+    implementation 'androidx.media3:media3-session:1.2.0'
 
     //implementation group: 'org.jupnp', name: 'org.jupnp', version: '2.7.0'
     //implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.7'

@@ -13,7 +13,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +39,7 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.ads.AdsLoader;
 import androidx.media3.exoplayer.util.EventLogger;
+import androidx.media3.session.MediaSession;
 import androidx.media3.ui.PlayerView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -103,9 +103,10 @@ public class MainActivity extends AppCompatActivity
     private long startPosition;
     @Nullable
     private AdsLoader clientSideAdsLoader;
+    private MediaSession mediaSession;
 
 
-   // @Nullable private ImaServerSideAdInsertionMediaSource.AdsLoader serverSideAdsLoader;
+             // @Nullable private ImaServerSideAdInsertionMediaSource.AdsLoader serverSideAdsLoader;
 
    // private ImaServerSideAdInsertionMediaSource.AdsLoader.@MonotonicNonNull State serverSideAdsLoaderState;
 
@@ -733,9 +734,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             lastSeenTracks = Tracks.EMPTY;
-            ExoPlayer.Builder playerBuilder =
-                    new ExoPlayer.Builder(/* context= */ this);
-                            //.setMediaSourceFactory(createMediaSourceFactory());
+            ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder( this);
+            //.setMediaSourceFactory(createMediaSourceFactory());
             //setRenderersFactory( playerBuilder, intent.getBooleanExtra(IntentUtil.PREFER_EXTENSION_DECODERS_EXTRA, false));
             exoPlayer = playerBuilder.build();
             exoPlayer.setTrackSelectionParameters(trackSelectionParameters);
@@ -743,6 +743,11 @@ public class MainActivity extends AppCompatActivity
             exoPlayer.addAnalyticsListener(new EventLogger());
             exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT,  true);
             exoPlayer.setPlayWhenReady(startAutoPlay);
+
+            mediaSession = new MediaSession.Builder(this, exoPlayer).build();
+
+
+
             playerView.setPlayer(exoPlayer);
             configurePlayerWithServerSideAdsLoader();
             //debugViewHelper = new DebugTextViewHelper(player, debugTextView);

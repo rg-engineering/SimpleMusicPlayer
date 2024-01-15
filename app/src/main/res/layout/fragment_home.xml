@@ -17,25 +17,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.media3.ui.PlayerView
-            android:id="@+id/player_view"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="10dp"
-            app:auto_show="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:show_shuffle_button="true"
-            app:show_subtitle_button="false" />
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="10dp"
+        app:auto_show="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:show_shuffle_button="true"
+        app:show_subtitle_button="false"
+        app:shutter_background_color="@color/CloudyBlue"
+        app:surface_type="none" />
 
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
+
 
    
 </androidx.constraintlayout.widget.ConstraintLayout>
