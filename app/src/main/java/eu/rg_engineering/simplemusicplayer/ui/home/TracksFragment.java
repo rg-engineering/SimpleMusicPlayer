@@ -162,8 +162,8 @@ public class TracksFragment extends Fragment implements
         }
     }
 
-    public void SetCurrentplaytime(long duration){
-        TrackItemsAdapter.SetCurrentPlaytime(duration);
+    public void SetCurrentplaytime(int index, long duration){
+        TrackItemsAdapter.SetCurrentPlaytime(index, duration);
     }
 
     /*

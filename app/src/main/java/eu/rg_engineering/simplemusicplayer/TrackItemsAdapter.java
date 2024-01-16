@@ -40,7 +40,7 @@ public class TrackItemsAdapter extends
     private ItemTouchHelper mTouchHelper;
     private final OnDeleteTrackitemListener deleteListener;
     private int mFilterIdx = 0;
-    private int currentPlayedMusicPosition = -1;
+    //private int currentPlayedMusicPosition = -1;
     Context mContext;
     TrackItemsAdapterListener mCommunication;
 
@@ -161,28 +161,32 @@ public class TrackItemsAdapter extends
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "PlayMusic pressed position " + position);
-                currentPlayedMusicPosition = position;
+                //currentPlayedMusicPosition = position;
                 //GetCurrentSong();
                 PlayCurrentSong(position);
             }
         });
 
+        /*
         if (currentPlayedMusicPosition==position) {
             viewHolder.nameTextView.setTextColor(Color.RED);
         }
         else {
             viewHolder.nameTextView.setTextColor(Color.BLACK);
         }
+        */
+
     }
-    public void SetCurrentPlaytime(long playtime) {
+    public void SetCurrentPlaytime(int index, long playtime) {
 
-        Log.d(TAG, "got current playtime " + playtime + " " + mItemsFiltered.size());
+        Log.d(TAG, "got current playtime " + index + " / " + playtime + " " + mItemsFiltered.size());
 
-        if (currentPlayedMusicPosition >= 0 && currentPlayedMusicPosition < mItemsFiltered.size()) {
-            mItemsFiltered.get(currentPlayedMusicPosition).setCurrentPlaytime(playtime);
-            notifyItemChanged(currentPlayedMusicPosition);
+        if (index >= 0 && index < mItemsFiltered.size()) {
+            mItemsFiltered.get(index).setCurrentPlaytime(playtime);
+
+            notifyItemChanged(index);
         } else {
-            Log.e(TAG, "index out of range " + currentPlayedMusicPosition);
+            Log.e(TAG, "index out of range " + index);
         }
     }
 

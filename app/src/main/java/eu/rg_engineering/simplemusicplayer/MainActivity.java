@@ -665,8 +665,9 @@ public class MainActivity extends AppCompatActivity
     private final Runnable UpdateProgress = new Runnable() {
         public void run() {
             long position = exoPlayer.getCurrentPosition();
+            int index = exoPlayer.getCurrentMediaItemIndex();
             if (mTracksFragment != null) {
-                mTracksFragment.SetCurrentplaytime(position);
+                mTracksFragment.SetCurrentplaytime(index, position);
             }
         }
     };
@@ -713,12 +714,20 @@ public class MainActivity extends AppCompatActivity
             }
             releasePlayer();
         }
+        if (progressTimer != null) {
+            progressTimer.cancel();
+            progressTimer.purge();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         releaseClientSideAdsLoader();
+        if (progressTimer != null) {
+            progressTimer.cancel();
+            progressTimer.purge();
+        }
     }
 
     protected boolean initializePlayer() {
@@ -760,6 +769,38 @@ public class MainActivity extends AppCompatActivity
         exoPlayer.setMediaItems(mediaItems,  !haveStartPosition);
         exoPlayer.prepare();
         updateButtonVisibility();
+
+
+        exoPlayer.addListener(
+                new Player.Listener() {
+                    @Override
+                    public void onIsPlayingChanged(boolean isPlaying) {
+                        if (isPlaying) {
+                            // Active playback.
+                            Log.i(TAG, "is playing");
+
+                        } else {
+                            // Not playing because playback is paused, ended, suppressed, or the player
+                            // is buffering, stopped or failed. Check player.getPlayWhenReady,
+                            // player.getPlaybackState, player.getPlaybackSuppressionReason and
+                            // player.getPlaybackError for details.
+                            Log.i(TAG, "is not playing " + exoPlayer.getPlaybackState());
+                        }
+                    }
+                });
+
+
+        if (progressTimer != null) {
+            progressTimer.cancel();
+            progressTimer.purge();
+        }
+
+        progressTimer = new Timer();
+        TimerTask updateProgress = new UpdateProgressTask();
+        progressTimer.scheduleAtFixedRate(updateProgress, 0, 1000);
+
+
+
         return true;
     }
     protected void releasePlayer() {
