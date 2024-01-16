@@ -773,11 +773,12 @@ public class MainActivity extends AppCompatActivity
 
         exoPlayer.addListener(
                 new Player.Listener() {
-                    @Override
+                    @OptIn(markerClass = UnstableApi.class) @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (isPlaying) {
                             // Active playback.
                             Log.i(TAG, "is playing");
+                            playerView.showController();
 
                         } else {
                             // Not playing because playback is paused, ended, suppressed, or the player
