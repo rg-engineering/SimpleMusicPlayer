@@ -779,6 +779,7 @@ public class MainActivity extends AppCompatActivity
                             // Active playback.
                             Log.i(TAG, "is playing");
                             playerView.showController();
+                            playerView.setVisibility(View.VISIBLE);
 
                         } else {
                             // Not playing because playback is paused, ended, suppressed, or the player
