@@ -40,7 +40,7 @@ public class TrackItemsAdapter extends
     private ItemTouchHelper mTouchHelper;
     private final OnDeleteTrackitemListener deleteListener;
     private int mFilterIdx = 0;
-    //private int currentPlayedMusicPosition = -1;
+    private int currentPlayedMusicPosition = -1;
     Context mContext;
     TrackItemsAdapterListener mCommunication;
 
@@ -167,14 +167,14 @@ public class TrackItemsAdapter extends
             }
         });
 
-        /*
+
         if (currentPlayedMusicPosition==position) {
             viewHolder.nameTextView.setTextColor(Color.RED);
         }
         else {
             viewHolder.nameTextView.setTextColor(Color.BLACK);
         }
-        */
+
 
     }
     public void SetCurrentPlaytime(int index, long playtime) {
@@ -184,7 +184,10 @@ public class TrackItemsAdapter extends
         if (index >= 0 && index < mItemsFiltered.size()) {
             mItemsFiltered.get(index).setCurrentPlaytime(playtime);
 
+            currentPlayedMusicPosition = index;
+
             notifyItemChanged(index);
+
         } else {
             Log.e(TAG, "index out of range " + index);
         }
