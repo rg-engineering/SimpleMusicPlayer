@@ -34,9 +34,7 @@ public class MusicService extends MediaSessionService {
     private final String TAG = "MusicService";
     private ExoPlayer exoPlayer;
     private MediaSession mediaSession = null;
-
     private List<MediaItem> mediaItems;
-
     private Tracks lastSeenTracks;
     private TrackSelectionParameters trackSelectionParameters;
     private boolean startAutoPlay;
@@ -49,7 +47,6 @@ public class MusicService extends MediaSessionService {
     @Override
     public MediaSession onGetSession(MediaSession.ControllerInfo controllerInfo) {
         return mediaSession;
-
     }
 
     @Override
@@ -65,11 +62,9 @@ public class MusicService extends MediaSessionService {
         //    startPosition = savedInstanceState.getLong(KEY_POSITION);
         //    restoreServerSideAdsLoaderState(savedInstanceState);
         //} else {
-        trackSelectionParameters = new TrackSelectionParameters.Builder( this).build();
+        trackSelectionParameters = new TrackSelectionParameters.Builder(this).build();
         clearStartPosition();
         //}
-
-
         initializePlayer();
     }
 
@@ -90,61 +85,42 @@ public class MusicService extends MediaSessionService {
         }
     }
 
-
-
-
     protected boolean initializePlayer() {
         if (exoPlayer == null) {
 
             mediaItems = createMediaItems();
-            /*
-            if (mediaItems==null) {
-                mediaItems = createMediaItems();
-            }
-            if (mediaItems.isEmpty()) {
-                Log.e(TAG, "no media items");
-                return false;
-            }
-             */
+
             lastSeenTracks = Tracks.EMPTY;
-            ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder( this);
+            ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder(this);
             //.setMediaSourceFactory(createMediaSourceFactory());
             //setRenderersFactory( playerBuilder, intent.getBooleanExtra(IntentUtil.PREFER_EXTENSION_DECODERS_EXTRA, false));
             exoPlayer = playerBuilder.build();
             exoPlayer.setTrackSelectionParameters(trackSelectionParameters);
             exoPlayer.addListener(new PlayerEventListener());
             exoPlayer.addAnalyticsListener(new EventLogger());
-            exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT,  true);
+            exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT, true);
             exoPlayer.setPlayWhenReady(startAutoPlay);
 
             mediaSession = new MediaSession.Builder(this, exoPlayer).build();
 
-
-
-            //playerView.setPlayer(exoPlayer);
             configurePlayerWithServerSideAdsLoader();
-            //debugViewHelper = new DebugTextViewHelper(player, debugTextView);
-            //debugViewHelper.start();
         }
         boolean haveStartPosition = startItemIndex != C.INDEX_UNSET;
         if (haveStartPosition) {
             exoPlayer.seekTo(startItemIndex, startPosition);
         }
-        exoPlayer.setMediaItems(mediaItems,  !haveStartPosition);
+        exoPlayer.setMediaItems(mediaItems, !haveStartPosition);
         exoPlayer.prepare();
         updateButtonVisibility();
 
-
         exoPlayer.addListener(
                 new Player.Listener() {
-                    @OptIn(markerClass = UnstableApi.class) @Override
+                    @OptIn(markerClass = UnstableApi.class)
+                    @Override
                     public void onIsPlayingChanged(boolean isPlaying) {
                         if (isPlaying) {
                             // Active playback.
                             Log.i(TAG, "is playing");
-                            //playerView.showController();
-                            //playerView.setVisibility(View.VISIBLE);
-
                         } else {
                             // Not playing because playback is paused, ended, suppressed, or the player
                             // is buffering, stopped or failed. Check player.getPlayWhenReady,
@@ -155,19 +131,6 @@ public class MusicService extends MediaSessionService {
                     }
                 });
 
-
-        /*
-        if (progressTimer != null) {
-            progressTimer.cancel();
-            progressTimer.purge();
-        }
-
-        progressTimer = new Timer();
-        TimerTask updateProgress = new MainActivity.UpdateProgressTask();
-        progressTimer.scheduleAtFixedRate(updateProgress, 0, 1000);
-*/
-
-
         return true;
     }
 
@@ -177,22 +140,18 @@ public class MusicService extends MediaSessionService {
         mediaSession.release();
         mediaSession = null;
 
-
         if (exoPlayer != null) {
             updateTrackSelectorParameters();
             updateStartPosition();
             releaseServerSideAdsLoader();
-            //debugViewHelper.stop();
-            //debugViewHelper = null;
+
             exoPlayer.release();
             exoPlayer = null;
-            //playerView.setPlayer(/* player= */ null);
+
             mediaItems = Collections.emptyList();
         }
         if (clientSideAdsLoader != null) {
             clientSideAdsLoader.setPlayer(null);
-        } else {
-            //playerView.getAdViewGroup().removeAllViews();
         }
     }
 
@@ -278,27 +237,12 @@ public class MusicService extends MediaSessionService {
         if (clientSideAdsLoader != null) {
             clientSideAdsLoader.release();
             clientSideAdsLoader = null;
-            //playerView.getAdViewGroup().removeAllViews();
         }
     }
 
     private List<MediaItem> createMediaItems() {
 
-        //todo
-        //mediaItems = mMusicData.createMediaItems();
-
-
-
         ArrayList<MediaItem> mediaItems = new ArrayList<>();
-
-        /* do not create items here
-        for (int i = 1; i <= 10; i++) {
-
-            //see https://developer.android.com/media/media3/exoplayer/media-items
-            MediaItem item = MediaItem.fromUri("http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ");
-            mediaItems.add(item);
-        }
-        */
 
         return mediaItems;
     }

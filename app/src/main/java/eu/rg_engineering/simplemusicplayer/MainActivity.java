@@ -84,33 +84,20 @@ public class MainActivity extends AppCompatActivity
             TracksFragment.TracksFragmentListener,
             AlbumsFragment.AlbumsFragmentListener,
             Plex_FindData.PlexFindArtistListener ,
-        PlayerView.ControllerVisibilityListener
-         {
+        PlayerView.ControllerVisibilityListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
     private final String TAG = "Main";
-
     private Timer progressTimer;
-    //private discoverServer  discover;
-    //private ScanNASFolder scanNASFolder;
     public MusicData mMusicData;
-    //private boolean OnlyOneSong = true;
-    //private boolean SongNotFinished = true;
     private ArtistsFragment mArtistsFragment;
     private AlbumsFragment mAlbumsFragment;
     private TracksFragment mTracksFragment;
     //private String nextSongFrom = "";
     protected PlayerView playerView;
     private List<MediaItem> mediaItems;
-
     ListenableFuture<MediaController> controllerFuture;
-
-
-
-             // @Nullable private ImaServerSideAdInsertionMediaSource.AdsLoader serverSideAdsLoader;
-
-   // private ImaServerSideAdInsertionMediaSource.AdsLoader.@MonotonicNonNull State serverSideAdsLoaderState;
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -120,7 +107,6 @@ public class MainActivity extends AppCompatActivity
         switch (msg) {
 
             case "PlayMusic":
-                //musicplay(params);
                 break;
             case "NoSongs":
                 Toast.makeText(this, "This is my Toast message!",
@@ -142,18 +128,11 @@ public class MainActivity extends AppCompatActivity
                 replaceFragment(mArtistsFragment);
                 break;
             case "PlayMusic":
-                //GetNextSong();
-                //OnlyOneSong = false;
                 break;
             case "PauseMusic":
-                //musicpause();
                 break;
             case "StopMusic":
-                //musicstop();
-                //OnlyOneSong = true;
-                //SongNotFinished = false;
                 break;
-
             default:
                 Log.e(TAG, "unknown message " + msg);
                 break;
@@ -236,25 +215,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void messageFromTrackItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks)  {
+    public void messageFromTrackItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks) {
         Log.d(TAG, "got message from TrackItemsFragment " + msg + " " + params);
 
         switch (msg) {
             case "PlayMusic":
-                //musicplay(params);
-                //nextSongFrom = "TrackItemsAdapter";
                 break;
             case "IsAlmostReady":
                 break;
-
             case "IsReady":
                 GetSongs();
                 break;
-
             case "UpdatePlayList":
                 UpdatePlayList(tracks);
                 break;
-
             default:
                 Log.e(TAG, "unknown message " + msg);
                 break;
@@ -302,30 +276,14 @@ public class MainActivity extends AppCompatActivity
     public void replaceFragment(Fragment fragmentName) {
 
         if (fragmentName != null) {
-
-            //boolean toShow = false;
-
             Log.d(TAG, "replace fragment " + fragmentName);
             // create a FragmentManager
             FragmentManager fm = getSupportFragmentManager();
 
-            //debug only
-            //List<Fragment> fragments = fm.getFragments();
-
-            //for (Fragment frag : fragments) {
-            //    if (frag.equals(fragmentName)) {
-            //        toShow = true;
-            //    }
-            //}
-
             // create a FragmentTransaction to begin the transaction and replace the Fragment
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
 
-            //if (toShow){
-            //    fragmentTransaction.attach(fragmentName);
-            //}
-            //else {
-                // replace the FrameLayout with new Fragment
+            // replace the FrameLayout with new Fragment
             fragmentTransaction.replace(R.id.mainframeLayout, fragmentName);
             fragmentTransaction.addToBackStack(null);
             //}
@@ -336,7 +294,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OptIn(markerClass = UnstableApi.class) @Override
+    @OptIn(markerClass = UnstableApi.class)
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -357,7 +316,6 @@ public class MainActivity extends AppCompatActivity
         playerView.setShowFastForwardButton(true);
         playerView.setShowNextButton(true);
         playerView.setShowPreviousButton(true);
-
 
         playerView.requestFocus();
 
@@ -390,7 +348,6 @@ public class MainActivity extends AppCompatActivity
         TextView text = (TextView) header.findViewById(R.id.VersionView);
         text.setText(Version);
 
-
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -417,13 +374,8 @@ public class MainActivity extends AppCompatActivity
         mArtistsFragment = new ArtistsFragment();
         replaceFragment(mArtistsFragment);
 
-        isCarUiMode(this);
-
         CreateMediaController();
-
-
     }
-
 
 
     @Override
@@ -433,16 +385,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public boolean isCarUiMode(Context c) {
-        UiModeManager uiModeManager = (UiModeManager) c.getSystemService(Context.UI_MODE_SERVICE);
-        if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_CAR) {
-            Log.d(TAG, "Running in Car mode");
-            return true;
-        } else {
-            Log.d(TAG, "Running on a non-Car mode");
-            return false;
-        }
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -451,168 +393,12 @@ public class MainActivity extends AppCompatActivity
                 || super.onSupportNavigateUp();
     }
 
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         //SaveData();
     }
-
-    /*
-    // Playing the music
-    private void musicplay(String filename) {
-
-        Log.d(TAG, "musicplay " + filename);
-
-        if (exoPlayer == null) {
-            exoPlayer = new ExoPlayer.Builder(getApplicationContext()).build();
-            Log.d(TAG, "builder called ");
-            CreateMusic();
-        }
-
-        //original:
-        Uri uri = Uri.parse(filename);
-
-        // Build the media item.
-        MediaItem mediaItem = MediaItem.fromUri(uri);
-
-        // Set the media item to be played.
-        exoPlayer.setMediaItem(mediaItem);
-        Log.d(TAG, "media item set ");
-        // Prepare the player.
-        exoPlayer.prepare();
-        Log.d(TAG, "player prepared ");
-
-        try {
-            // Start the playback.
-            exoPlayer.play();
-        } catch (Exception e) {
-            Log.e(TAG, "exception in musicplay " + e.getMessage());
-            Sentry.captureException(e);
-        }
-
-
-    }
-
-     */
-
-    /*
-    private void musicplay() {
-
-        if (exoPlayer != null) {
-
-            //first stop
-            exoPlayer.stop();
-
-            //then start
-            exoPlayer.play();
-        }
-
-
-    }
-
-
-     */
-
-/*
-    // Pausing the music
-    private void musicpause() {
-
-        if (exoPlayer != null) {
-            exoPlayer.pause();
-        }
-    }
-
-
- */
-
-    /*
-    // Stopping the music
-    private void musicstop() {
-
-        if (progressTimer != null) {
-            progressTimer.cancel();
-            progressTimer.purge();
-        }
-        if (exoPlayer != null) {
-            exoPlayer.release();
-            exoPlayer = null;
-        }
-    }
-
-
-     */
-
-/*
-    private void CreateMusic() {
-
-        exoPlayer.addListener(
-                new Player.Listener() {
-                    @Override
-                    public void onIsPlayingChanged(boolean isPlaying) {
-                        if (isPlaying) {
-                            // Active playback.
-                            Log.i(TAG, "is playing");
-                            SongNotFinished = true;
-                        } else {
-                            // Not playing because playback is paused, ended, suppressed, or the player
-                            // is buffering, stopped or failed. Check player.getPlayWhenReady,
-                            // player.getPlaybackState, player.getPlaybackSuppressionReason and
-                            // player.getPlaybackError for details.
-                            Log.i(TAG, "is not playing " + exoPlayer.getPlaybackState());
-
-                            if (exoPlayer.getPlaybackState() == Player.STATE_ENDED) {
-                                Log.d(TAG, "Song Complete " + OnlyOneSong);
-                                SongNotFinished = false;
-                                if (!OnlyOneSong) {
-                                    GetNextSong();
-                                } else {
-                                    musicstop();
-                                }
-                            }
-                        }
-                    }
-                });
-
-        playerView.setPlayer(exoPlayer);
-
-        if (progressTimer != null) {
-            progressTimer.cancel();
-            progressTimer.purge();
-        }
-
-        progressTimer = new Timer();
-        TimerTask updateProgress = new UpdateProgressTask();
-        progressTimer.scheduleAtFixedRate(updateProgress, 0, 1000);
-    }
-
-
- */
-
-    /*
-    private void GetNextSong() {
-        Log.d(TAG, "get next song from " + nextSongFrom);
-
-        if (nextSongFrom.equals("TrackItemsAdapter")) {
-            if (mTracksFragment != null) {
-                //wenn noch nicht fertig, dann aktuellen Song holen
-                if (SongNotFinished) {
-                    mTracksFragment.GetCurrentSong();
-                } else {
-                    mTracksFragment.GetNextSong();
-                }
-            }
-        } else {
-            Log.e(TAG, "no source of tracks");
-
-            Toast.makeText(this, "no track selected.", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-
-     */
 
     private void GetSongs() {
         Log.d(TAG, "get songs ");
@@ -626,11 +412,7 @@ public class MainActivity extends AppCompatActivity
         try {
             mediaItems.clear();
 
-
-
             for (TrackData track : tracks) {
-                //MediaItem item = MediaItem.fromUri(filename);
-                //mediaItems.add(item);
 
                 MediaItem item =
                         new MediaItem.Builder()
@@ -651,15 +433,6 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception ex) {
             Log.e(TAG, "exception in  UpdatePlayList" + ex);
         }
-
-
-        //if (exoPlayer!=null) {
-        //    exoPlayer.setMediaItems(mediaItems);
-        //}
-        //else{
-        //    initializePlayer();
-        //}
-
     }
 
     @Override
@@ -684,9 +457,8 @@ public class MainActivity extends AppCompatActivity
                 if (mTracksFragment != null) {
                     mTracksFragment.SetCurrentplaytime(index, position);
                 }
-            }
-            catch (Exception ex){
-                Log.e(TAG, "exception in UpdateProgress  "+ ex);
+            } catch (Exception ex) {
+                Log.e(TAG, "exception in UpdateProgress  " + ex);
             }
         }
     };
@@ -700,14 +472,12 @@ public class MainActivity extends AppCompatActivity
                 playerView.onResume();
             }
         }
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT <= 23 ) {
+        if (Build.VERSION.SDK_INT <= 23) {
 
             if (playerView != null) {
                 playerView.onResume();
@@ -722,7 +492,6 @@ public class MainActivity extends AppCompatActivity
             if (playerView != null) {
                 playerView.onPause();
             }
-
         }
     }
 
@@ -733,7 +502,6 @@ public class MainActivity extends AppCompatActivity
             if (playerView != null) {
                 playerView.onPause();
             }
-
         }
         if (progressTimer != null) {
             progressTimer.cancel();
@@ -752,50 +520,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
-
-
-
     private void createMediaItems() {
-
         mediaItems = mMusicData.createMediaItems();
-
     }
 
-
-
-    /*
-    @OptIn(markerClass = UnstableApi.class) private MediaSource.Factory createMediaSourceFactory() {
-        DefaultDrmSessionManagerProvider drmSessionManagerProvider = new DefaultDrmSessionManagerProvider();
-        drmSessionManagerProvider.setDrmHttpDataSourceFactory(DemoUtil.getHttpDataSourceFactory( this));
-        ImaServerSideAdInsertionMediaSource.AdsLoader.Builder serverSideAdLoaderBuilder =
-                new ImaServerSideAdInsertionMediaSource.AdsLoader.Builder( this, playerView);
-        if (serverSideAdsLoaderState != null) {
-            serverSideAdLoaderBuilder.setAdsLoaderState(serverSideAdsLoaderState);
-        }
-        serverSideAdsLoader = serverSideAdLoaderBuilder.build();
-        ImaServerSideAdInsertionMediaSource.Factory imaServerSideAdInsertionMediaSourceFactory =
-                new ImaServerSideAdInsertionMediaSource.Factory(
-                        serverSideAdsLoader,
-                        new DefaultMediaSourceFactory( this)
-                                .setDataSourceFactory(dataSourceFactory));
-        return new DefaultMediaSourceFactory( this)
-                .setDataSourceFactory(dataSourceFactory)
-                .setDrmSessionManagerProvider(drmSessionManagerProvider)
-                .setLocalAdInsertionComponents(
-                        this::getClientSideAdsLoader,  playerView)
-                .setServerSideAdInsertionMediaSourceFactory(imaServerSideAdInsertionMediaSourceFactory);
-    }
-*/
-    /*
-    private void setRenderersFactory(
-            ExoPlayer.Builder playerBuilder, boolean preferExtensionDecoders) {
-        RenderersFactory renderersFactory =
-                DemoUtil.buildRenderersFactory( this, preferExtensionDecoders);
-        playerBuilder.setRenderersFactory(renderersFactory);
-    }
-    */
     private class PlayerErrorMessageProvider implements ErrorMessageProvider<PlaybackException> {
 
         @Override
@@ -834,8 +562,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-    private void CreateMediaController(){
+    private void CreateMediaController() {
         SessionToken sessionToken = new SessionToken(this, new ComponentName(this, MusicService.class));
 
         controllerFuture = new MediaController.Builder(this, sessionToken).buildAsync();
@@ -850,7 +577,8 @@ public class MainActivity extends AppCompatActivity
 
                 controllerFuture.get().addListener(
                         new Player.Listener() {
-                            @OptIn(markerClass = UnstableApi.class) @Override
+                            @OptIn(markerClass = UnstableApi.class)
+                            @Override
                             public void onIsPlayingChanged(boolean isPlaying) {
                                 if (isPlaying) {
 
@@ -885,27 +613,16 @@ public class MainActivity extends AppCompatActivity
                                             }
 
                                         }
+                                    } catch (Exception ex) {
+                                        Log.e(TAG, "exception in onIsPlayingChanged " + ex);
                                     }
-                                        catch (Exception ex){
-                                            Log.e(TAG, "exception in onIsPlayingChanged " + ex);
-                                        }
-
-
                                 }
                             }
                         });
-            }
-            catch (Exception ex){
+            } catch (Exception ex) {
                 Log.e(TAG, "exception in CreateMediaController " + ex);
             }
 
-
-
         }, ContextCompat.getMainExecutor(this));
-
-
     }
-
-
-
 }
