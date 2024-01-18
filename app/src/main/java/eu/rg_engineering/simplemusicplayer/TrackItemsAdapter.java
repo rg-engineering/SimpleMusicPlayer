@@ -54,7 +54,7 @@ public class TrackItemsAdapter extends
     }
 
     public interface TrackItemsAdapterListener {
-        void messageFromTrackItemsAdapter(String msg, ArrayList<String> params);
+        void messageFromTrackItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks);
     }
     public TrackItemsAdapter(List<TrackItem> items, OnDeleteTrackitemListener deleteListener) {
         this.deleteListener = deleteListener;
@@ -75,7 +75,7 @@ public class TrackItemsAdapter extends
 
         mCommunication = (TrackItemsAdapterListener) context;
         if (mCommunication != null) {
-            mCommunication.messageFromTrackItemsAdapter("IsAlmostReady", null);
+            mCommunication.messageFromTrackItemsAdapter("IsAlmostReady", null, null);
         }
     }
 
@@ -90,7 +90,7 @@ public class TrackItemsAdapter extends
         }
 
         if (mCommunication != null) {
-            mCommunication.messageFromTrackItemsAdapter("IsReady", null);
+            mCommunication.messageFromTrackItemsAdapter("IsReady", null, null);
         }
     }
     @NonNull
@@ -219,15 +219,20 @@ public class TrackItemsAdapter extends
     public void GetSongs() {
         Log.d(TAG, "GetSongs  " );
 
-        ArrayList<String> filenames = new ArrayList<>();
+        ArrayList<TrackData> tracks = new ArrayList<>();
 
         for (TrackItem item : mItemsFiltered) {
 
-            filenames.add(item.getFileName());
+            TrackData track = new TrackData();
+            track.Artist= item.getArtist();
+            track.TrackName= item.getName();
+            track.Url= item.getFileName();
+
+            tracks.add(track);
 
         }
 
-        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", filenames);
+        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", null, tracks);
     }
 
     private void PlayCurrentSong(int pos){
@@ -235,7 +240,7 @@ public class TrackItemsAdapter extends
         TrackItem item = mItemsFiltered.get(pos);
         ArrayList<String> filenames = new ArrayList<>();
         filenames.add(item.getFileName());
-        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", filenames);
+        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", filenames, null);
     }
 
 
@@ -401,7 +406,7 @@ public class TrackItemsAdapter extends
 
             items.add(String.valueOf(pos));
 
-            mCommunication.messageFromTrackItemsAdapter("TrackSelected",items );
+            mCommunication.messageFromTrackItemsAdapter("TrackSelected",items, null );
 
             return true;
         }
