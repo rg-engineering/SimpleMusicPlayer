@@ -43,6 +43,7 @@ public class TrackItemsAdapter extends
     private int currentPlayedMusicPosition = -1;
     Context mContext;
     TrackItemsAdapterListener mCommunication;
+    private boolean mNeed2SendSongs=false;
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -57,26 +58,58 @@ public class TrackItemsAdapter extends
         void messageFromTrackItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks);
     }
     public TrackItemsAdapter(List<TrackItem> items, OnDeleteTrackitemListener deleteListener) {
+
+        Log.d(TAG, "TrackItemsAdapter contructor ");
+
         this.deleteListener = deleteListener;
         mItemsFiltered = TrackItem.createItemsList(0);
 
         mItemsAll = items;
         UpdateData();
 
-
-
         //todo load playlist
+
+
+        /*
+        //hier zu zeitig
+        if (mCommunication != null) {
+            mCommunication.messageFromTrackItemsAdapter("IsReady", null, null);
+        }
+        else {
+            Log.w(TAG, "mCommunication == null ");
+        }
+
+         */
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        Context context = recyclerView.getContext();
+        Log.d(TAG, "onAttachedToRecyclerView");
 
+        Context context = recyclerView.getContext();
         mCommunication = (TrackItemsAdapterListener) context;
+        mContext = context;
+
+
         if (mCommunication != null) {
-            mCommunication.messageFromTrackItemsAdapter("IsAlmostReady", null, null);
+            mCommunication.messageFromTrackItemsAdapter("IsReady", null, null);
         }
+        else {
+            Log.w(TAG, "mCommunication == null ");
+        }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+        Log.d(TAG, "onViewRecycled");
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        Log.d(TAG, "onViewAttachedToWindow");
     }
 
     public void UpdateData() {
@@ -89,8 +122,9 @@ public class TrackItemsAdapter extends
             mItemsFiltered.add(item);
         }
 
-        if (mCommunication != null) {
-            mCommunication.messageFromTrackItemsAdapter("IsReady", null, null);
+        //send songs here to main since plexe needs longer then internal data
+        if (mNeed2SendSongs) {
+            GetSongs();
         }
     }
     @NonNull
@@ -105,9 +139,9 @@ public class TrackItemsAdapter extends
         // Return a new holder instance
         TrackItemsAdapter.ViewHolder viewHolder = new TrackItemsAdapter.ViewHolder(itemView);
 
-        mCommunication = (TrackItemsAdapterListener) context;
-        mContext = context;
 
+
+        Log.d(TAG, "onCreateViewHolder ");
 
         return viewHolder;
 
@@ -193,54 +227,40 @@ public class TrackItemsAdapter extends
         }
     }
 
-    /*
-    public void GetNextSong() {
-        Log.d(TAG, "GetNextSong  " + currentPlayedMusicPosition);
-
-        currentPlayedMusicPosition ++ ;
-        if (currentPlayedMusicPosition>=mItemsFiltered.size()){
-            currentPlayedMusicPosition=0;
-        }
-        String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFileName();
-        mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
-    }
-     */
-/*
-    public void GetCurrentSong() {
-        Log.d(TAG, "GetCurrentSong  " + currentPlayedMusicPosition);
-
-        if (currentPlayedMusicPosition>=mItemsFiltered.size()){
-            currentPlayedMusicPosition=0;
-        }
-        String filename = mItemsFiltered.get(currentPlayedMusicPosition).getFileName();
-        mCommunication.messageFromTrackItemsAdapter("PlayMusic", filename);
-    }
- */
     public void GetSongs() {
         Log.d(TAG, "GetSongs  " );
 
-        ArrayList<TrackData> tracks = new ArrayList<>();
+        if (mItemsFiltered.size()>0) {
+            mNeed2SendSongs=false;
+            ArrayList<TrackData> tracks = new ArrayList<>();
 
-        for (TrackItem item : mItemsFiltered) {
+            for (TrackItem item : mItemsFiltered) {
 
-            TrackData track = new TrackData();
-            track.Artist= item.getArtist();
-            track.TrackName= item.getName();
-            track.Url= item.getFileName();
+                TrackData track = new TrackData();
+                track.Artist = item.getArtist();
+                track.TrackName = item.getName();
+                track.Url = item.getFileName();
 
-            tracks.add(track);
+                tracks.add(track);
 
+            }
+
+            mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", null, tracks);
         }
-
-        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", null, tracks);
+        else {
+            mNeed2SendSongs=true;
+        }
     }
 
     private void PlayCurrentSong(int pos){
 
-        TrackItem item = mItemsFiltered.get(pos);
-        ArrayList<String> filenames = new ArrayList<>();
-        filenames.add(item.getFileName());
-        mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", filenames, null);
+        Log.d(TAG, "PLayfromcurrent position  " + pos );
+
+        ArrayList<String> items = new ArrayList<>();
+
+        items.add(String.valueOf(pos));
+
+        mCommunication.messageFromTrackItemsAdapter("PlayFromCurrentPos", items, null);
     }
 
 
@@ -315,10 +335,6 @@ public class TrackItemsAdapter extends
             notifyDataSetChanged();
         }
     };
-
-
-
-
 
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {

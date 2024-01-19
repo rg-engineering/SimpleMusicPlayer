@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity
         switch (msg) {
             case "btnBack":
                 replaceFragment(mAlbumsFragment);
+                stopMusic();
                 break;
             case "PlexDataRead":
                 break;
@@ -219,15 +220,16 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from TrackItemsFragment " + msg + " " + params);
 
         switch (msg) {
-            case "PlayMusic":
+            case "PlayFromCurrentPos":
+                startFromPos( Integer.parseInt(params.get(0))  );
                 break;
-            case "IsAlmostReady":
-                break;
+
             case "IsReady":
                 GetSongs();
                 break;
             case "UpdatePlayList":
                 UpdatePlayList(tracks);
+                startMusic();
                 break;
             default:
                 Log.e(TAG, "unknown message " + msg);
@@ -409,6 +411,7 @@ public class MainActivity extends AppCompatActivity
 
     private void UpdatePlayList(ArrayList<TrackData> tracks) {
 
+        Log.d(TAG, "update UpdatePlayList" + tracks.size());
         try {
             mediaItems.clear();
 
@@ -625,4 +628,45 @@ public class MainActivity extends AppCompatActivity
 
         }, ContextCompat.getMainExecutor(this));
     }
+
+    private void stopMusic() {
+        Log.d(TAG, "stop music ");
+
+        try {
+            controllerFuture.get().stop();
+            controllerFuture.get().clearMediaItems();
+
+            if (progressTimer != null) {
+                progressTimer.cancel();
+                progressTimer.purge();
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "exception in stopMusic " + ex);
+        }
+
+    }
+
+    private void startMusic() {
+        Log.d(TAG, "start music ");
+
+        try {
+            controllerFuture.get().play();
+
+        } catch (Exception ex) {
+            Log.e(TAG, "exception in stopMusic " + ex);
+        }
+
+    }
+
+    private void startFromPos(int pos){
+        Log.d(TAG, "start from pos " + pos);
+
+        try {
+            controllerFuture.get().seekTo(pos,0);
+
+        } catch (Exception ex) {
+            Log.e(TAG, "exception in stopMusic " + ex);
+        }
+    }
+
 }
