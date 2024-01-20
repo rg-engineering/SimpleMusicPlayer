@@ -469,8 +469,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT > 23) {
+        Log.d(TAG, "onStart");
 
+        if (Build.VERSION.SDK_INT > 23) {
             if (playerView != null) {
                 playerView.onResume();
             }
@@ -480,8 +481,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT <= 23) {
+        Log.d(TAG, "onResume");
 
+        ReconnectMediaController();
+
+        if (Build.VERSION.SDK_INT <= 23) {
             if (playerView != null) {
                 playerView.onResume();
             }
@@ -491,6 +495,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause");
         if (Build.VERSION.SDK_INT <= 23) {
             if (playerView != null) {
                 playerView.onPause();
@@ -501,6 +506,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop");
         if (Build.VERSION.SDK_INT > 23) {
             if (playerView != null) {
                 playerView.onPause();
@@ -510,17 +516,18 @@ public class MainActivity extends AppCompatActivity
             progressTimer.cancel();
             progressTimer.purge();
         }
-        MediaController.releaseFuture(controllerFuture);
+        //MediaController.releaseFuture(controllerFuture);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        Log.d(TAG, "onDestroy");
         if (progressTimer != null) {
             progressTimer.cancel();
             progressTimer.purge();
         }
+        MediaController.releaseFuture(controllerFuture);
     }
 
     private void createMediaItems() {
@@ -628,6 +635,12 @@ public class MainActivity extends AppCompatActivity
 
         }, ContextCompat.getMainExecutor(this));
     }
+
+    private void ReconnectMediaController(){
+        Log.d(TAG, "reconnect Mediacontroller");
+
+    }
+
 
     private void stopMusic() {
         Log.d(TAG, "stop music ");

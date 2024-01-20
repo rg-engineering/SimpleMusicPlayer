@@ -1,6 +1,7 @@
 package eu.rg_engineering.simplemusicplayer.MusicData;
 
 import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -68,9 +69,37 @@ public class MusicService extends MediaSessionService {
         initializePlayer();
     }
 
+
+    @Nullable
+    @Override
+    public IBinder onBind(@Nullable Intent intent) {
+        Log.d(TAG, "onBind");
+        return super.onBind(intent);
+    }
+
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind");
+        return super.onUnbind(intent);
+
+    }
+
+    @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
+        Log.d(TAG, "onRebind");
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy");
         releasePlayer();
     }
 
@@ -82,6 +111,7 @@ public class MusicService extends MediaSessionService {
             // Stop the service if not playing, continue playing in the background
             // otherwise.
             stopSelf();
+            Log.i(TAG, "stop self");
         }
     }
 
@@ -135,6 +165,8 @@ public class MusicService extends MediaSessionService {
     }
 
     protected void releasePlayer() {
+
+        Log.d(TAG, "release player");
 
         mediaSession.getPlayer().release();
         mediaSession.release();
@@ -247,4 +279,10 @@ public class MusicService extends MediaSessionService {
         return mediaItems;
     }
 
+    @Override
+    public void onUpdateNotification(MediaSession session, boolean startInForegroundRequired) {
+        super.onUpdateNotification(session, startInForegroundRequired);
+
+        Log.d(TAG, "onUpdateNotification");
+    }
 }
