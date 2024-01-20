@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -148,6 +150,7 @@ public class MainActivity extends AppCompatActivity
             case "btnBack":
                 replaceFragment(mAlbumsFragment);
                 stopMusic();
+                setPlayControllerHeight(10);
                 break;
             case "PlexDataRead":
                 break;
@@ -318,6 +321,8 @@ public class MainActivity extends AppCompatActivity
         playerView.setShowFastForwardButton(true);
         playerView.setShowNextButton(true);
         playerView.setShowPreviousButton(true);
+
+        setPlayControllerHeight(10);
 
         playerView.requestFocus();
 
@@ -592,8 +597,7 @@ public class MainActivity extends AppCompatActivity
                             public void onIsPlayingChanged(boolean isPlaying) {
                                 if (isPlaying) {
 
-                                    playerView.showController();
-                                    playerView.setVisibility(View.VISIBLE);
+                                    setPlayControllerHeight(300);
 
                                     // Active playback.
                                     Log.i(TAG, "is playing");
@@ -605,8 +609,6 @@ public class MainActivity extends AppCompatActivity
                                     progressTimer = new Timer();
                                     TimerTask updateProgress = new UpdateProgressTask();
                                     progressTimer.scheduleAtFixedRate(updateProgress, 0, 1000);
-
-
                                 } else {
                                     // Not playing because playback is paused, ended, suppressed, or the player
                                     // is buffering, stopped or failed. Check player.getPlayWhenReady,
@@ -681,5 +683,26 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "exception in stopMusic " + ex);
         }
     }
+
+
+    @OptIn(markerClass = UnstableApi.class) private void setPlayControllerHeight(int height) {
+        if (playerView!=null) {
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) playerView.getLayoutParams();
+            params.width = 0;
+            
+            params.height = height;
+            playerView.setLayoutParams(params);
+
+            if (height>100){
+                playerView.showController();
+                playerView.setVisibility(View.VISIBLE);
+            }
+            else {
+                playerView.hideController();
+                playerView.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
 
 }
