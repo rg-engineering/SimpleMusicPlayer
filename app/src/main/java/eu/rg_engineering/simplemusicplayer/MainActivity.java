@@ -597,7 +597,7 @@ public class MainActivity extends AppCompatActivity
                             public void onIsPlayingChanged(boolean isPlaying) {
                                 if (isPlaying) {
 
-                                    setPlayControllerHeight(300);
+                                    setPlayControllerHeight(200);
 
                                     // Active playback.
                                     Log.i(TAG, "is playing");
@@ -689,8 +689,10 @@ public class MainActivity extends AppCompatActivity
         if (playerView!=null) {
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) playerView.getLayoutParams();
             params.width = 0;
-            
-            params.height = height;
+
+            float scale = getResources().getDisplayMetrics().density;
+
+            params.height =  (int) (height * scale + 0.5f);
             playerView.setLayoutParams(params);
 
             if (height>100){

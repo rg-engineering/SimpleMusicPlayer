@@ -240,6 +240,8 @@ public class TrackItemsAdapter extends
                 track.Artist = item.getArtist();
                 track.TrackName = item.getName();
                 track.Url = item.getFileName();
+                //todo URL zum Bild
+
 
                 tracks.add(track);
 
