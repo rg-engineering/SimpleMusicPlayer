@@ -23,36 +23,36 @@ import java.util.ArrayList;
 import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
-import eu.rg_engineering.simplemusicplayer.TrackItemsAdapter;
+import eu.rg_engineering.simplemusicplayer.PlaylistItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
-import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
+import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
 import io.sentry.Sentry;
 
 //todo Anzeige Anzahl Tracks
 // Bild von Artist und Album einfügen
 
-public class TracksFragment extends Fragment implements
-        OnDeleteTrackitemListener {
+public class PlaylistFragment extends Fragment implements
+        OnDeletePlaylistitemListener {
 
-    private final String TAG = "TracksFragment";
-    TracksFragmentListener mCommunication;
+    private final String TAG = "PlaylistFragment";
+    PlaylistFragmentListener mCommunication;
     Context mContext;
-    private RecyclerView rvTrackItems = null;
-    private TrackItemsAdapter TrackItemsAdapter = null;
-    ArrayList<TrackItem> mTracks;
+    private RecyclerView rvPlaylistItems = null;
+    private PlaylistItemsAdapter PlaylistItemsAdapter = null;
+    ArrayList<TrackItem> mPlaylistTracks;
 
     @Override
     public void ItemDeleted() {
         //SaveData();
     }
-    public interface TracksFragmentListener {
-        void messageFromTracksFragment(String msg, String params);
+    public interface PlaylistFragmentListener {
+        void messageFromPlaylistFragment(String msg, String params);
     }
     @Override
     public void onAttach(Context context) {
 
         super.onAttach(context);
-        mCommunication = (TracksFragmentListener) context;
+        mCommunication = (PlaylistFragmentListener) context;
         mContext = context;
     }
 
@@ -64,35 +64,36 @@ public class TracksFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_tracks, container, false);
+        View root = inflater.inflate(R.layout.fragment_playlist, container, false);
 
         try {
-            rvTrackItems = (RecyclerView) root.findViewById(R.id.rvPlaylistTracks);
+            rvPlaylistItems = (RecyclerView) root.findViewById(R.id.rvPlaylistTracks);
 
             MainActivity activity = (MainActivity) getActivity();
-            mTracks=activity.mMusicData.getTrackData();
+
+            //todo load playlist from file
+            //mPlaylistTracks=  from file...
 
             // Create adapter passing in the sample user data
-            TrackItemsAdapter = new TrackItemsAdapter(mTracks,this);
+            PlaylistItemsAdapter = new PlaylistItemsAdapter(mPlaylistTracks,this);
 
-
-            ItemTouchHelper.Callback callback = new MyItemTouchHelper(TrackItemsAdapter);
+            ItemTouchHelper.Callback callback = new MyItemTouchHelper(PlaylistItemsAdapter);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-            TrackItemsAdapter.setTouchHelper(itemTouchHelper);
-            itemTouchHelper.attachToRecyclerView(rvTrackItems);
+            PlaylistItemsAdapter.setTouchHelper(itemTouchHelper);
+            itemTouchHelper.attachToRecyclerView(rvPlaylistItems);
             // Attach the adapter to the recyclerview to populate items
-            rvTrackItems.setAdapter(TrackItemsAdapter);
+            rvPlaylistItems.setAdapter(PlaylistItemsAdapter);
 
             // Set layout manager to position the items
-            rvTrackItems.setLayoutManager(new LinearLayoutManager(getActivity()));
-            rvTrackItems.setItemAnimator(null);
+            rvPlaylistItems.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvPlaylistItems.setItemAnimator(null);
             // That's all!
             AutoCompleteTextView editFilterTracks = (AutoCompleteTextView ) root.findViewById(R.id.filter_playlisttracks);
             ArrayList <String> TrackList = new ArrayList<>();
 
-            for (int i = 0; i < mTracks.size(); i++) {
+            for (int i = 0; i < mPlaylistTracks.size(); i++) {
 
-                String track = mTracks.get(i).getName();
+                String track = mPlaylistTracks.get(i).getName();
                 if (!TrackList.contains(track)) {
                     TrackList.add(track);
                 }
@@ -113,8 +114,8 @@ public class TracksFragment extends Fragment implements
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     Log.d(TAG, "track filter text changed " + s);
-                    TrackItemsAdapter.setFilterIdx(1);
-                    TrackItemsAdapter.getFilter().filter(s);
+                    PlaylistItemsAdapter.setFilterIdx(1);
+                    PlaylistItemsAdapter.getFilter().filter(s);
                 }
 
                 @Override
@@ -128,7 +129,7 @@ public class TracksFragment extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     Log.d(TAG, "back button pressed");
-                    mCommunication.messageFromTracksFragment("btnBack", "");
+                    mCommunication.messageFromPlaylistFragment("btnBack", "");
                 }
             });
 
@@ -137,46 +138,13 @@ public class TracksFragment extends Fragment implements
             Sentry.captureException(ex);
         }
         return root;
-
-
-    }
-    public void ReadPlexTrackData(){
-
-        MainActivity activity = (MainActivity) getActivity();
-        if (activity.mMusicData!=null) {
-            activity.mMusicData.ReadPlexTrackData();
-            Log.d(TAG, "plex data read ");
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mTracks != null) {
-                        TrackItemsAdapter.updateItems(mTracks);
-                        TrackItemsAdapter.notifyDatasetChanged();
-                    }
-                }
-            });
-
-            mCommunication.messageFromTracksFragment("PlexDataRead", "");
-            Log.d(TAG, "adapter notified ");
-        }
     }
 
     public void SetCurrentplaytime(int index, long duration){
-        TrackItemsAdapter.SetCurrentPlaytime(index, duration);
+        PlaylistItemsAdapter.SetCurrentPlaytime(index, duration);
     }
-
-    /*
-    public void GetNextSong(){
-        TrackItemsAdapter.GetNextSong();
-    }
-
-    public void GetCurrentSong(){
-        TrackItemsAdapter.GetCurrentSong();
-    }
-     */
 
     public void GetSongs(){
-        TrackItemsAdapter.GetSongs();
+        PlaylistItemsAdapter.GetSongs();
     }
 }

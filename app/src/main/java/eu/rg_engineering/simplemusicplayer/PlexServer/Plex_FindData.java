@@ -201,7 +201,13 @@ public class Plex_FindData extends Thread {
 
 
         try {
+
+            Log.d(TAG, "download from " + url);
+
+
             stream = downloadUrl(url);
+
+
 
             switch (mSearchMode) {
                 case "Artists":
@@ -245,7 +251,12 @@ public class Plex_FindData extends Thread {
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
-        } finally {
+        }
+        catch (Exception ex){
+            Log.e(TAG, "exception in loadXmlFromNetwork " + ex);
+        }
+
+        finally {
             if (stream != null) {
                 stream.close();
             }

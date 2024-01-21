@@ -27,16 +27,9 @@
         android:layout_height="wrap_content"
         android:hint="track"
         app:layout_constraintEnd_toEndOf="@+id/toolbar3"
-        app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnBackTracks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/ic_menu_revert"
-        app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
-        app:layout_constraintStart_toStartOf="@+id/toolbar3"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

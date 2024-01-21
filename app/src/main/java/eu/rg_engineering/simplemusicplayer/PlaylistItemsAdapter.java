@@ -16,7 +16,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.media3.common.MediaItem;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,24 +24,24 @@ import java.util.Collection;
 import java.util.List;
 
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
-import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
+import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
 import io.sentry.Sentry;
 
 
-public class TrackItemsAdapter extends
-        RecyclerView.Adapter<TrackItemsAdapter.ViewHolder> implements
+public class PlaylistItemsAdapter extends
+        RecyclerView.Adapter<PlaylistItemsAdapter.ViewHolder> implements
         Filterable,
         ItemTouchHelperAdapter {
 
-    private final String TAG = "TrackItemsAdapter";
+    private final String TAG = "PlaylistItemsAdapter";
     private final List<TrackItem> mItemsFiltered;
     private List<TrackItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private final OnDeleteTrackitemListener deleteListener;
+    private final OnDeletePlaylistitemListener deleteListener;
     private int mFilterIdx = 0;
     private int currentPlayedMusicPosition = -1;
     Context mContext;
-    TrackItemsAdapterListener mCommunication;
+    PlaylistItemsAdapterListener mCommunication;
     private boolean mNeed2SendSongs=false;
 
     public void notifyDatasetChanged() {
@@ -54,12 +53,12 @@ public class TrackItemsAdapter extends
         UpdateData();
     }
 
-    public interface TrackItemsAdapterListener {
-        void messageFromTrackItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks);
+    public interface PlaylistItemsAdapterListener {
+        void messageFromPlaylistItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks);
     }
-    public TrackItemsAdapter(List<TrackItem> items, OnDeleteTrackitemListener deleteListener) {
+    public PlaylistItemsAdapter(List<TrackItem> items, OnDeletePlaylistitemListener deleteListener) {
 
-        Log.d(TAG, "TrackItemsAdapter contructor ");
+        Log.d(TAG, "PlaylistItemsAdapter contructor ");
 
         this.deleteListener = deleteListener;
         mItemsFiltered = TrackItem.createItemsList(0);
@@ -67,6 +66,7 @@ public class TrackItemsAdapter extends
         mItemsAll = items;
         UpdateData();
 
+        //todo load playlist
     }
 
     @Override
@@ -75,12 +75,12 @@ public class TrackItemsAdapter extends
         Log.d(TAG, "onAttachedToRecyclerView");
 
         Context context = recyclerView.getContext();
-        mCommunication = (TrackItemsAdapterListener) context;
+        mCommunication = (PlaylistItemsAdapterListener) context;
         mContext = context;
 
 
         if (mCommunication != null) {
-            mCommunication.messageFromTrackItemsAdapter("IsReady", null, null);
+            mCommunication.messageFromPlaylistItemsAdapter("IsReady", null, null);
         }
         else {
             Log.w(TAG, "mCommunication == null ");
@@ -109,14 +109,14 @@ public class TrackItemsAdapter extends
             mItemsFiltered.add(item);
         }
 
-        //send songs here to main since plex needs longer then internal data
+        //send songs here to main since plexe needs longer then internal data
         if (mNeed2SendSongs) {
             GetSongs();
         }
     }
     @NonNull
     @Override
-    public TrackItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PlaylistItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -124,23 +124,18 @@ public class TrackItemsAdapter extends
         View itemView = inflater.inflate(R.layout.track_item, parent, false);
 
         // Return a new holder instance
-        TrackItemsAdapter.ViewHolder viewHolder = new TrackItemsAdapter.ViewHolder(itemView);
-
-
+        PlaylistItemsAdapter.ViewHolder viewHolder = new PlaylistItemsAdapter.ViewHolder(itemView);
 
         Log.d(TAG, "onCreateViewHolder ");
-
         return viewHolder;
-
-
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TrackItemsAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull PlaylistItemsAdapter.ViewHolder viewHolder, int position) {
 // Get the data model based on position
         TrackItem item = mItemsFiltered.get(position);
 
-        Log.d(TAG, "onBindViewHolder tracks called, position " + position);
+        Log.d(TAG, "onBindViewHolder playlist called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
 
         TextView albumTextView = viewHolder.albumTextView;
@@ -192,8 +187,6 @@ public class TrackItemsAdapter extends
         else {
             viewHolder.nameTextView.setTextColor(Color.BLACK);
         }
-
-
     }
     public void SetCurrentPlaytime(int index, long playtime) {
 
@@ -226,12 +219,11 @@ public class TrackItemsAdapter extends
                 track.Url = item.getFileName();
                 //todo URL zum Bild
 
-
                 tracks.add(track);
 
             }
 
-            mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", null, tracks);
+            mCommunication.messageFromPlaylistItemsAdapter("UpdatePlayList", null, tracks);
         }
         else {
             mNeed2SendSongs=true;
@@ -246,7 +238,7 @@ public class TrackItemsAdapter extends
 
         items.add(String.valueOf(pos));
 
-        mCommunication.messageFromTrackItemsAdapter("PlayFromCurrentPos", items, null);
+        mCommunication.messageFromPlaylistItemsAdapter("PlayFromCurrentPos", items, null);
     }
 
 
@@ -408,7 +400,7 @@ public class TrackItemsAdapter extends
 
             items.add(String.valueOf(pos));
 
-            mCommunication.messageFromTrackItemsAdapter("TrackSelected",items, null );
+            mCommunication.messageFromPlaylistItemsAdapter("TrackSelected",items, null );
 
             return true;
         }
@@ -456,6 +448,8 @@ public class TrackItemsAdapter extends
         if (pos > -1) {
             mItemsFiltered.set(pos, item);
         }
+
+
     }
 
     public void AddItem(TrackItem item) {
@@ -467,6 +461,7 @@ public class TrackItemsAdapter extends
         getFilter().filter("");
 
     }
+
 
     private int FindItemInList(List<TrackItem> list, String id) {
         int nRet = -1;

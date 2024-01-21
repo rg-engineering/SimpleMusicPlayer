@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,6 +71,7 @@ import eu.rg_engineering.simplemusicplayer.PlexServer.Plex_FindData;
 import eu.rg_engineering.simplemusicplayer.ui.home.AlbumsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.ArtistsFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
+import eu.rg_engineering.simplemusicplayer.ui.home.PlaylistFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment;
 import io.sentry.Sentry;
 
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity
             HomeFragment.HomeFragmentListener,
             TracksFragment.TracksFragmentListener,
             AlbumsFragment.AlbumsFragmentListener,
+            PlaylistFragment.PlaylistFragmentListener,
             Plex_FindData.PlexFindArtistListener ,
         PlayerView.ControllerVisibilityListener {
 
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity
     private ArtistsFragment mArtistsFragment;
     private AlbumsFragment mAlbumsFragment;
     private TracksFragment mTracksFragment;
+    private PlaylistFragment mPlaylistFragment;
     //private String nextSongFrom = "";
     protected PlayerView playerView;
     private List<MediaItem> mediaItems;
@@ -277,6 +281,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void messageFromPlaylistFragment(String msg, String params) {
+        Log.d(TAG, "got message from PlaylistFragment " + msg);
+
+        switch (msg) {
+
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
+        }
+    }
 
     public void replaceFragment(Fragment fragmentName) {
 
@@ -378,10 +393,33 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "permission set correctly");
         }
 
-        mArtistsFragment = new ArtistsFragment();
-        replaceFragment(mArtistsFragment);
-
         CreateMediaController();
+
+        RadioButton rbShowLib = (RadioButton) findViewById(R.id.showLibrary);
+        RadioButton rbShowPlaylist = (RadioButton) findViewById(R.id.showPlaylist);
+        rbShowLib.setChecked(true);
+
+
+        mArtistsFragment = new ArtistsFragment();
+        mPlaylistFragment = new PlaylistFragment();
+
+        rbShowLib.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Log.d(TAG, "show lib clicked");
+                        replaceFragment(mArtistsFragment);
+                    }
+                });
+        rbShowPlaylist.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Log.d(TAG, "show playlist clicked");
+                        replaceFragment(mPlaylistFragment);
+                    }
+                });
+
+        //todo wenn Playlist empty, dann auf Bibliothek, andernfalls auf Playlist schalten
+        replaceFragment(mArtistsFragment);
     }
 
 
@@ -448,6 +486,8 @@ public class MainActivity extends AppCompatActivity
         //todo
         Log.w(TAG, "onVisibilityChanged called " + visibility);
     }
+
+
 
 
     class UpdateProgressTask extends TimerTask {

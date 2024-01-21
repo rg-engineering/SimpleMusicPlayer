@@ -6,6 +6,28 @@
     android:layout_height="match_parent"
     android:background="@color/JuicyGreen">
 
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/showPlaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PlayList" />
+
+        <RadioButton
+            android:id="@+id/showLibrary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Library" />
+    </RadioGroup>
+
     <FrameLayout
         android:id="@+id/mainframeLayout"
         android:layout_width="match_parent"
@@ -14,7 +36,9 @@
         app:layout_constraintBottom_toTopOf="@+id/player_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+    </FrameLayout>
 
 
     <androidx.media3.ui.PlayerView
