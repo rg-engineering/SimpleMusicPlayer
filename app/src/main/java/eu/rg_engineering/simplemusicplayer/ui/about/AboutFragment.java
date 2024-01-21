@@ -35,7 +35,7 @@ public class AboutFragment extends Fragment {
 
     private void setShowDataPrivacyButtonListener() {
         btnShowDataPrivacy.setOnClickListener(e -> {
-            Uri uri = Uri.parse("https://www.rg-engineering.de/index.php/datenschutz/weitere-datenschutzerklaerungen/datenschutzerklaerung-simple_music_player");
+            Uri uri = Uri.parse("https://rg-engineering.de/ingenieurbuero-fuer-software-entwicklung-elektro-projektierung-und-photovoltaik/datenschutz/datenschutzerklaerung-app-einfacher-musikplayer/");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         });
