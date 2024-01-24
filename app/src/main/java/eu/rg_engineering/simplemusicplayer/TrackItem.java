@@ -168,7 +168,10 @@ public class TrackItem implements Parcelable  {
                 mArtist = parts[3];
                 mFileName = parts[4];
                 try {
-                    mDuration = Integer.parseInt(parts[5]);
+
+                    String sDuration = parts[5].replace("'","");
+
+                    mDuration = Integer.parseInt(sDuration);
                 } catch (NumberFormatException e) {
                     mDuration = 0;
                 }

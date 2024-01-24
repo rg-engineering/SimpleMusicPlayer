@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
     protected PlayerView playerView;
     private List<MediaItem> mediaItems;
     ListenableFuture<MediaController> controllerFuture;
+    private String mPlayStartedFrom;
 
     @Override
     public void messageFromMusicItemsAdapter(String msg, String params) {
@@ -237,6 +238,7 @@ public class MainActivity extends AppCompatActivity
             case "UpdatePlayList":
                 UpdatePlayList(tracks);
                 startMusic();
+                mPlayStartedFrom="TrackItemsAdapter";
                 break;
             default:
                 Log.e(TAG, "unknown message " + msg);
@@ -307,6 +309,7 @@ public class MainActivity extends AppCompatActivity
             case "UpdatePlayList":
                 UpdatePlayList(tracks);
                 startMusic();
+                mPlayStartedFrom="PlaylistItemsAdapter";
                 break;
             default:
                 Log.e(TAG, "unknown message " + msg);
@@ -530,8 +533,16 @@ public class MainActivity extends AppCompatActivity
                 long position = controllerFuture.get().getCurrentPosition();
                 int index = controllerFuture.get().getCurrentMediaItemIndex();
 
-                if (mTracksFragment != null) {
-                    mTracksFragment.SetCurrentplaytime(index, position);
+
+                if (mPlayStartedFrom == "PlaylistItemsAdapter") {
+                    if (mPlaylistFragment != null) {
+                        mPlaylistFragment.SetCurrentplaytime(index, position);
+                    }
+                }
+                if (mPlayStartedFrom == "TrackItemsAdapter") {
+                    if (mTracksFragment != null) {
+                        mTracksFragment.SetCurrentplaytime(index, position);
+                    }
                 }
             } catch (Exception ex) {
                 Log.e(TAG, "exception in UpdateProgress  " + ex);
