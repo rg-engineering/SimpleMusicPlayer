@@ -2,6 +2,7 @@ package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Environment;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -20,6 +21,10 @@ import androidx.media3.common.MediaItem;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +49,9 @@ public class TrackItemsAdapter extends
     Context mContext;
     TrackItemsAdapterListener mCommunication;
     private boolean mNeed2SendSongs=false;
+
+    //todo playlist file einstellbar
+    private String filename = "Playlist";
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -178,11 +186,21 @@ public class TrackItemsAdapter extends
         }
 
         Button btnPlaySong = viewHolder.btnPlaySong;
+        Button btnAdd2PlayList = viewHolder.btnAdd2PlayList;
+
         btnPlaySong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "PlayMusic pressed position " + position);
                 PlayCurrentSong(position);
+            }
+        });
+
+        btnAdd2PlayList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Add to playlist pressed position " + position);
+                AddSong2Playlist(position);
             }
         });
 
@@ -247,6 +265,27 @@ public class TrackItemsAdapter extends
         items.add(String.valueOf(pos));
 
         mCommunication.messageFromTrackItemsAdapter("PlayFromCurrentPos", items, null);
+    }
+
+    private void AddSong2Playlist(int pos){
+        Log.d(TAG, "Add to playlist position  " + pos );
+
+        TrackItem track = mItemsFiltered.get(pos);
+
+        String data = track.Serialize(true);
+        try {
+            String Contents = data + "\n" ;
+            //todo save play list
+            Log.d(TAG, "save play list (to do)");
+
+
+            writeToFile(Contents,filename);
+
+        } catch (Exception ex) {
+            Log.e(TAG, "Exception in SavePlaylist " + ex);
+        }
+
+
     }
 
 
@@ -362,6 +401,7 @@ public class TrackItemsAdapter extends
         public ProgressBar currentProgressbar;
         public SeekBar currentSeekbar;
         public Button btnPlaySong;
+        public Button btnAdd2PlayList;
 
         GestureDetector mGestureDetector;
 
@@ -380,7 +420,7 @@ public class TrackItemsAdapter extends
             currentProgressbar = (ProgressBar) itemView.findViewById(R.id.track_ProgressBar);
             currentSeekbar = (SeekBar) itemView.findViewById(R.id.track_SeekBar);
             btnPlaySong = (Button) itemView.findViewById(R.id.track_PlaySong);
-
+            btnAdd2PlayList = (Button) itemView.findViewById(R.id.track_Add2Playlist);
 
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
 
@@ -490,5 +530,37 @@ public class TrackItemsAdapter extends
         }
         return nRet;
     }
+
+
+
+    private void writeToFile(String data,String filename) {
+        try {
+
+            //File playlistfile = new File(mContext.getFilesDir(), filename);
+            //playlistfile.createNewFile();
+
+            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(mContext.openFileOutput(filename, Context.MODE_PRIVATE));
+            //outputStreamWriter.write(data);
+            //outputStreamWriter.close();
+            //File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+
+            File path = mContext.getFilesDir();
+            File newDir = new File(path + "/" + filename);
+
+            if (!newDir.exists()) {
+                newDir.mkdir();
+            }
+            FileOutputStream writer = new FileOutputStream(new File(path, filename),true);
+            writer.write(data.getBytes());
+            writer.close();
+            Log.d("TAG", "Wrote to file: " + newDir);
+
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+
+
+    }
+
 
 }

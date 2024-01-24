@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity
             ArtistItemsAdapter.ArtistItemsAdapterListener,
             AlbumItemsAdapter.AlbumItemsAdapterListener,
             TrackItemsAdapter.TrackItemsAdapterListener,
+        PlaylistItemsAdapter.PlaylistItemsAdapterListener,
             HomeFragment.HomeFragmentListener,
             TracksFragment.TracksFragmentListener,
             AlbumsFragment.AlbumsFragmentListener,
@@ -231,6 +232,8 @@ public class MainActivity extends AppCompatActivity
                 startFromPos( Integer.parseInt(params.get(0))  );
                 break;
 
+
+
             case "IsReady":
                 GetSongs();
                 break;
@@ -284,6 +287,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void messageFromPlaylistFragment(String msg, String params) {
         Log.d(TAG, "got message from PlaylistFragment " + msg);
+
+        switch (msg) {
+
+            default:
+                Log.e(TAG, "unknown message " + msg);
+                break;
+        }
+    }
+
+    @Override
+    public void messageFromPlaylistItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks) {
+        Log.d(TAG, "got message from PlaylistItemsAdapter " + msg);
 
         switch (msg) {
 

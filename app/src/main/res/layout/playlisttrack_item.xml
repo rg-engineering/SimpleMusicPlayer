@@ -87,8 +87,7 @@
             android:layout_height="50dp"
             android:background="@android:drawable/ic_media_play"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/track_Add2Playlist" />
+            card_view:layout_constraintEnd_toEndOf="parent" />
 
         <ProgressBar
             android:id="@+id/track_ProgressBar"
@@ -110,15 +109,6 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/track_ProgressBar" />
-
-        <Button
-            android:id="@+id/track_Add2Playlist"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@android:drawable/ic_menu_add"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

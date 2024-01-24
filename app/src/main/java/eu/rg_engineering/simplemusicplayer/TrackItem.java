@@ -2,6 +2,7 @@ package eu.rg_engineering.simplemusicplayer;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -11,8 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 public class TrackItem implements Parcelable  {
 
+    private final String TAG = "TrackItem";
     private final String mID;
-    private final String mName;
+    private String mName;
     private String mAlbum;
     private String mArtist;
     private String mFileName;
@@ -34,6 +36,16 @@ public class TrackItem implements Parcelable  {
         mProgress = 0;
         mCurrentPlaytime = 0;
     }
+
+    public TrackItem(String data ) {
+        mID = UUID.randomUUID().toString();
+
+        Deserialize(data);
+
+        mProgress = 0;
+        mCurrentPlaytime = 0;
+    }
+
 
     public String getId() {
         return mID;
@@ -128,19 +140,45 @@ public class TrackItem implements Parcelable  {
         return sRet;
     }
 
+
+
+
     public String Serialize(Boolean all) {
         String sRet = "";
 
-        sRet += "," + mID;
-        sRet += "," + mName;
-        sRet += "," + mAlbum;
-        sRet += "," + mArtist;
-        sRet += "," + mFileName;
-        sRet += "," + mDuration;
-        sRet += System.getProperty("line.separator");
+        sRet += "'" + mID;
+        sRet += "','" + mName;
+        sRet += "','" + mAlbum;
+        sRet += "','" + mArtist;
+        sRet += "','" + mFileName;
+        sRet += "','" + mDuration;
+        sRet += "'" + System.getProperty("line.separator");
 
         return sRet;
     }
+
+    private void Deserialize(String data) {
+
+        try {
+            String[] parts = data.split("','");
+
+            if (parts.length>4) {
+                mName = parts[1];
+                mAlbum = parts[2];
+                mArtist = parts[3];
+                mFileName = parts[4];
+                try {
+                    mDuration = Integer.parseInt(parts[5]);
+                } catch (NumberFormatException e) {
+                    mDuration = 0;
+                }
+            }
+        }
+        catch (Exception ex){
+            Log.e(TAG, "exception in Deserialize " + ex );
+        }
+    }
+
 
     String Convert2Timestring(long duration) {
         String sRet = "";

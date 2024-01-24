@@ -121,7 +121,7 @@ public class PlaylistItemsAdapter extends
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View itemView = inflater.inflate(R.layout.track_item, parent, false);
+        View itemView = inflater.inflate(R.layout.playlisttrack_item, parent, false);
 
         // Return a new holder instance
         PlaylistItemsAdapter.ViewHolder viewHolder = new PlaylistItemsAdapter.ViewHolder(itemView);

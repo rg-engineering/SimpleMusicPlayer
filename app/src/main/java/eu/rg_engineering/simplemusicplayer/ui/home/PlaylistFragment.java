@@ -18,6 +18,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.MainActivity;
@@ -40,14 +49,17 @@ public class PlaylistFragment extends Fragment implements
     private RecyclerView rvPlaylistItems = null;
     private PlaylistItemsAdapter PlaylistItemsAdapter = null;
     ArrayList<TrackItem> mPlaylistTracks;
-
+    //todo playlist file einstellbar
+    private String filename = "Playlist";
     @Override
     public void ItemDeleted() {
         //SaveData();
     }
+
     public interface PlaylistFragmentListener {
         void messageFromPlaylistFragment(String msg, String params);
     }
+
     @Override
     public void onAttach(Context context) {
 
@@ -61,6 +73,7 @@ public class PlaylistFragment extends Fragment implements
         super.onDetach();
         mCommunication = null;
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -72,10 +85,10 @@ public class PlaylistFragment extends Fragment implements
             MainActivity activity = (MainActivity) getActivity();
 
             //todo load playlist from file
-            //mPlaylistTracks=  from file...
+            ReadPlaylist();
 
             // Create adapter passing in the sample user data
-            PlaylistItemsAdapter = new PlaylistItemsAdapter(mPlaylistTracks,this);
+            PlaylistItemsAdapter = new PlaylistItemsAdapter(mPlaylistTracks, this);
 
             ItemTouchHelper.Callback callback = new MyItemTouchHelper(PlaylistItemsAdapter);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
@@ -88,8 +101,8 @@ public class PlaylistFragment extends Fragment implements
             rvPlaylistItems.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvPlaylistItems.setItemAnimator(null);
             // That's all!
-            AutoCompleteTextView editFilterTracks = (AutoCompleteTextView ) root.findViewById(R.id.filter_playlisttracks);
-            ArrayList <String> TrackList = new ArrayList<>();
+            AutoCompleteTextView editFilterTracks = (AutoCompleteTextView) root.findViewById(R.id.filter_playlisttracks);
+            ArrayList<String> TrackList = new ArrayList<>();
 
             for (int i = 0; i < mPlaylistTracks.size(); i++) {
 
@@ -124,14 +137,6 @@ public class PlaylistFragment extends Fragment implements
                 }
             });
 
-            Button btnBack = (Button) root.findViewById(R.id.btnBackTracks);
-            btnBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "back button pressed");
-                    mCommunication.messageFromPlaylistFragment("btnBack", "");
-                }
-            });
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
@@ -140,11 +145,119 @@ public class PlaylistFragment extends Fragment implements
         return root;
     }
 
-    public void SetCurrentplaytime(int index, long duration){
+    public void SetCurrentplaytime(int index, long duration) {
         PlaylistItemsAdapter.SetCurrentPlaytime(index, duration);
     }
 
-    public void GetSongs(){
+    public void GetSongs() {
         PlaylistItemsAdapter.GetSongs();
     }
+
+    private void ReadPlaylist() {
+
+        if (mPlaylistTracks == null) {
+            mPlaylistTracks = new ArrayList<>();
+        }
+        else {
+            mPlaylistTracks.clear();
+        }
+        try {
+            //todo read playlist from file
+            Log.d(TAG, "read play list");
+            readFromFile(filename);
+        } catch (Exception ex) {
+            Log.e(TAG, "Exception in SavePlaylist " + ex);
+        }
+    }
+    private String readFromFile(String filename) {
+
+        String ret = "";
+
+        try {
+            File path = mContext.getFilesDir();
+            File newDir = new File(path + "/" + filename);
+
+            FileInputStream fileInputStream = new FileInputStream(new File(path, filename));
+            InputStreamReader  inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+
+                if (line.length()>5) {
+                    Log.d(TAG, "read " + line);
+                    TrackItem item = new TrackItem(line);
+                    mPlaylistTracks.add(item);
+                }
+            }
+
+
+        }
+        catch (FileNotFoundException e) {
+            Log.e(TAG, "File not found: " + e.toString());
+            mCommunication.messageFromPlaylistFragment("ShowInfo", "playlist not found");
+        } catch (IOException e) {
+            Log.e(TAG, "Can not read file: " + e.toString());
+        }
+
+        return ret;
+    }
+    private void SavePlaylist() {
+
+        try {
+            String Contents = "";
+            //todo save play list
+            Log.d(TAG, "save play list");
+
+            for (int i =0; i< mPlaylistTracks.size(); i++) {
+                Contents += mPlaylistTracks.get(i).Serialize(true);
+            }
+            writeToFile(Contents,filename);
+
+        } catch (Exception ex) {
+            Log.e(TAG, "Exception in SavePlaylist " + ex);
+        }
+    }
+
+    private void writeToFile(String data,String filename) {
+        try {
+            File path = mContext.getFilesDir();
+            File newDir = new File(path + "/" + filename);
+
+            if (!newDir.exists()) {
+                newDir.mkdir();
+            }
+            FileOutputStream writer = new FileOutputStream(new File(path, filename));
+            writer.write(data.getBytes());
+            writer.close();
+            Log.d("TAG", "Wrote to file: " + newDir);
+
+        }
+
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+
+
+    }
+
+    public void Add2Playlist(String trackData) {
+
+        ReadPlaylist();
+
+        try {
+            TrackItem track = new TrackItem(trackData);
+            if (mPlaylistTracks != null) {
+                mPlaylistTracks.add(track);
+                Log.d(TAG, "track added to playlist " +track.getName());
+            }
+            if (PlaylistItemsAdapter != null) {
+                PlaylistItemsAdapter.notifyDatasetChanged();
+            }
+        } catch (Exception ex) {
+            Log.e(TAG, "Exception in Add2Playlist " + ex);
+        }
+        SavePlaylist();
+    }
+
 }
