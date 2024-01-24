@@ -24,6 +24,7 @@
             android:id="@+id/track_Name"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_weight="8"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -34,6 +35,7 @@
             android:id="@+id/track_Album"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_weight="8"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -44,6 +46,7 @@
             android:id="@+id/track_Artist"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_weight="8"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -54,6 +57,7 @@
             android:id="@+id/track_Duration"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_weight="8"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -64,7 +68,6 @@
             android:id="@+id/track_Image"
             android:layout_width="63dp"
             android:layout_height="53dp"
-            card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toStartOf="@+id/track_PlaySong"
             card_view:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -87,7 +90,8 @@
             android:layout_height="50dp"
             android:background="@android:drawable/ic_media_play"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toEndOf="parent" />
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
             android:id="@+id/track_ProgressBar"
@@ -95,6 +99,8 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="50dp"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/track_Image" />
@@ -104,6 +110,8 @@
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="50dp"
             android:max="100"
             android:progress="3"
             card_view:layout_constraintEnd_toEndOf="parent"
