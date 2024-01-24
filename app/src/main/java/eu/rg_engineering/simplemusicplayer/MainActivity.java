@@ -225,17 +225,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void messageFromTrackItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks) {
-        Log.d(TAG, "got message from TrackItemsFragment " + msg + " " + params);
+        Log.d(TAG, "got message from TrackItemsAdapter " + msg + " " + params);
 
         switch (msg) {
+            case "IsReady":
+                GetSongs("TrackItemsAdapter");
+                break;
             case "PlayFromCurrentPos":
                 startFromPos( Integer.parseInt(params.get(0))  );
-                break;
-
-
-
-            case "IsReady":
-                GetSongs();
                 break;
             case "UpdatePlayList":
                 UpdatePlayList(tracks);
@@ -301,7 +298,16 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from PlaylistItemsAdapter " + msg);
 
         switch (msg) {
-
+            case "IsReady":
+                GetSongs("PlaylistItemsAdapter");
+                break;
+            case "PlayFromCurrentPos":
+                startFromPos( Integer.parseInt(params.get(0))  );
+                break;
+            case "UpdatePlayList":
+                UpdatePlayList(tracks);
+                startMusic();
+                break;
             default:
                 Log.e(TAG, "unknown message " + msg);
                 break;
@@ -460,10 +466,17 @@ public class MainActivity extends AppCompatActivity
         //SaveData();
     }
 
-    private void GetSongs() {
-        Log.d(TAG, "get songs ");
-        if (mTracksFragment != null) {
-            mTracksFragment.GetSongs();
+    private void GetSongs(String target) {
+        Log.d(TAG, "get songs from " + target);
+
+        if (target == "PlaylistItemsAdapter") {
+            if (mPlaylistFragment != null) {
+                mPlaylistFragment.GetSongs();
+            }
+        } else if (target == "TrackItemsAdapter") {
+            if (mTracksFragment != null) {
+                mTracksFragment.GetSongs();
+            }
         }
     }
 
