@@ -34,6 +34,8 @@ import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 import io.sentry.Sentry;
 
 
+//todo swipe verhindern
+
 public class TrackItemsAdapter extends
         RecyclerView.Adapter<TrackItemsAdapter.ViewHolder> implements
         Filterable,
@@ -50,7 +52,7 @@ public class TrackItemsAdapter extends
     TrackItemsAdapterListener mCommunication;
     private boolean mNeed2SendSongs=false;
 
-    //todo playlist file einstellbar
+    //todo playlist file einstellbar, oder mehrere supporten
     private String filename = "Playlist";
 
     public void notifyDatasetChanged() {
@@ -244,9 +246,7 @@ public class TrackItemsAdapter extends
                 track.Url = item.getFileName();
                 //todo URL zum Bild
 
-
                 tracks.add(track);
-
             }
 
             mCommunication.messageFromTrackItemsAdapter("UpdatePlayList", null, tracks);
@@ -275,19 +275,15 @@ public class TrackItemsAdapter extends
         String data = track.Serialize(true);
         try {
             String Contents = data + "\n" ;
-            //todo save play list
-            Log.d(TAG, "save play list (to do)");
 
+            Log.d(TAG, "save play list");
 
             writeToFile(Contents,filename);
 
         } catch (Exception ex) {
             Log.e(TAG, "Exception in SavePlaylist " + ex);
         }
-
-
     }
-
 
     @Override
     public int getItemCount() {

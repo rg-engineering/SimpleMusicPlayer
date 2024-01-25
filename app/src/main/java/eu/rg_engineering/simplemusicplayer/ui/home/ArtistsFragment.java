@@ -21,13 +21,9 @@ import java.util.ArrayList;
 import eu.rg_engineering.simplemusicplayer.ArtistItem;
 import eu.rg_engineering.simplemusicplayer.ArtistItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.MainActivity;
-import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
-import eu.rg_engineering.simplemusicplayer.MusicItem;
-import eu.rg_engineering.simplemusicplayer.MusicItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteArtistitemListener;
-import eu.rg_engineering.simplemusicplayer.utils.OnDeleteMusicitemListener;
 import io.sentry.Sentry;
 
 

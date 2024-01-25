@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Simple Music Player</string>
+    <string name="app_name">Einfacher Musil-Player</string>
     <string name="button_add">hinzufügen</string>
     <string name="button_edit">bearbeiten</string>
     <string name="button_cancel">abbrechen</string>
@@ -8,21 +8,12 @@
     <string name="hint_count">Anzahl</string>
     <string name="menu_home">Home</string>
     <string name="my_logo">my logo</string>
-    <string name="my_shopping_list_by_rg_engineering">Simple Music Player von rg-engineering</string>
     <string name="action_settings">Einstellungen</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="email">E-Mail</string>
     <string name="share">teilen</string>
-    <string name="send_email_to">E-Mail senden an</string>
-    <string name="share_title">Standard-App für Teilen</string>
-    <string name="always_ask">immer fragen</string>
 
-    <string name="hint_shop">Laden</string>
-    <string name="hint_category">Kategorie</string>
-    <string name="shops">Läden</string>
-    <string name="categories">Kategorien</string>
     <string name="lists">Listen</string>
-    <string name="units">Einheiten</string>
     <string name="design">Design</string>
     <string name="useBackgroundColor">Hintergrundfarbe nutzen</string>
     <string name="BackgroundColor">Hintergrundfarbe</string>
@@ -31,7 +22,6 @@
     <string name="BackgroundImage">Hintergrundbild</string>
     <string name="menu_about" >Über</string>
     <string name="ShowDataPrivacy">Datenschutzerklärung</string>
-    <string name="menu_search" >Suche</string>
     <string name="menu_tracks" >Musikstücke</string>
     <string name="menu_albums" >Alben</string>
     <string name="menu_artists" >Künstler</string>
@@ -43,4 +33,7 @@
     <string name="usePlexServer" >Plex Server verwenden</string>
     <string name="plex_server_libid" >Plex Server Bibliotheks-ID</string>
     <string name="sentry_hint" >Diese App nutzt Sentry-Bibliotheken, um Ausnahmen und Codefehler automatisch an die Entwickler zu melden.</string>
+    <string name="playlist">Play-List</string>
+    <string name="library">Bibliothek</string>
+    <string name="simplemusicplayer_by_rg_engineering">Einfacher Musik-Player von rg-engineering</string>
 </resources>

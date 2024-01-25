@@ -216,7 +216,7 @@ public class MusicData  {
                 /*
                 http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ"
                 */
-                //todo: erst mal nur ersten Teil, später alle Teile
+                //todo: erst mal nur ersten Teil des tracks, später alle Teile, wenn es mehrere gibt
                 String filename = "http://" + IP + ":" + Port + item.parts.get(0).key + "?X-Plex-Token=" + Token;
                 int duration = 0;
                 try {

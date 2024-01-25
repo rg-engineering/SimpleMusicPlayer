@@ -32,6 +32,7 @@ import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteArtistitemListener;
 import io.sentry.Sentry;
 
+//todo swipe verhindern
 
 public class ArtistItemsAdapter extends
         RecyclerView.Adapter<ArtistItemsAdapter.ViewHolder> implements
@@ -70,7 +71,6 @@ public class ArtistItemsAdapter extends
         mItemsAll = items;
         UpdateData();
 
-        //todo load playlist
     }
 
     public void UpdateData() {

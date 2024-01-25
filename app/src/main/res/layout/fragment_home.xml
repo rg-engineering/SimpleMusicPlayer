@@ -19,13 +19,13 @@
             android:id="@+id/showPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PlayList" />
+            android:text="@string/playlist" />
 
         <RadioButton
             android:id="@+id/showLibrary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Library" />
+            android:text="@string/library" />
     </RadioGroup>
 
     <FrameLayout

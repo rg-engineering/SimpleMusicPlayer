@@ -1,13 +1,10 @@
 package eu.rg_engineering.simplemusicplayer;
 
 
-import android.app.UiModeManager;
+
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +12,6 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.View;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +19,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -31,23 +26,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.media3.common.AudioAttributes;
-import androidx.media3.common.C;
 import androidx.media3.common.ErrorMessageProvider;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaMetadata;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
-import androidx.media3.common.Tracks;
-import androidx.media3.common.TrackSelectionParameters;
-
 
 import androidx.media3.common.util.UnstableApi;
-import androidx.media3.exoplayer.ExoPlayer;
-import androidx.media3.exoplayer.source.ads.AdsLoader;
-import androidx.media3.exoplayer.util.EventLogger;
 import androidx.media3.session.MediaController;
-import androidx.media3.session.MediaSession;
 import androidx.media3.session.SessionToken;
 import androidx.media3.ui.PlayerView;
 import androidx.navigation.NavController;
@@ -59,11 +45,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
 
 import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
 import eu.rg_engineering.simplemusicplayer.MusicData.MusicService;
@@ -77,20 +61,27 @@ import io.sentry.Sentry;
 
 
 
+//todo Rückkehr von "Einstellungen" oder "About" muss Bibliothek oder playlist öffnen
+//todo in Einstellungen link hinzufügen, wie man den Token ermittelt
+//todo Auswahl der plex-Bibliothek (derzeit automatisch bzw. in Einstellungen)
+//todo überall Sentry catches einbauen
+//todo link zu Sentry-Informtionen
+//todo sentry abschaltbar machen
+//todo Albums mit various interpretes werden nicht gefunden (lokale Bibliothek) z.Bsp. Bravo Hits
+
 
 public class MainActivity extends AppCompatActivity
         implements
-            MusicItemsAdapter.MusicItemsAdapterListener,
             ArtistItemsAdapter.ArtistItemsAdapterListener,
             AlbumItemsAdapter.AlbumItemsAdapterListener,
             TrackItemsAdapter.TrackItemsAdapterListener,
-        PlaylistItemsAdapter.PlaylistItemsAdapterListener,
+            PlaylistItemsAdapter.PlaylistItemsAdapterListener,
             HomeFragment.HomeFragmentListener,
             TracksFragment.TracksFragmentListener,
             AlbumsFragment.AlbumsFragmentListener,
             PlaylistFragment.PlaylistFragmentListener,
             Plex_FindData.PlexFindArtistListener ,
-        PlayerView.ControllerVisibilityListener {
+            PlayerView.ControllerVisibilityListener {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private AppBarConfiguration mAppBarConfiguration;
@@ -108,25 +99,6 @@ public class MainActivity extends AppCompatActivity
     private String mPlayStartedFrom;
 
     @Override
-    public void messageFromMusicItemsAdapter(String msg, String params) {
-
-        Log.d(TAG, "got message from MusicItemsAdapter " + msg + " " + params);
-
-        switch (msg) {
-
-            case "PlayMusic":
-                break;
-            case "NoSongs":
-                Toast.makeText(this, "This is my Toast message!",
-                        Toast.LENGTH_LONG).show();
-                break;
-            default:
-                Log.e(TAG, "unknown message " + msg);
-                break;
-        }
-    }
-
-    @Override
     public void messageFromHomeFragment(String msg, String params) {
 
         Log.d(TAG, "got message from HomeFragment " + msg + " " + params);
@@ -135,12 +107,7 @@ public class MainActivity extends AppCompatActivity
             case "created":
                 replaceFragment(mArtistsFragment);
                 break;
-            case "PlayMusic":
-                break;
-            case "PauseMusic":
-                break;
-            case "StopMusic":
-                break;
+
             default:
                 Log.e(TAG, "unknown message " + msg);
                 break;
@@ -410,9 +377,11 @@ public class MainActivity extends AppCompatActivity
                 != PackageManager.PERMISSION_GRANTED) {
 
             Log.e(TAG, "need more permissions");
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.READ_MEDIA_AUDIO},
-                    PERMISSION_REQUEST_CODE);
+            if (Build.VERSION.SDK_INT > 32) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.READ_MEDIA_AUDIO},
+                        PERMISSION_REQUEST_CODE);
+            }
         } else {
             Log.d(TAG, "permission set correctly");
         }
@@ -423,7 +392,6 @@ public class MainActivity extends AppCompatActivity
         RadioButton rbShowPlaylist = (RadioButton) findViewById(R.id.showPlaylist);
         rbShowLib.setChecked(true);
 
-
         mArtistsFragment = new ArtistsFragment();
         mPlaylistFragment = new PlaylistFragment();
 
@@ -431,6 +399,7 @@ public class MainActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     public void onClick(View v) {
                         Log.d(TAG, "show lib clicked");
+                        stopMusic();
                         replaceFragment(mArtistsFragment);
                     }
                 });
@@ -438,6 +407,7 @@ public class MainActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     public void onClick(View v) {
                         Log.d(TAG, "show playlist clicked");
+                        stopMusic();
                         replaceFragment(mPlaylistFragment);
                     }
                 });
@@ -472,11 +442,11 @@ public class MainActivity extends AppCompatActivity
     private void GetSongs(String target) {
         Log.d(TAG, "get songs from " + target);
 
-        if (target == "PlaylistItemsAdapter") {
+        if (target.equals("PlaylistItemsAdapter")) {
             if (mPlaylistFragment != null) {
                 mPlaylistFragment.GetSongs();
             }
-        } else if (target == "TrackItemsAdapter") {
+        } else if (target.equals("TrackItemsAdapter")) {
             if (mTracksFragment != null) {
                 mTracksFragment.GetSongs();
             }
@@ -514,7 +484,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onVisibilityChanged(int visibility) {
-        //todo
         Log.w(TAG, "onVisibilityChanged called " + visibility);
     }
 
@@ -534,12 +503,12 @@ public class MainActivity extends AppCompatActivity
                 int index = controllerFuture.get().getCurrentMediaItemIndex();
 
 
-                if (mPlayStartedFrom == "PlaylistItemsAdapter") {
+                if (mPlayStartedFrom.equals("PlaylistItemsAdapter")) {
                     if (mPlaylistFragment != null) {
                         mPlaylistFragment.SetCurrentplaytime(index, position);
                     }
                 }
-                if (mPlayStartedFrom == "TrackItemsAdapter") {
+                if (mPlayStartedFrom.equals("TrackItemsAdapter")) {
                     if (mTracksFragment != null) {
                         mTracksFragment.SetCurrentplaytime(index, position);
                     }
@@ -734,6 +703,9 @@ public class MainActivity extends AppCompatActivity
                 progressTimer.cancel();
                 progressTimer.purge();
             }
+
+            setPlayControllerHeight(10);
+
         } catch (Exception ex) {
             Log.e(TAG, "exception in stopMusic " + ex);
         }

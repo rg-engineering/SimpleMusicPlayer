@@ -33,6 +33,7 @@ import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
 
+//todo swipe verhindern
 
 public class AlbumItemsAdapter extends
         RecyclerView.Adapter<AlbumItemsAdapter.ViewHolder> implements
@@ -72,7 +73,6 @@ public class AlbumItemsAdapter extends
         mItemsAll = items;
         UpdateData();
 
-        //todo load playlist
     }
 
     public void UpdateData() {

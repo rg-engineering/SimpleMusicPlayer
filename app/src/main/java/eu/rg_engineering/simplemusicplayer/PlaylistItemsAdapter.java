@@ -28,6 +28,12 @@ import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
 import io.sentry.Sentry;
 
 
+//todo playlist muss sortierbar werden
+//todo playlist löschen
+//todo playlist automatisch speichern, wenn Seite verlassen wird
+//todo entfernter track muss auch aus Media-Liste im Service gelöscht werden, sonst wird er trotzdem gespielt
+
+
 public class PlaylistItemsAdapter extends
         RecyclerView.Adapter<PlaylistItemsAdapter.ViewHolder> implements
         Filterable,
@@ -66,7 +72,6 @@ public class PlaylistItemsAdapter extends
         mItemsAll = items;
         UpdateData();
 
-        //todo load playlist
     }
 
     @Override
