@@ -128,10 +128,11 @@ public class ArtistsFragment extends Fragment implements
                         ArtistItemsAdapter.updateItems(mArtists);
                         ArtistItemsAdapter.notifyDatasetChanged();
                     }
+                    UpdateInfo();
                 }
             });
 
-            UpdateInfo();
+
         }
     }
 

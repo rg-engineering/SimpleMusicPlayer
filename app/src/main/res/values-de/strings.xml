@@ -33,11 +33,11 @@
     <string name="usePlexServer" >Plex Server verwenden</string>
     <string name="plex_server_libid" >Plex Server Bibliotheks-ID</string>
     <string name="sentry_hint" >Diese App nutzt Sentry-Bibliotheken, um Ausnahmen und Codefehler automatisch an die Entwickler zu melden.</string>
-    <string name="playlist">Play-List</string>
+    <string name="playlist">Lieblingsmusik</string>
     <string name="library">Bibliothek</string>
     <string name="simplemusicplayer_by_rg_engineering">Einfacher Musik-Player von rg-engineering</string>
     <string name="album">Album</string>
-    <string name="albums">Albums</string>
-    <string name="artists">artists</string>
-    <string name="tracks">Tracks</string>
+    <string name="albums">Alben</string>
+    <string name="artists">Interpreten</string>
+    <string name="tracks">Musikstücke</string>
 </resources>
