@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,9 +27,7 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteArtistitemListener;
 import io.sentry.Sentry;
 
-
-//todo Anzeige Anzahl Artists
-//todo Info-Anzeige optimieren
+//todo Info-Anzeige optimieren -> echte textbox
 public class ArtistsFragment extends Fragment implements
         OnDeleteArtistitemListener {
 
@@ -36,7 +35,7 @@ public class ArtistsFragment extends Fragment implements
     private RecyclerView rvArtistItems = null;
     private ArtistItemsAdapter ArtistItemsAdapter = null;
     ArrayList<ArtistItem> mArtists;
-
+    TextView noOfArtists;
 
     @Override
     public void ItemDeleted() {
@@ -103,6 +102,9 @@ public class ArtistsFragment extends Fragment implements
 
                 }
             });
+
+            noOfArtists = (TextView) root.findViewById(R.id.numberOfArtists);
+            UpdateInfo();
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
@@ -129,7 +131,14 @@ public class ArtistsFragment extends Fragment implements
                 }
             });
 
-            Log.d(TAG, "adapter notified ");
+            UpdateInfo();
+        }
+    }
+
+    private void UpdateInfo() {
+        if (noOfArtists != null) {
+            String counts = "" + mArtists.size() + " " + getString(R.string.artists);
+            noOfArtists.setText(counts);
         }
     }
 }

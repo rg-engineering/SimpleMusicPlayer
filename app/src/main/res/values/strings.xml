@@ -64,6 +64,9 @@
     <string name="sentry_hint" >This app uses Sentry libraries to automatically report exceptions and code errors to the developers.</string>
     <string name="playlist">PlayList</string>
     <string name="library">Library</string>
+    <string name="album">album</string>
+    <string name="albums">Albums</string>
+    <string name="artists">artists</string>
 
 
 </resources>

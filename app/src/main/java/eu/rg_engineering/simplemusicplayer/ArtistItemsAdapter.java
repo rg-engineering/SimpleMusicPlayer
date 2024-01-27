@@ -61,7 +61,7 @@ public class ArtistItemsAdapter extends
     }
 
     public interface ArtistItemsAdapterListener {
-        void messageFromArtistItemsAdapter(String msg, String params, String artistName);
+        void messageFromArtistItemsAdapter(String msg, String params, ArrayList<String> data);
     }
 
     public ArtistItemsAdapter(List<ArtistItem> items, OnDeleteArtistitemListener deleteListener) {
@@ -119,6 +119,7 @@ public class ArtistItemsAdapter extends
         Button infoButton = viewHolder.infoButton;
         ImageView imageImageView = viewHolder.imageImageView;
         viewHolder.Plex_RatingKey = item.getPlexRatingKey();
+        viewHolder.Path2Image = item.getPath2Image();
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
@@ -141,7 +142,7 @@ public class ArtistItemsAdapter extends
                     public void onClick(View view) {
                         Log.d(TAG, "infoButton pressed position " + position);
                         String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromArtistItemsAdapter("ShowInfo", info, "");
+                        mCommunication.messageFromArtistItemsAdapter("ShowInfo", info, null);
                     }
                 });
             } else {
@@ -303,6 +304,7 @@ public class ArtistItemsAdapter extends
         public Button infoButton;
         public ImageView imageImageView;
         public int Plex_RatingKey;
+        public String Path2Image="";
 
         GestureDetector mGestureDetector;
 
@@ -345,9 +347,13 @@ public class ArtistItemsAdapter extends
             if (Plex_RatingKey > 0) {
                 ratingKey = String.valueOf(Plex_RatingKey);
             }
-            String ArtistName = nameTextView.getText().toString();
 
-            mCommunication.messageFromArtistItemsAdapter("ArtistSelected", ratingKey, ArtistName);
+            ArrayList<String> data = new ArrayList<>();
+            data.add(nameTextView.getText().toString());
+            data.add(Path2Image);
+            data.add(ratingKey);
+
+            mCommunication.messageFromArtistItemsAdapter("ArtistSelected", "" , data);
             return true;
         }
 

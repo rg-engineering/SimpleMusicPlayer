@@ -1,6 +1,10 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,13 +15,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.AlbumItem;
@@ -29,9 +37,8 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
 
-//todo Anzeige Anzahl Albums
-//todo Info-Anzeige optimieren
-// Bild von Artist einfügen
+//todo Info-Anzeige optimieren -> echte textbox
+
 public class AlbumsFragment extends Fragment implements
         OnDeleteAlbumitemListener {
 
@@ -41,6 +48,14 @@ public class AlbumsFragment extends Fragment implements
     private RecyclerView rvAlbumItems = null;
     private AlbumItemsAdapter AlbumItemsAdapter = null;
     ArrayList<AlbumItem> mAlbums;
+    String mArtistName = "";
+    String mPath2Image = "";
+    TextView artistName;
+    TextView noOfAlbum;
+    ImageView artistImage;
+    private String IP = "";
+    private String Port = "";
+    private String Token = "";
 
     @Override
     public void ItemDeleted() {
@@ -50,6 +65,7 @@ public class AlbumsFragment extends Fragment implements
     public interface AlbumsFragmentListener {
         void messageFromAlbumsFragment(String msg, String params);
     }
+
     @Override
     public void onAttach(Context context) {
 
@@ -63,6 +79,7 @@ public class AlbumsFragment extends Fragment implements
         super.onDetach();
         mCommunication = null;
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -72,10 +89,10 @@ public class AlbumsFragment extends Fragment implements
             rvAlbumItems = (RecyclerView) root.findViewById(R.id.rvAlbums);
 
             MainActivity activity = (MainActivity) getActivity();
-            mAlbums=activity.mMusicData.getAlbumData();
+            mAlbums = activity.mMusicData.getAlbumData();
 
             // Create adapter passing in the sample user data
-            AlbumItemsAdapter = new AlbumItemsAdapter(mAlbums,this);
+            AlbumItemsAdapter = new AlbumItemsAdapter(mAlbums, this);
 
 
             ItemTouchHelper.Callback callback = new MyItemTouchHelper(AlbumItemsAdapter);
@@ -89,8 +106,8 @@ public class AlbumsFragment extends Fragment implements
             rvAlbumItems.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvAlbumItems.setItemAnimator(null);
             // That's all!
-            AutoCompleteTextView editFilterAlbum = (AutoCompleteTextView ) root.findViewById(R.id.filter_albums);
-            ArrayList <String> AlbumList = new ArrayList<>();
+            AutoCompleteTextView editFilterAlbum = (AutoCompleteTextView) root.findViewById(R.id.filter_albums);
+            ArrayList<String> AlbumList = new ArrayList<>();
 
             for (int i = 0; i < mAlbums.size(); i++) {
 
@@ -134,6 +151,12 @@ public class AlbumsFragment extends Fragment implements
                 }
             });
 
+
+            artistName = (TextView) root.findViewById(R.id.artistName);
+            noOfAlbum = (TextView) root.findViewById(R.id.numberOfAlbum);
+            artistImage = (ImageView) root.findViewById(R.id.artistImage);
+            UpdateInfo();
+
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
@@ -142,11 +165,13 @@ public class AlbumsFragment extends Fragment implements
 
 
     }
-    public void ReadPlexAlbumData(){
+
+    public void ReadPlexAlbumData() {
 
         MainActivity activity = (MainActivity) getActivity();
-        if (activity.mMusicData!=null) {
+        if (activity.mMusicData != null) {
             activity.mMusicData.ReadPlexAlbumData();
+
             Log.d(TAG, "plex data read ");
 
             getActivity().runOnUiThread(new Runnable() {
@@ -159,7 +184,72 @@ public class AlbumsFragment extends Fragment implements
                 }
             });
 
-            Log.d(TAG, "adapter notified ");
+
+
+            UpdateInfo();
+
         }
     }
+
+    private void UpdateInfo() {
+        MainActivity activity = (MainActivity) getActivity();
+        mArtistName = activity.mMusicData.GetArtist4Album();
+        mPath2Image = activity.mMusicData.GetPath2Image4Album();
+
+        if (artistName != null) {
+            artistName.setText(mArtistName);
+        }
+
+        if (noOfAlbum != null) {
+            String counts = "" + mAlbums.size() + " " + getString(R.string.albums);
+            noOfAlbum.setText(counts);
+        }
+
+        if (artistImage != null) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            IP = sharedPreferences.getString("plex_server_ip", "");
+            Port = sharedPreferences.getString("plex_server_port", "");
+            Token = sharedPreferences.getString("plex_server_token", "");
+
+            if (mPath2Image != null && mPath2Image.length() > 0) {
+                Log.d(TAG, "image view should be used ");
+                new DownloadImageTask(artistImage).execute(mPath2Image);
+            } else {
+                Log.d(TAG, "image view shouldn't be used ");
+            }
+        }
+
+
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView mImage;
+
+        public DownloadImageTask(ImageView image) {
+            this.mImage = image;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
+            Bitmap icon = null;
+
+            Log.d(TAG, "get image from " + fullURL);
+
+            try {
+                InputStream in = new java.net.URL(fullURL).openStream();
+                icon = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
+                e.printStackTrace();
+                Sentry.captureException(e);
+            }
+            return icon;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            mImage.setImageBitmap(result);
+        }
+    }
+
 }

@@ -35,5 +35,8 @@
     <string name="playlist">Playlist</string>
     <string name="library">Library</string>
     <string name="simplemusicplayer_by_rg_engineering">Simple Music Player by rg-engineering</string>
+    <string name="album">album</string>
+    <string name="albums">Albums</string>
+    <string name="artists">artists</string>
 
 </resources>

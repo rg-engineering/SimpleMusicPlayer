@@ -19,15 +19,17 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
 
     <AutoCompleteTextView
         android:id="@+id/filter_albums"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:hint="album"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar3"
-        app:layout_constraintStart_toEndOf="@+id/btnBackAlbums"
+        android:hint="@string/album"
+        app:layout_constraintBottom_toTopOf="@+id/rvAlbums"
+        app:layout_constraintEnd_toStartOf="@+id/artistName"
+        app:layout_constraintStart_toEndOf="@+id/numberOfAlbum"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -37,6 +39,37 @@
         android:background="@drawable/ic_arrow_back_black_24dp"
         app:layout_constraintBottom_toTopOf="@+id/rvAlbums"
         app:layout_constraintStart_toStartOf="@+id/toolbar3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/artistImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        tools:srcCompat="@tools:sample/avatars"
+        app:layout_constraintBottom_toTopOf="@+id/rvAlbums"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/artistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text=""
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/rvAlbums"
+        app:layout_constraintEnd_toStartOf="@+id/artistImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/numberOfAlbum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/rvAlbums"
+        app:layout_constraintStart_toEndOf="@+id/btnBackAlbums"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Einfacher Musil-Player</string>
+    <string name="app_name">Einfacher Musik-Player</string>
     <string name="button_add">hinzufügen</string>
     <string name="button_edit">bearbeiten</string>
     <string name="button_cancel">abbrechen</string>
@@ -36,4 +36,7 @@
     <string name="playlist">Play-List</string>
     <string name="library">Bibliothek</string>
     <string name="simplemusicplayer_by_rg_engineering">Einfacher Musik-Player von rg-engineering</string>
+    <string name="album">Album</string>
+    <string name="albums">Albums</string>
+    <string name="artists">artists</string>
 </resources>

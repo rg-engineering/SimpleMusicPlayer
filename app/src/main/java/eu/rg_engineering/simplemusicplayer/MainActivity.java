@@ -68,6 +68,7 @@ import io.sentry.Sentry;
 //todo link zu Sentry-Informtionen
 //todo sentry abschaltbar machen
 //todo Albums mit various interpretes werden nicht gefunden (lokale Bibliothek) z.Bsp. Bravo Hits
+//todo info text album und artist) muss in echte Textbox
 
 
 public class MainActivity extends AppCompatActivity
@@ -146,15 +147,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void messageFromArtistItemsAdapter(String msg, String params, String artistName) {
-        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params + " " + artistName);
+    public void messageFromArtistItemsAdapter(String msg, String params, ArrayList<String> data) {
+        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params + " " + data.get(0));
 
         switch (msg) {
             case "ShowInfo":
                 Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
             case "ArtistSelected":
-                mMusicData.SetArtist4Album(params, artistName);
+                mMusicData.SetArtist4Album( data);
 
                 if (mAlbumsFragment == null) {
                     mAlbumsFragment = new AlbumsFragment();

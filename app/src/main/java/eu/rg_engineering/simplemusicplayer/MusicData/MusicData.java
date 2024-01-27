@@ -31,6 +31,8 @@ public class MusicData  {
     private final Activity mActivity;
     private Plex_FindData mPlex_FindData=null;
     private String mArtist4Album="";
+    private String mArtistPath2Image="";
+    private String mArtistName4Album="";
     private Boolean mSearchAlbumOnServer = false;
     private String mAlbum4Track="";
     private Boolean mSearchTrackOnServer = false;
@@ -260,15 +262,29 @@ public class MusicData  {
 
     //======================================================================================================================
 
-    public void SetArtist4Album(String artist, String artistName){
-        if (artist.contains("-1")){
-            mArtist4Album = artistName;
+    public void SetArtist4Album( ArrayList<String> data){
+
+        //if RatingKey==-1, then local
+        if (data.get(2).contains("-1")){
+            mArtist4Album = data.get(0);
+            mArtistName4Album = data.get(0); //clear text name
+            mArtistPath2Image=data.get(1);
             mSearchAlbumOnServer=false;
         }
         else {
-            mArtist4Album = artist;
+            //if on Plex then we need RatingKey for next search
+            mArtist4Album = data.get(2);
+            mArtistName4Album = data.get(0); //clear text name
+            mArtistPath2Image=data.get(1);
             mSearchAlbumOnServer=true;
         }
+    }
+
+    public String GetArtist4Album(){
+        return mArtistName4Album;
+    }
+    public String GetPath2Image4Album(){
+        return mArtistPath2Image;
     }
 
     public void SetAlbum4Track(String album, String albumName) {
