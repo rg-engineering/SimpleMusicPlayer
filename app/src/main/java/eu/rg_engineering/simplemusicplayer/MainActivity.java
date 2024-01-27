@@ -169,16 +169,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
-    public void messageFromAlbumItemsAdapter(String msg, String params, String albumName) {
-        Log.d(TAG, "got message from AlbumFragment " + msg + " " + params + " " + albumName);
+    public void messageFromAlbumItemsAdapter(String msg, String params, ArrayList<String> data) {
+        Log.d(TAG, "got message from AlbumFragment " + msg + " " + params + " " + data.get(0));
 
         switch (msg) {
             case "ShowInfo":
                 Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
             case "AlbumSelected":
-                mMusicData.SetAlbum4Track(params, albumName);
+                mMusicData.SetAlbum4Track(params, data);
 
                 if (mTracksFragment == null) {
                     mTracksFragment = new TracksFragment();

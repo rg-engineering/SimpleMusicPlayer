@@ -33,6 +33,8 @@ public class MusicData  {
     private String mArtist4Album="";
     private String mArtistPath2Image="";
     private String mArtistName4Album="";
+    private String mAlbumName4Track="";
+    private String mAlbumPath2Image="";
     private Boolean mSearchAlbumOnServer = false;
     private String mAlbum4Track="";
     private Boolean mSearchTrackOnServer = false;
@@ -287,18 +289,27 @@ public class MusicData  {
         return mArtistPath2Image;
     }
 
-    public void SetAlbum4Track(String album, String albumName) {
-        if (album.contains("-1")){
-            mAlbum4Track = albumName;
+    public void SetAlbum4Track(String album, ArrayList<String> data) {
+        if (data.get(2).contains("-1")){
+            mAlbum4Track = data.get(0);
+            mAlbumName4Track = data.get(0); //clear text name
+            mAlbumPath2Image=data.get(1);
             mSearchTrackOnServer=false;
         }
         else {
-            mAlbum4Track = album;
+            mAlbum4Track = data.get(2);
+            mAlbumName4Track = data.get(0); //clear text name
+            mAlbumPath2Image=data.get(1);
             mSearchTrackOnServer=true;
         }
     }
+    public String GetAlbum4Track(){
+        return mAlbumName4Track;
+    }
 
-
+    public String GetPath2Image4Track(){
+        return mAlbumPath2Image;
+    }
     public ArrayList<AlbumItem> getAlbumData() {
 
         if (mArtist4Album.length()>0 && mSearchAlbumOnServer) {

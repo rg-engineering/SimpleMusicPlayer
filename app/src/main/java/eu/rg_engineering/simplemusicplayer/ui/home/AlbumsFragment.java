@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import eu.rg_engineering.simplemusicplayer.AlbumItem;
 import eu.rg_engineering.simplemusicplayer.AlbumItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.MainActivity;
-import eu.rg_engineering.simplemusicplayer.MusicData.MusicData;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
@@ -152,9 +151,9 @@ public class AlbumsFragment extends Fragment implements
             });
 
 
-            artistName = (TextView) root.findViewById(R.id.artistName);
+            artistName = (TextView) root.findViewById(R.id.artistName4Album);
             noOfAlbum = (TextView) root.findViewById(R.id.numberOfAlbum);
-            artistImage = (ImageView) root.findViewById(R.id.artistImage);
+            artistImage = (ImageView) root.findViewById(R.id.artistImage4Album);
             UpdateInfo();
 
         } catch (Exception ex) {
@@ -181,12 +180,13 @@ public class AlbumsFragment extends Fragment implements
                         AlbumItemsAdapter.updateItems(mAlbums);
                         AlbumItemsAdapter.notifyDatasetChanged();
                     }
+                    UpdateInfo();
                 }
             });
 
 
 
-            UpdateInfo();
+
 
         }
     }

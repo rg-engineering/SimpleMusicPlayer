@@ -1,6 +1,10 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,13 +15,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.MainActivity;
@@ -28,9 +36,6 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 import io.sentry.Sentry;
 
-//todo Anzeige Anzahl Tracks
-// Bild von Artist und Album einfügen
-
 public class TracksFragment extends Fragment implements
         OnDeleteTrackitemListener {
 
@@ -40,6 +45,18 @@ public class TracksFragment extends Fragment implements
     private RecyclerView rvTrackItems = null;
     private TrackItemsAdapter TrackItemsAdapter = null;
     ArrayList<TrackItem> mTracks;
+    String mArtistName = "";
+    String mAlbumName = "";
+    String mPath2ImageArtist = "";
+    String mPath2ImageAlbum = "";
+    TextView artistName;
+    TextView albumName;
+    TextView noOfTracks;
+    ImageView artistImage;
+    ImageView albumImage;
+    private String IP = "";
+    private String Port = "";
+    private String Token = "";
 
     @Override
     public void ItemDeleted() {
@@ -132,6 +149,19 @@ public class TracksFragment extends Fragment implements
                 }
             });
 
+            artistName = (TextView) root.findViewById(R.id.artistName4Tracks);
+            albumName = (TextView) root.findViewById(R.id.albumName4Tracks);
+
+            noOfTracks = (TextView) root.findViewById(R.id.numberOfTracks);
+            artistImage = (ImageView) root.findViewById(R.id.artistImage4Tracks);
+            albumImage = (ImageView) root.findViewById(R.id.albumImage4Tracks);
+
+
+            UpdateInfo();
+
+
+
+
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
@@ -154,6 +184,7 @@ public class TracksFragment extends Fragment implements
                         TrackItemsAdapter.updateItems(mTracks);
                         TrackItemsAdapter.notifyDatasetChanged();
                     }
+                    UpdateInfo();
                 }
             });
 
@@ -179,4 +210,84 @@ public class TracksFragment extends Fragment implements
     public void GetSongs(){
         TrackItemsAdapter.GetSongs();
     }
+
+
+    private void UpdateInfo() {
+        MainActivity activity = (MainActivity) getActivity();
+        mArtistName = activity.mMusicData.GetArtist4Album();
+        mPath2ImageArtist = activity.mMusicData.GetPath2Image4Album();
+
+        mAlbumName = activity.mMusicData.GetAlbum4Track();
+        mPath2ImageAlbum = activity.mMusicData.GetPath2Image4Track();
+
+        if (artistName != null) {
+            artistName.setText(mArtistName);
+        }
+        if (albumName != null) {
+            albumName.setText(mAlbumName);
+        }
+        if (noOfTracks != null) {
+            String counts = "" + mTracks.size() + " " + getString(R.string.tracks);
+            noOfTracks.setText(counts);
+        }
+
+        if (artistImage != null) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            IP = sharedPreferences.getString("plex_server_ip", "");
+            Port = sharedPreferences.getString("plex_server_port", "");
+            Token = sharedPreferences.getString("plex_server_token", "");
+
+            if (mPath2ImageArtist != null && mPath2ImageArtist.length() > 0) {
+                Log.d(TAG, "image view should be used ");
+                new DownloadImageTask(artistImage).execute(mPath2ImageArtist);
+            } else {
+                Log.d(TAG, "image view shouldn't be used ");
+            }
+        }
+        if (albumImage != null) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            IP = sharedPreferences.getString("plex_server_ip", "");
+            Port = sharedPreferences.getString("plex_server_port", "");
+            Token = sharedPreferences.getString("plex_server_token", "");
+
+            if (mPath2ImageAlbum != null && mPath2ImageAlbum.length() > 0) {
+                Log.d(TAG, "image view should be used ");
+                new DownloadImageTask(albumImage).execute(mPath2ImageAlbum);
+            } else {
+                Log.d(TAG, "image view shouldn't be used ");
+            }
+        }
+
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView mImage;
+
+        public DownloadImageTask(ImageView image) {
+            this.mImage = image;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
+            Bitmap icon = null;
+
+            Log.d(TAG, "get image from " + fullURL);
+
+            try {
+                InputStream in = new java.net.URL(fullURL).openStream();
+                icon = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
+                e.printStackTrace();
+                Sentry.captureException(e);
+            }
+            return icon;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            mImage.setImageBitmap(result);
+        }
+    }
+
 }

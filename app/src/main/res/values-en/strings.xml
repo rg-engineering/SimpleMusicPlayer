@@ -38,5 +38,6 @@
     <string name="album">album</string>
     <string name="albums">Albums</string>
     <string name="artists">artists</string>
+    <string name="tracks">Tracks</string>
 
 </resources>

@@ -63,7 +63,7 @@ public class AlbumItemsAdapter extends
     }
 
     public interface AlbumItemsAdapterListener {
-        void messageFromAlbumItemsAdapter(String msg, String params, String albumName);
+        void messageFromAlbumItemsAdapter(String msg, String params, ArrayList<String> data);
     }
 
     public AlbumItemsAdapter(List<AlbumItem> items, OnDeleteAlbumitemListener deleteListener) {
@@ -121,6 +121,7 @@ public class AlbumItemsAdapter extends
         Button infoButton = viewHolder.infoButton;
         ImageView imageImageView = viewHolder.imageImageView;
         viewHolder.Plex_RatingKey = item.getPlexRatingKey();
+        viewHolder.Path2Image = item.getPath2Image();
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
@@ -150,7 +151,7 @@ public class AlbumItemsAdapter extends
                     public void onClick(View view) {
                         Log.d(TAG, "infoButton pressed position " + position);
                         String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromAlbumItemsAdapter("ShowInfo", info, "");
+                        mCommunication.messageFromAlbumItemsAdapter("ShowInfo", info, null);
                     }
                 });
             } else {
@@ -309,6 +310,7 @@ public class AlbumItemsAdapter extends
         public Button infoButton;
         public ImageView imageImageView;
         public int Plex_RatingKey;
+        public String Path2Image="";
 
         GestureDetector mGestureDetector;
 
@@ -350,9 +352,14 @@ public class AlbumItemsAdapter extends
             if (Plex_RatingKey > 0) {
                 ratingKey = String.valueOf(Plex_RatingKey);
             }
-            String AlbumName = nameTextView.getText().toString();
+            //String AlbumName = nameTextView.getText().toString();
 
-            mCommunication.messageFromAlbumItemsAdapter("AlbumSelected", ratingKey, AlbumName);
+            ArrayList<String> data = new ArrayList<>();
+            data.add(nameTextView.getText().toString());
+            data.add(Path2Image);
+            data.add(ratingKey);
+
+            mCommunication.messageFromAlbumItemsAdapter("AlbumSelected", "", data);
             return true;
         }
 
