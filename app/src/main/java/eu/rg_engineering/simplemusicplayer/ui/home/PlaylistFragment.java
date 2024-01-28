@@ -1,6 +1,7 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,14 +30,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 import eu.rg_engineering.simplemusicplayer.PlaylistItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
 import io.sentry.Sentry;
-
-//todo Anzeige Anzahl Tracks
 
 
 public class PlaylistFragment extends Fragment implements
@@ -46,6 +48,7 @@ public class PlaylistFragment extends Fragment implements
     private RecyclerView rvPlaylistItems = null;
     private PlaylistItemsAdapter PlaylistItemsAdapter = null;
     ArrayList<TrackItem> mPlaylistTracks;
+    TextView noOfTracks;
     //todo playlist file einstellbar
     private final String filename = "Playlist";
     @Override
@@ -142,7 +145,9 @@ public class PlaylistFragment extends Fragment implements
                 }
             });
 
+            noOfTracks = (TextView) root.findViewById(R.id.numberOfTracksInPlaylist);
 
+            UpdateInfo();
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
@@ -168,7 +173,6 @@ public class PlaylistFragment extends Fragment implements
             mPlaylistTracks.clear();
         }
         try {
-            //todo read playlist from file
             Log.d(TAG, "read play list");
             readFromFile(filename);
         } catch (Exception ex) {
@@ -288,6 +292,18 @@ public class PlaylistFragment extends Fragment implements
         if (PlaylistItemsAdapter != null) {
             PlaylistItemsAdapter.notifyDatasetChanged();
         }
+    }
+
+    private void UpdateInfo() {
+        //MainActivity activity = (MainActivity) getActivity();
+
+        if (noOfTracks != null) {
+            String counts = "" + mPlaylistTracks.size() + " " + getString(R.string.tracks);
+            noOfTracks.setText(counts);
+        }
+
+
+
     }
 
 }
