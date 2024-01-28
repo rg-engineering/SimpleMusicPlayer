@@ -7,7 +7,7 @@
     android:background="@color/JuicyGreen">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPlaylistTracks"
+        android:id="@+id/rvTracks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
@@ -22,11 +22,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <AutoCompleteTextView
-        android:id="@+id/filter_playlisttracks"
+        android:id="@+id/filter_tracks"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:hint="track"
-        app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
+        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.272" />
@@ -36,7 +36,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/ic_arrow_back_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
+        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintStart_toStartOf="@+id/toolbar3"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,7 +47,7 @@
         android:layout_marginEnd="10dp"
         android:text="artist"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
+        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintEnd_toStartOf="@+id/artistImage4Tracks"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,7 +66,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
+        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -76,7 +76,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
+        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintEnd_toStartOf="@+id/artistName4Tracks"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
+        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
         app:layout_constraintTop_toBottomOf="@+id/albumName4Tracks" />
 

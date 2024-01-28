@@ -84,7 +84,7 @@ public class TracksFragment extends Fragment implements
         View root = inflater.inflate(R.layout.fragment_tracks, container, false);
 
         try {
-            rvTrackItems = (RecyclerView) root.findViewById(R.id.rvPlaylistTracks);
+            rvTrackItems = (RecyclerView) root.findViewById(R.id.rvTracks);
 
             MainActivity activity = (MainActivity) getActivity();
             mTracks=activity.mMusicData.getTrackData();
@@ -104,7 +104,7 @@ public class TracksFragment extends Fragment implements
             rvTrackItems.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvTrackItems.setItemAnimator(null);
             // That's all!
-            AutoCompleteTextView editFilterTracks = (AutoCompleteTextView ) root.findViewById(R.id.filter_playlisttracks);
+            AutoCompleteTextView editFilterTracks = (AutoCompleteTextView ) root.findViewById(R.id.filter_tracks);
             ArrayList <String> TrackList = new ArrayList<>();
 
             for (int i = 0; i < mTracks.size(); i++) {
@@ -148,6 +148,8 @@ public class TracksFragment extends Fragment implements
                     mCommunication.messageFromTracksFragment("btnBack", "");
                 }
             });
+
+
 
             artistName = (TextView) root.findViewById(R.id.artistName4Tracks);
             albumName = (TextView) root.findViewById(R.id.albumName4Tracks);
@@ -289,5 +291,7 @@ public class TracksFragment extends Fragment implements
             mImage.setImageBitmap(result);
         }
     }
+
+
 
 }

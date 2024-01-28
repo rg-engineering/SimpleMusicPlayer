@@ -1,7 +1,11 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -11,14 +15,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +36,7 @@ import io.sentry.Sentry;
 
 
 //todo playlist muss sortierbar werden
-//todo playlist löschen
+
 //todo playlist automatisch speichern, wenn Seite verlassen wird
 //todo entfernter track muss auch aus Media-Liste im Service gelöscht werden, sonst wird er trotzdem gespielt
 
@@ -49,6 +56,9 @@ public class PlaylistItemsAdapter extends
     Context mContext;
     PlaylistItemsAdapterListener mCommunication;
     private boolean mNeed2SendSongs=false;
+    private String IP = "";
+    private String Port = "";
+    private String Token = "";
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -131,7 +141,12 @@ public class PlaylistItemsAdapter extends
         // Return a new holder instance
         PlaylistItemsAdapter.ViewHolder viewHolder = new PlaylistItemsAdapter.ViewHolder(itemView);
 
-        Log.d(TAG, "onCreateViewHolder ");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        IP = sharedPreferences.getString("plex_server_ip", "");
+        Port = sharedPreferences.getString("plex_server_port", "");
+        Token = sharedPreferences.getString("plex_server_token", "");
+
+        Log.d(TAG, "onCreateViewHolder done");
         return viewHolder;
     }
 
@@ -147,6 +162,9 @@ public class PlaylistItemsAdapter extends
         TextView artistTextView = viewHolder.artistTextView;
         TextView durationTextView = viewHolder.durationTextView;
         TextView currentPlaytimeTextView = viewHolder.currentPlaytimeTextView;
+
+        ImageView imageViewAlbum = viewHolder.imageViewAlbum;
+        ImageView imageViewArtist = viewHolder.imageViewArtist;
 
         if (nameTextView != null) {
             nameTextView.setText(item.getName());
@@ -192,7 +210,61 @@ public class PlaylistItemsAdapter extends
         else {
             viewHolder.nameTextView.setTextColor(Color.BLACK);
         }
+
+        if (imageViewAlbum != null) {
+            String path2image = item.GetPath2AlbumImage();
+
+            if (path2image != null && path2image.length() > 0) {
+                Log.d(TAG, "image view should be used ");
+                new DownloadImageTask(imageViewAlbum).execute(path2image);
+            } else {
+                Log.d(TAG, "image view shouldn't be used ");
+            }
+        }
+
+        if (imageViewArtist != null) {
+            String path2image = item.GetPath2ArtistImage();
+
+            if (path2image != null && path2image.length() > 0) {
+                Log.d(TAG, "image view should be used ");
+                new DownloadImageTask(imageViewArtist).execute(path2image);
+            } else {
+                Log.d(TAG, "image view shouldn't be used ");
+            }
+        }
+
     }
+
+    //todo DownloadImageTask global verfügbar machen
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView mImage;
+
+        public DownloadImageTask(ImageView image) {
+            this.mImage = image;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
+            Bitmap icon = null;
+
+            Log.d(TAG, "get image from " + fullURL);
+
+            try {
+                InputStream in = new java.net.URL(fullURL).openStream();
+                icon = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
+                e.printStackTrace();
+                Sentry.captureException(e);
+            }
+            return icon;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            mImage.setImageBitmap(result);
+        }
+    }
+
     public void SetCurrentPlaytime(int index, long playtime) {
 
         Log.d(TAG, "got current playtime " + index + " / " + playtime + " " + mItemsFiltered.size());
@@ -359,6 +431,8 @@ public class PlaylistItemsAdapter extends
         public ProgressBar currentProgressbar;
         public SeekBar currentSeekbar;
         public Button btnPlaySong;
+        public ImageView imageViewAlbum;
+        public ImageView imageViewArtist;
 
         GestureDetector mGestureDetector;
 
@@ -378,6 +452,8 @@ public class PlaylistItemsAdapter extends
             currentSeekbar = (SeekBar) itemView.findViewById(R.id.track_SeekBar);
             btnPlaySong = (Button) itemView.findViewById(R.id.track_PlaySong);
 
+            imageViewAlbum = (ImageView) itemView.findViewById(R.id.track_AlbumImage);
+            imageViewArtist = (ImageView) itemView.findViewById(R.id.track_ArtistImage);
 
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
 

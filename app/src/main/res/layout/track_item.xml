@@ -65,7 +65,7 @@
             card_view:layout_constraintTop_toBottomOf="@+id/track_Artist" />
 
         <ImageView
-            android:id="@+id/track_Image"
+            android:id="@+id/track_ArtistImage"
             android:layout_width="63dp"
             android:layout_height="53dp"
             android:layout_marginEnd="10dp"

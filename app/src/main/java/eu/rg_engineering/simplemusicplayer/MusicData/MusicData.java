@@ -217,6 +217,9 @@ public class MusicData  {
                 String album = item.parentTitle;
                 String artist = item.grandparentTitle;
 
+                String path2AlbumImage=item.parentThumb;
+                String path2ArtistImage=item.grandparentThumb;
+
                 /*
                 http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ"
                 */
@@ -229,7 +232,7 @@ public class MusicData  {
                     Log.e(TAG, "duration is not a number");
                     Sentry.captureException(ex);
                 }
-                TrackItem track = new TrackItem(name, album, artist, filename, duration);
+                TrackItem track = new TrackItem(name, album, artist, filename, duration, path2AlbumImage, path2ArtistImage);
                 mLocalTracks.add(track);
             }
         }
@@ -462,7 +465,7 @@ public class MusicData  {
                 Log.d(TAG, "Image " + albumArt);
                 artCursor.close();
 
-                TrackItem track = new TrackItem(Title,Album,Artist,fileName,nDuration);
+                TrackItem track = new TrackItem(Title,Album,Artist,fileName,nDuration,"","");
                 mLocalTracksAll.add(track);
 
                 if (!ArtistExists(Artist)) {

@@ -24,12 +24,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 import eu.rg_engineering.simplemusicplayer.PlaylistItemsAdapter;
@@ -38,7 +35,7 @@ import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
 import io.sentry.Sentry;
 
 //todo Anzeige Anzahl Tracks
-// Bild von Artist und Album einfügen
+
 
 public class PlaylistFragment extends Fragment implements
         OnDeletePlaylistitemListener {
@@ -50,7 +47,7 @@ public class PlaylistFragment extends Fragment implements
     private PlaylistItemsAdapter PlaylistItemsAdapter = null;
     ArrayList<TrackItem> mPlaylistTracks;
     //todo playlist file einstellbar
-    private String filename = "Playlist";
+    private final String filename = "Playlist";
     @Override
     public void ItemDeleted() {
         //SaveData();
@@ -82,9 +79,8 @@ public class PlaylistFragment extends Fragment implements
         try {
             rvPlaylistItems = (RecyclerView) root.findViewById(R.id.rvPlaylistTracks);
 
-            MainActivity activity = (MainActivity) getActivity();
+            //MainActivity activity = (MainActivity) getActivity();
 
-            //todo load playlist from file
             ReadPlaylist();
 
             // Create adapter passing in the sample user data
@@ -137,6 +133,16 @@ public class PlaylistFragment extends Fragment implements
                 }
             });
 
+            Button btnDeletePlaylist = (Button) root.findViewById(R.id.playlist_deleteAll);
+            btnDeletePlaylist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "delete playlist button pressed");
+                    DeletePlaylist();
+                }
+            });
+
+
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
@@ -175,7 +181,7 @@ public class PlaylistFragment extends Fragment implements
 
         try {
             File path = mContext.getFilesDir();
-            File newDir = new File(path + "/" + filename);
+            //File newDir = new File(path + "/" + filename);
 
             FileInputStream fileInputStream = new FileInputStream(new File(path, filename));
             InputStreamReader  inputStreamReader = new InputStreamReader(fileInputStream);
@@ -194,10 +200,10 @@ public class PlaylistFragment extends Fragment implements
 
         }
         catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found: " + e.toString());
+            Log.e(TAG, "File not found: " + e);
             mCommunication.messageFromPlaylistFragment("ShowInfo", "playlist not found");
         } catch (IOException e) {
-            Log.e(TAG, "Can not read file: " + e.toString());
+            Log.e(TAG, "Can not read file: " + e);
         }
 
         return ret;
@@ -205,14 +211,14 @@ public class PlaylistFragment extends Fragment implements
     private void SavePlaylist() {
 
         try {
-            String Contents = "";
+            StringBuilder Contents = new StringBuilder();
             //todo save play list
             Log.d(TAG, "save play list");
 
             for (int i =0; i< mPlaylistTracks.size(); i++) {
-                Contents += mPlaylistTracks.get(i).Serialize(true);
+                Contents.append(mPlaylistTracks.get(i).Serialize(true));
             }
-            writeToFile(Contents,filename);
+            writeToFile(Contents.toString(),filename);
 
         } catch (Exception ex) {
             Log.e(TAG, "Exception in SavePlaylist " + ex);
@@ -227,7 +233,7 @@ public class PlaylistFragment extends Fragment implements
             if (!newDir.exists()) {
                 newDir.mkdir();
             }
-            FileOutputStream writer = new FileOutputStream(new File(path, filename));
+            FileOutputStream writer = new FileOutputStream(new File(path, filename),false);
             writer.write(data.getBytes());
             writer.close();
             Log.d("TAG", "Wrote to file: " + newDir);
@@ -235,10 +241,8 @@ public class PlaylistFragment extends Fragment implements
         }
 
         catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
+            Log.e("Exception", "File write failed: " + e);
         }
-
-
     }
 
     public void Add2Playlist(String trackData) {
@@ -258,6 +262,32 @@ public class PlaylistFragment extends Fragment implements
             Log.e(TAG, "Exception in Add2Playlist " + ex);
         }
         SavePlaylist();
+    }
+
+    private void DeletePlaylist(){
+        try {
+            File path = mContext.getFilesDir();
+            File newDir = new File(path + "/" + filename);
+
+            if (!newDir.exists()) {
+                newDir.mkdir();
+            }
+            FileOutputStream writer = new FileOutputStream(new File(path, filename),false);
+
+            writer.close();
+            Log.d("TAG", "Wrote empty to file: " + newDir);
+
+        }
+
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e);
+        }
+
+        ReadPlaylist();
+
+        if (PlaylistItemsAdapter != null) {
+            PlaylistItemsAdapter.notifyDatasetChanged();
+        }
     }
 
 }
