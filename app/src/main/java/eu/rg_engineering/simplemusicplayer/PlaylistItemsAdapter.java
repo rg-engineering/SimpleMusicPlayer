@@ -55,9 +55,9 @@ public class PlaylistItemsAdapter extends
     Context mContext;
     PlaylistItemsAdapterListener mCommunication;
     private boolean mNeed2SendSongs=false;
-    private String IP = "";
-    private String Port = "";
-    private String Token = "";
+    //private String IP = "";
+    //private String Port = "";
+    //private String Token = "";
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -140,10 +140,10 @@ public class PlaylistItemsAdapter extends
         // Return a new holder instance
         PlaylistItemsAdapter.ViewHolder viewHolder = new PlaylistItemsAdapter.ViewHolder(itemView);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        IP = sharedPreferences.getString("plex_server_ip", "");
-        Port = sharedPreferences.getString("plex_server_port", "");
-        Token = sharedPreferences.getString("plex_server_token", "");
+        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        //IP = sharedPreferences.getString("plex_server_ip", "");
+        //Port = sharedPreferences.getString("plex_server_port", "");
+        //Token = sharedPreferences.getString("plex_server_token", "");
 
         Log.d(TAG, "onCreateViewHolder done");
         return viewHolder;
@@ -243,7 +243,7 @@ public class PlaylistItemsAdapter extends
         }
 
         protected Bitmap doInBackground(String... urls) {
-            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
+            String fullURL = urls[0];
             Bitmap icon = null;
 
             Log.d(TAG, "get image from " + fullURL);
@@ -293,10 +293,9 @@ public class PlaylistItemsAdapter extends
                 track.Artist = item.getArtist();
                 track.TrackName = item.getName();
                 track.Url = item.getFileName();
-                //todo URL zum Bild
+                track.Path2Image = item.GetPath2ArtistImage();
 
                 tracks.add(track);
-
             }
 
             mCommunication.messageFromPlaylistItemsAdapter("UpdatePlayList", null, tracks);

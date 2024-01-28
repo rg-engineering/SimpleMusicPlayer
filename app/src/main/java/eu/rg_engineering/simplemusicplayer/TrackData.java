@@ -5,5 +5,6 @@ public class TrackData {
     public String Artist;
     public String TrackName;
     public String Url;
+    public String Path2Image;
 
 }

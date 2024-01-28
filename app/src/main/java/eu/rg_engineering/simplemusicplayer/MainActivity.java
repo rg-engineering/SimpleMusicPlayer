@@ -5,6 +5,7 @@ package eu.rg_engineering.simplemusicplayer;
 import android.content.ComponentName;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -472,7 +473,7 @@ public class MainActivity extends AppCompatActivity
                                         new MediaMetadata.Builder()
                                                 .setArtist(track.Artist)
                                                 .setTitle(track.TrackName)
-                                                //.setArtworkUri("")
+                                                .setArtworkUri(Uri.parse(track.Path2Image))
                                                 .build())
                                 .build();
 

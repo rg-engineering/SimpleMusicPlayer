@@ -1,7 +1,6 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 import eu.rg_engineering.simplemusicplayer.PlaylistItemsAdapter;
@@ -46,7 +44,7 @@ public class PlaylistFragment extends Fragment implements
     PlaylistFragmentListener mCommunication;
     Context mContext;
     private RecyclerView rvPlaylistItems = null;
-    private PlaylistItemsAdapter PlaylistItemsAdapter = null;
+    private PlaylistItemsAdapter playlistItemsAdapter = null;
     ArrayList<TrackItem> mPlaylistTracks;
     TextView noOfTracks;
     //todo playlist file einstellbar
@@ -87,14 +85,14 @@ public class PlaylistFragment extends Fragment implements
             ReadPlaylist();
 
             // Create adapter passing in the sample user data
-            PlaylistItemsAdapter = new PlaylistItemsAdapter(mPlaylistTracks, this);
+            playlistItemsAdapter = new PlaylistItemsAdapter(mPlaylistTracks, this);
 
-            ItemTouchHelper.Callback callback = new MyItemTouchHelper(PlaylistItemsAdapter);
+            ItemTouchHelper.Callback callback = new MyItemTouchHelper(playlistItemsAdapter);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-            PlaylistItemsAdapter.setTouchHelper(itemTouchHelper);
+            playlistItemsAdapter.setTouchHelper(itemTouchHelper);
             itemTouchHelper.attachToRecyclerView(rvPlaylistItems);
             // Attach the adapter to the recyclerview to populate items
-            rvPlaylistItems.setAdapter(PlaylistItemsAdapter);
+            rvPlaylistItems.setAdapter(playlistItemsAdapter);
 
             // Set layout manager to position the items
             rvPlaylistItems.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -126,8 +124,8 @@ public class PlaylistFragment extends Fragment implements
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     Log.d(TAG, "track filter text changed " + s);
-                    PlaylistItemsAdapter.setFilterIdx(1);
-                    PlaylistItemsAdapter.getFilter().filter(s);
+                    playlistItemsAdapter.setFilterIdx(1);
+                    playlistItemsAdapter.getFilter().filter(s);
                 }
 
                 @Override
@@ -157,11 +155,11 @@ public class PlaylistFragment extends Fragment implements
     }
 
     public void SetCurrentplaytime(int index, long duration) {
-        PlaylistItemsAdapter.SetCurrentPlaytime(index, duration);
+        playlistItemsAdapter.SetCurrentPlaytime(index, duration);
     }
 
     public void GetSongs() {
-        PlaylistItemsAdapter.GetSongs();
+        playlistItemsAdapter.GetSongs();
     }
 
     private void ReadPlaylist() {
@@ -259,8 +257,8 @@ public class PlaylistFragment extends Fragment implements
                 mPlaylistTracks.add(track);
                 Log.d(TAG, "track added to playlist " +track.getName());
             }
-            if (PlaylistItemsAdapter != null) {
-                PlaylistItemsAdapter.notifyDatasetChanged();
+            if (playlistItemsAdapter != null) {
+                playlistItemsAdapter.notifyDatasetChanged();
             }
         } catch (Exception ex) {
             Log.e(TAG, "Exception in Add2Playlist " + ex);
@@ -289,8 +287,8 @@ public class PlaylistFragment extends Fragment implements
 
         ReadPlaylist();
 
-        if (PlaylistItemsAdapter != null) {
-            PlaylistItemsAdapter.notifyDatasetChanged();
+        if (playlistItemsAdapter != null) {
+            playlistItemsAdapter.notifyDatasetChanged();
         }
     }
 

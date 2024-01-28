@@ -217,8 +217,8 @@ public class MusicData  {
                 String album = item.parentTitle;
                 String artist = item.grandparentTitle;
 
-                String path2AlbumImage=item.parentThumb;
-                String path2ArtistImage=item.grandparentThumb;
+                String path2AlbumImage=item.parentThumb.length()>0 ? "http://" + IP + ":" + Port + item.parentThumb + "?X-Plex-Token=" + Token : "";
+                String path2ArtistImage=item.grandparentThumb.length()>0 ? "http://" + IP + ":" + Port + item.grandparentThumb + "?X-Plex-Token=" + Token : "";
 
                 /*
                 http://192.168.3.21:32400/library/parts/48571/1261258691/file.mp3?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ"

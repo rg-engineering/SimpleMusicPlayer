@@ -191,7 +191,11 @@ public class TrackItem implements Parcelable  {
                     mDuration = 0;
                 }
                 mPath2AlbumImage = parts[6];
-                mPath2ArtistImage = parts[7];
+                //remove last "'"
+                mPath2ArtistImage = parts[7].substring(0, parts[7].length() - 1);
+                //must be removed when adding new entries...
+
+
             }
         }
         catch (Exception ex){
