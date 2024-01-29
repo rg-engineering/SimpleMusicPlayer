@@ -30,6 +30,7 @@ import java.util.TimerTask;
 
 import eu.rg_engineering.simplemusicplayer.MainActivity;
 
+//todo implement MediaSession.Callback.onPlaybackResumption() https://developer.android.com/media/media3/session/background-playback
 public class MusicService extends MediaSessionService {
 
     private final String TAG = "MusicService";

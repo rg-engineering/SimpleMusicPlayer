@@ -459,7 +459,7 @@ public class MainActivity extends AppCompatActivity
 
     private void UpdatePlayList(ArrayList<TrackData> tracks) {
 
-        Log.d(TAG, "update UpdatePlayList" + tracks.size());
+        Log.d(TAG, "update UpdatePlayList " + tracks.size());
         try {
             mediaItems.clear();
 
@@ -473,9 +473,11 @@ public class MainActivity extends AppCompatActivity
                                         new MediaMetadata.Builder()
                                                 .setArtist(track.Artist)
                                                 .setTitle(track.TrackName)
-                                                .setArtworkUri(Uri.parse(track.Path2Image))
+                                                .setArtworkUri( ( track.Path2Image!=null && track.Path2Image.length()>0) ? Uri.parse(track.Path2Image) : null)
                                                 .build())
                                 .build();
+
+
 
                 mediaItems.add(item);
             }
