@@ -56,9 +56,6 @@ public class PlaylistItemsAdapter extends
     Context mContext;
     PlaylistItemsAdapterListener mCommunication;
     private boolean mNeed2SendSongs=false;
-    //private String IP = "";
-    //private String Port = "";
-    //private String Token = "";
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -140,11 +137,6 @@ public class PlaylistItemsAdapter extends
 
         // Return a new holder instance
         PlaylistItemsAdapter.ViewHolder viewHolder = new PlaylistItemsAdapter.ViewHolder(itemView);
-
-        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        //IP = sharedPreferences.getString("plex_server_ip", "");
-        //Port = sharedPreferences.getString("plex_server_port", "");
-        //Token = sharedPreferences.getString("plex_server_token", "");
 
         Log.d(TAG, "onCreateViewHolder done");
         return viewHolder;

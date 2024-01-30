@@ -1,10 +1,6 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -19,11 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,9 +41,6 @@ public class ArtistItemsAdapter extends
     private final OnDeleteArtistitemListener deleteListener;
     private int mFilterIdx = 0;
     Context mContext;
-    private String IP = "";
-    private String Port = "";
-    private String Token = "";
     ArtistItemsAdapter.ArtistItemsAdapterListener mCommunication;
 
     public void notifyDatasetChanged() {
@@ -100,10 +91,7 @@ public class ArtistItemsAdapter extends
         mCommunication = (ArtistItemsAdapter.ArtistItemsAdapterListener) context;
         mContext = context;
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        IP = sharedPreferences.getString("plex_server_ip", "");
-        Port = sharedPreferences.getString("plex_server_port", "");
-        Token = sharedPreferences.getString("plex_server_token", "");
+
 
         return viewHolder;
     }
@@ -161,12 +149,7 @@ public class ArtistItemsAdapter extends
                 imageImageView.setImageBitmap(null);
             }
         }
-
-
     }
-
-
-
 
     @Override
     public int getItemCount() {

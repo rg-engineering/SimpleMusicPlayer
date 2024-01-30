@@ -1,10 +1,6 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -18,16 +14,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
@@ -48,9 +40,6 @@ public class AlbumItemsAdapter extends
     private final OnDeleteAlbumitemListener deleteListener;
     private int mFilterIdx = 0;
     Context mContext;
-    private String IP = "";
-    private String Port = "";
-    private String Token = "";
     AlbumItemsAdapterListener mCommunication;
 
 
@@ -101,11 +90,6 @@ public class AlbumItemsAdapter extends
 
         mCommunication = (AlbumItemsAdapterListener) context;
         mContext = context;
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        IP = sharedPreferences.getString("plex_server_ip", "");
-        Port = sharedPreferences.getString("plex_server_port", "");
-        Token = sharedPreferences.getString("plex_server_token", "");
 
         return viewHolder;
     }

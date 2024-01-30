@@ -2,9 +2,6 @@ package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,7 +22,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.MainActivity;
@@ -55,9 +51,6 @@ public class TracksFragment extends Fragment implements
     TextView noOfTracks;
     ImageView artistImage;
     ImageView albumImage;
-    private String IP = "";
-    private String Port = "";
-    private String Token = "";
 
     @Override
     public void ItemDeleted() {
@@ -200,16 +193,6 @@ public class TracksFragment extends Fragment implements
         TrackItemsAdapter.SetCurrentPlaytime(index, duration);
     }
 
-    /*
-    public void GetNextSong(){
-        TrackItemsAdapter.GetNextSong();
-    }
-
-    public void GetCurrentSong(){
-        TrackItemsAdapter.GetCurrentSong();
-    }
-     */
-
     public void GetSongs(){
         TrackItemsAdapter.GetSongs();
     }
@@ -235,11 +218,6 @@ public class TracksFragment extends Fragment implements
         }
 
         if (artistImage != null) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            IP = sharedPreferences.getString("plex_server_ip", "");
-            Port = sharedPreferences.getString("plex_server_port", "");
-            Token = sharedPreferences.getString("plex_server_token", "");
-
             if (mPath2ImageArtist != null && mPath2ImageArtist.length() > 0) {
                 Log.d(TAG, "image view should be used ");
                 new DownloadImageTask(artistImage, "ArtistImage").execute(mPath2ImageArtist);
@@ -248,11 +226,6 @@ public class TracksFragment extends Fragment implements
             }
         }
         if (albumImage != null) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            IP = sharedPreferences.getString("plex_server_ip", "");
-            Port = sharedPreferences.getString("plex_server_port", "");
-            Token = sharedPreferences.getString("plex_server_token", "");
-
             if (mPath2ImageAlbum != null && mPath2ImageAlbum.length() > 0) {
                 Log.d(TAG, "image view should be used ");
                 new DownloadImageTask(albumImage, "AlbumImage").execute(mPath2ImageAlbum);
@@ -260,12 +233,5 @@ public class TracksFragment extends Fragment implements
                 Log.d(TAG, "image view shouldn't be used ");
             }
         }
-
     }
-
-
-
-
-
-
 }

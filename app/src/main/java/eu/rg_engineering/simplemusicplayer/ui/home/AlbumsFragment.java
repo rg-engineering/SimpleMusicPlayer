@@ -1,10 +1,6 @@
 package eu.rg_engineering.simplemusicplayer.ui.home;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,12 +16,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.AlbumItem;
@@ -53,9 +47,6 @@ public class AlbumsFragment extends Fragment implements
     TextView artistName;
     TextView noOfAlbum;
     ImageView artistImage;
-    private String IP = "";
-    private String Port = "";
-    private String Token = "";
 
     @Override
     public void ItemDeleted() {
@@ -207,11 +198,6 @@ public class AlbumsFragment extends Fragment implements
         }
 
         if (artistImage != null) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            IP = sharedPreferences.getString("plex_server_ip", "");
-            Port = sharedPreferences.getString("plex_server_port", "");
-            Token = sharedPreferences.getString("plex_server_token", "");
-
             if (mPath2Image != null && mPath2Image.length() > 0) {
                 Log.d(TAG, "image view should be used ");
                 new DownloadImageTask(artistImage, "AlbumImage").execute(mPath2Image);
@@ -219,11 +205,5 @@ public class AlbumsFragment extends Fragment implements
                 Log.d(TAG, "image view shouldn't be used ");
             }
         }
-
-
     }
-
-
-
-
 }
