@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
 import io.sentry.Sentry;
@@ -214,10 +215,11 @@ public class PlaylistItemsAdapter extends
             String path2image = item.GetPath2AlbumImage();
 
             if (path2image != null && path2image.length() > 0) {
-                Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(imageViewAlbum).execute(path2image);
+                Log.d(TAG, item.getName()+": image view album should be used ");
+                new DownloadImageTask(imageViewAlbum, item.getName()).execute(path2image);
             } else {
-                Log.d(TAG, "image view shouldn't be used ");
+                Log.d(TAG, item.getName()+": image view album shouldn't be used ");
+                imageViewAlbum.setImageBitmap(null);
             }
         }
 
@@ -225,44 +227,19 @@ public class PlaylistItemsAdapter extends
             String path2image = item.GetPath2ArtistImage();
 
             if (path2image != null && path2image.length() > 0) {
-                Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(imageViewArtist).execute(path2image);
+                Log.d(TAG, item.getName()+": image view artist should be used ");
+                new DownloadImageTask(imageViewArtist, item.getName()).execute(path2image);
             } else {
-                Log.d(TAG, "image view shouldn't be used ");
+                Log.d(TAG, item.getName()+": image view artist shouldn't be used ");
+                imageViewArtist.setImageBitmap(null);
             }
         }
 
     }
 
+    //todo image nur einmal downloaden und nicht alle Sekunde
     //todo DownloadImageTask global verfügbar machen
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView mImage;
 
-        public DownloadImageTask(ImageView image) {
-            this.mImage = image;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String fullURL = urls[0];
-            Bitmap icon = null;
-
-            Log.d(TAG, "get image from " + fullURL);
-
-            try {
-                InputStream in = new java.net.URL(fullURL).openStream();
-                icon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
-                e.printStackTrace();
-                Sentry.captureException(e);
-            }
-            return icon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            mImage.setImageBitmap(result);
-        }
-    }
 
     public void SetCurrentPlaytime(int index, long playtime) {
 

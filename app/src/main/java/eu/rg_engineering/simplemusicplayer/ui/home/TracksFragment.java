@@ -32,6 +32,7 @@ import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 import eu.rg_engineering.simplemusicplayer.TrackItemsAdapter;
+import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 import io.sentry.Sentry;
@@ -241,7 +242,7 @@ public class TracksFragment extends Fragment implements
 
             if (mPath2ImageArtist != null && mPath2ImageArtist.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(artistImage).execute(mPath2ImageArtist);
+                new DownloadImageTask(artistImage, "ArtistImage").execute(mPath2ImageArtist);
             } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }
@@ -254,7 +255,7 @@ public class TracksFragment extends Fragment implements
 
             if (mPath2ImageAlbum != null && mPath2ImageAlbum.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(albumImage).execute(mPath2ImageAlbum);
+                new DownloadImageTask(albumImage, "AlbumImage").execute(mPath2ImageAlbum);
             } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }
@@ -263,34 +264,7 @@ public class TracksFragment extends Fragment implements
     }
 
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView mImage;
 
-        public DownloadImageTask(ImageView image) {
-            this.mImage = image;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
-            Bitmap icon = null;
-
-            Log.d(TAG, "get image from " + fullURL);
-
-            try {
-                InputStream in = new java.net.URL(fullURL).openStream();
-                icon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
-                e.printStackTrace();
-                Sentry.captureException(e);
-            }
-            return icon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            mImage.setImageBitmap(result);
-        }
-    }
 
 
 

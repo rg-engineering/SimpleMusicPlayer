@@ -32,6 +32,7 @@ import eu.rg_engineering.simplemusicplayer.AlbumItem;
 import eu.rg_engineering.simplemusicplayer.AlbumItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
+import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
@@ -213,7 +214,7 @@ public class AlbumsFragment extends Fragment implements
 
             if (mPath2Image != null && mPath2Image.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(artistImage).execute(mPath2Image);
+                new DownloadImageTask(artistImage, "AlbumImage").execute(mPath2Image);
             } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }
@@ -223,33 +224,6 @@ public class AlbumsFragment extends Fragment implements
     }
 
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView mImage;
 
-        public DownloadImageTask(ImageView image) {
-            this.mImage = image;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
-            Bitmap icon = null;
-
-            Log.d(TAG, "get image from " + fullURL);
-
-            try {
-                InputStream in = new java.net.URL(fullURL).openStream();
-                icon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
-                e.printStackTrace();
-                Sentry.captureException(e);
-            }
-            return icon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            mImage.setImageBitmap(result);
-        }
-    }
 
 }

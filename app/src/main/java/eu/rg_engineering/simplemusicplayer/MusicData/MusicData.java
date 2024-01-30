@@ -146,7 +146,8 @@ public class MusicData  {
                 String name = item.title;
                 String genre = item.Genre;
                 String country = item.Country;
-                String path2image = item.thumb;
+                String path2image = (item.thumb != null && item.thumb.length() > 0) ? "http://" + IP + ":" + Port + item.thumb + "?X-Plex-Token=" + Token : "";
+
                 String summery = item.summary;
                 int ratingKey = -1;
                 try {
@@ -183,7 +184,8 @@ public class MusicData  {
                     Log.e(TAG, "year is not a number");
                     Sentry.captureException(ex);
                 }
-                String path2image = item.thumb;
+                String path2image = (item.thumb != null && item.thumb.length() > 0) ? "http://" + IP + ":" + Port + item.thumb + "?X-Plex-Token=" + Token : "";
+
                 String summery = item.summary;
                 int ratingKey = -1;
                 try {

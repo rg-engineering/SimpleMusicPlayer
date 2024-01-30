@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.List;
 
 
+import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
@@ -114,7 +115,7 @@ public class AlbumItemsAdapter extends
 // Get the data model based on position
         AlbumItem item = mItemsFiltered.get(position);
 
-        Log.d(TAG, "onBindViewHolder called, position " + position);
+        //Log.d(TAG, "onBindViewHolder called, position " + position);
         TextView nameTextView = viewHolder.nameTextView;
         TextView artistTextView = viewHolder.artistTextView;
         TextView yearTextView = viewHolder.yearTextView;
@@ -143,7 +144,7 @@ public class AlbumItemsAdapter extends
             String infoSummery = item.getInfo();
 
             if (infoSummery != null && infoSummery.length() > 0) {
-                Log.d(TAG, "info Button should be visible ");
+                Log.d(TAG, item.getName()+ ": info Button should be visible " + position);
                 infoButton.setVisibility(View.VISIBLE);
 
                 infoButton.setOnClickListener(new View.OnClickListener() {
@@ -155,49 +156,23 @@ public class AlbumItemsAdapter extends
                     }
                 });
             } else {
-                Log.d(TAG, "info Button should be invisible ");
+                Log.d(TAG, item.getName()+": info Button should be invisible " + position);
             }
         }
         if (imageImageView != null) {
             String path2image = item.getPath2Image();
 
             if (path2image != null && path2image.length() > 0) {
-                Log.d(TAG, "image view should be used ");
-                new AlbumItemsAdapter.DownloadImageTask(imageImageView).execute(path2image);
+                Log.d(TAG, item.getName() +": image view should be used ");
+                new DownloadImageTask(imageImageView, item.getName()).execute(path2image);
             } else {
-                Log.d(TAG, "image view shouldn't be used ");
+                Log.d(TAG, item.getName() +": image view shouldn't be used ");
+                imageImageView.setImageBitmap(null);
             }
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView mImage;
 
-        public DownloadImageTask(ImageView image) {
-            this.mImage = image;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String fullURL = "http://" + IP + ":" + Port + urls[0] + "?X-Plex-Token=" + Token;
-            Bitmap icon = null;
-
-            Log.d(TAG, "get image from " + fullURL);
-
-            try {
-                InputStream in = new java.net.URL(fullURL).openStream();
-                icon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e(TAG, "exception in DownloadImageTask " + e.getMessage());
-                e.printStackTrace();
-                Sentry.captureException(e);
-            }
-            return icon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            mImage.setImageBitmap(result);
-        }
-    }
 
     @Override
     public int getItemCount() {
