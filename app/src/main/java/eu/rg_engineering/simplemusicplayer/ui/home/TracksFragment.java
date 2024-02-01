@@ -28,7 +28,7 @@ import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 import eu.rg_engineering.simplemusicplayer.TrackItemsAdapter;
-import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
+import eu.rg_engineering.simplemusicplayer.utils.ImageDownloader;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 import io.sentry.Sentry;
@@ -51,6 +51,7 @@ public class TracksFragment extends Fragment implements
     TextView noOfTracks;
     ImageView artistImage;
     ImageView albumImage;
+    private ImageDownloader imageDownloader=null;
 
     @Override
     public void ItemDeleted() {
@@ -143,8 +144,6 @@ public class TracksFragment extends Fragment implements
                 }
             });
 
-
-
             artistName = (TextView) root.findViewById(R.id.artistName4Tracks);
             albumName = (TextView) root.findViewById(R.id.albumName4Tracks);
 
@@ -152,12 +151,8 @@ public class TracksFragment extends Fragment implements
             artistImage = (ImageView) root.findViewById(R.id.artistImage4Tracks);
             albumImage = (ImageView) root.findViewById(R.id.albumImage4Tracks);
 
-
+            imageDownloader = new ImageDownloader();
             UpdateInfo();
-
-
-
-
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
@@ -220,7 +215,8 @@ public class TracksFragment extends Fragment implements
         if (artistImage != null) {
             if (mPath2ImageArtist != null && mPath2ImageArtist.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(artistImage, "ArtistImage").execute(mPath2ImageArtist);
+                //new DownloadImageTask(artistImage, "ArtistImage").execute(mPath2ImageArtist);
+                imageDownloader.loadBitmap(mPath2ImageArtist, artistImage);
             } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }
@@ -228,7 +224,8 @@ public class TracksFragment extends Fragment implements
         if (albumImage != null) {
             if (mPath2ImageAlbum != null && mPath2ImageAlbum.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(albumImage, "AlbumImage").execute(mPath2ImageAlbum);
+                //new DownloadImageTask(albumImage, "AlbumImage").execute(mPath2ImageAlbum);
+                imageDownloader.loadBitmap(mPath2ImageAlbum, albumImage);
             } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }

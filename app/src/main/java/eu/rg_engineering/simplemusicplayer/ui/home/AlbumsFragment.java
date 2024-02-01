@@ -26,7 +26,7 @@ import eu.rg_engineering.simplemusicplayer.AlbumItem;
 import eu.rg_engineering.simplemusicplayer.AlbumItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.MainActivity;
 import eu.rg_engineering.simplemusicplayer.R;
-import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
+import eu.rg_engineering.simplemusicplayer.utils.ImageDownloader;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
@@ -47,6 +47,7 @@ public class AlbumsFragment extends Fragment implements
     TextView artistName;
     TextView noOfAlbum;
     ImageView artistImage;
+    private ImageDownloader imageDownloader=null;
 
     @Override
     public void ItemDeleted() {
@@ -142,12 +143,12 @@ public class AlbumsFragment extends Fragment implements
                 }
             });
 
-
             artistName = (TextView) root.findViewById(R.id.artistName4Album);
             noOfAlbum = (TextView) root.findViewById(R.id.numberOfAlbum);
             artistImage = (ImageView) root.findViewById(R.id.artistImage4Album);
-            UpdateInfo();
 
+            imageDownloader = new ImageDownloader();
+            UpdateInfo();
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
@@ -200,7 +201,8 @@ public class AlbumsFragment extends Fragment implements
         if (artistImage != null) {
             if (mPath2Image != null && mPath2Image.length() > 0) {
                 Log.d(TAG, "image view should be used ");
-                new DownloadImageTask(artistImage, "AlbumImage").execute(mPath2Image);
+                //new DownloadImageTask(artistImage, "AlbumImage").execute(mPath2Image);
+                imageDownloader.loadBitmap(mPath2Image, artistImage);
             } else {
                 Log.d(TAG, "image view shouldn't be used ");
             }

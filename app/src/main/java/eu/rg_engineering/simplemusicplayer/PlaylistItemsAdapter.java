@@ -1,11 +1,7 @@
 package eu.rg_engineering.simplemusicplayer;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -21,16 +17,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
+import eu.rg_engineering.simplemusicplayer.utils.ImageDownloader;
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
 import io.sentry.Sentry;
@@ -56,6 +50,7 @@ public class PlaylistItemsAdapter extends
     Context mContext;
     PlaylistItemsAdapterListener mCommunication;
     private boolean mNeed2SendSongs=false;
+    private ImageDownloader imageDownloader=null;
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -77,6 +72,9 @@ public class PlaylistItemsAdapter extends
         mItemsFiltered = TrackItem.createItemsList(0);
 
         mItemsAll = items;
+
+        imageDownloader = new ImageDownloader();
+
         UpdateData();
 
     }
@@ -208,7 +206,8 @@ public class PlaylistItemsAdapter extends
 
             if (path2image != null && path2image.length() > 0) {
                 Log.d(TAG, item.getName()+": image view album should be used ");
-                new DownloadImageTask(imageViewAlbum, item.getName()).execute(path2image);
+                //new DownloadImageTask(imageViewAlbum, item.getName()).execute(path2image);
+                imageDownloader.loadBitmap(path2image, imageViewAlbum);
             } else {
                 Log.d(TAG, item.getName()+": image view album shouldn't be used ");
                 imageViewAlbum.setImageBitmap(null);
@@ -220,18 +219,16 @@ public class PlaylistItemsAdapter extends
 
             if (path2image != null && path2image.length() > 0) {
                 Log.d(TAG, item.getName()+": image view artist should be used ");
-                new DownloadImageTask(imageViewArtist, item.getName()).execute(path2image);
+                //new DownloadImageTask(imageViewArtist, item.getName()).execute(path2image);
+                imageDownloader.loadBitmap(path2image, imageViewArtist);
             } else {
                 Log.d(TAG, item.getName()+": image view artist shouldn't be used ");
                 imageViewArtist.setImageBitmap(null);
             }
         }
-
     }
 
     //todo image nur einmal downloaden und nicht alle Sekunde
-    //todo DownloadImageTask global verfügbar machen
-
 
     public void SetCurrentPlaytime(int index, long playtime) {
 

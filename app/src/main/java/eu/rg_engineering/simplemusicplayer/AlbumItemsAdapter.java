@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import eu.rg_engineering.simplemusicplayer.utils.DownloadImageTask;
+import eu.rg_engineering.simplemusicplayer.utils.ImageDownloader;
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
@@ -41,6 +41,7 @@ public class AlbumItemsAdapter extends
     private int mFilterIdx = 0;
     Context mContext;
     AlbumItemsAdapterListener mCommunication;
+    private ImageDownloader imageDownloader=null;
 
 
     public void notifyDatasetChanged() {
@@ -61,6 +62,9 @@ public class AlbumItemsAdapter extends
         mItemsFiltered = AlbumItem.createItemsList(0);
 
         mItemsAll = items;
+
+        imageDownloader = new ImageDownloader();
+
         UpdateData();
 
     }
@@ -148,7 +152,8 @@ public class AlbumItemsAdapter extends
 
             if (path2image != null && path2image.length() > 0) {
                 Log.d(TAG, item.getName() +": image view should be used ");
-                new DownloadImageTask(imageImageView, item.getName()).execute(path2image);
+                //new DownloadImageTask(imageImageView, item.getName()).execute(path2image);
+                imageDownloader.loadBitmap(path2image, imageImageView);
             } else {
                 Log.d(TAG, item.getName() +": image view shouldn't be used ");
                 imageImageView.setImageBitmap(null);
