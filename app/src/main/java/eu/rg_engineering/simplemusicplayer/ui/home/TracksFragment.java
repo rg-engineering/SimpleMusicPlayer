@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import eu.rg_engineering.simplemusicplayer.MainActivity;
@@ -151,7 +152,8 @@ public class TracksFragment extends Fragment implements
             artistImage = (ImageView) root.findViewById(R.id.artistImage4Tracks);
             albumImage = (ImageView) root.findViewById(R.id.albumImage4Tracks);
 
-            imageDownloader = new ImageDownloader();
+            File path = mContext.getFilesDir();
+            imageDownloader = new ImageDownloader(path.getAbsolutePath());
             UpdateInfo();
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);

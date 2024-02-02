@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -73,7 +74,6 @@ public class PlaylistItemsAdapter extends
 
         mItemsAll = items;
 
-        imageDownloader = new ImageDownloader();
 
         UpdateData();
 
@@ -88,6 +88,8 @@ public class PlaylistItemsAdapter extends
         mCommunication = (PlaylistItemsAdapterListener) context;
         mContext = context;
 
+        File path = mContext.getFilesDir();
+        imageDownloader = new ImageDownloader(path.getAbsolutePath());
 
         if (mCommunication != null) {
             mCommunication.messageFromPlaylistItemsAdapter("IsReady", null, null);

@@ -8,23 +8,37 @@ import android.widget.ImageView;
 
 import androidx.collection.LruCache;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.rg_engineering.simplemusicplayer.TrackItem;
 import io.sentry.Sentry;
 
-//todo cache on disk
+//todo house keeping of disk cache
 //todo cache on memory too small?
 
 
 public class ImageDownloader {
     private final String TAG = "ImageDownloader";
     private LruCache<String, Bitmap> memoryCache;
-    
-    public ImageDownloader() {
+    private String mImageCachDir;
+
+    public ImageDownloader(String curDir) {
 
         Log.d(TAG, "create ImageDownloader ");
+
+        mImageCachDir = curDir + "/thumbs";
+
 
         // Get max available VM memory, exceeding this amount will throw an
         // OutOfMemory exception. Stored in kilobytes as LruCache takes an
@@ -42,39 +56,60 @@ public class ImageDownloader {
                 return bitmap.getByteCount() / 1024;
             }
         };
-
-
     }
 
-    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemCache(key) == null) {
+    private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemoryCache(key) == null) {
             int size = bitmap.getByteCount() / 1024;
             Log.d(TAG, "put bitmap into cache " + key + " size " + size + "kB");
             memoryCache.put(key, bitmap);
         }
     }
 
-    public Bitmap getBitmapFromMemCache(String key) {
+    private Bitmap getBitmapFromMemoryCache(String key) {
         Log.d(TAG, "get bitmap from cache " + key);
         return memoryCache.get(key);
     }
 
+    private void addBitmapToDiskCache(String key, Bitmap bitmap) {
+        //http://192.168.3.21:32400/library/metadata/49889/thumb/1706671847?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ
+        String[] parts = key.split("[/?]");
 
+        String filename = parts[7] + ".bmp";
 
+        writeToFile(bitmap,filename);
+
+    }
+
+    private Bitmap getBitmapFromDiskCache(String key) {
+        //http://192.168.3.21:32400/library/metadata/49889/thumb/1706671847?X-Plex-Token=LAtVbxshNWzuGUwtm8bJ
+        String[] parts = key.split("[/?]");
+
+        String filename = parts[7] + ".bmp";
+
+        Bitmap bitmap=readFromFile(filename);
+
+        return bitmap;
+    }
     public void loadBitmap(String fullURL, ImageView imageView) {
 
         Log.d(TAG, "load bitmap, cache size: " + memoryCache.size() + "kB");
-        final Bitmap bitmap = getBitmapFromMemCache(fullURL);
+        Bitmap bitmap = getBitmapFromMemoryCache(fullURL);
         if (bitmap != null) {
             Log.d(TAG, "bitmap from cache... ");
             imageView.setImageBitmap(bitmap);
         } else {
-            Log.d(TAG, "not in cache, start download... ");
 
+            bitmap = getBitmapFromDiskCache(fullURL);
+            if (bitmap != null) {
+                Log.d(TAG, "bitmap from disk cache... ");
+                imageView.setImageBitmap(bitmap);
+            } else {
+                Log.d(TAG, "not in cache, start download... ");
 
-
-            BitmapWorkerTask task = new BitmapWorkerTask(imageView, fullURL);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                BitmapWorkerTask task = new BitmapWorkerTask(imageView, fullURL);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 
@@ -100,6 +135,7 @@ public class ImageDownloader {
                 InputStream in = new java.net.URL(mFullURL).openStream();
                 icon = BitmapFactory.decodeStream(in);
                 addBitmapToMemoryCache(mFullURL, icon);
+                addBitmapToDiskCache(mFullURL, icon);
 
 
             } catch (Exception e) {
@@ -115,5 +151,39 @@ public class ImageDownloader {
         }
     }
 
+    private void writeToFile(Bitmap bitmap,String filename) {
+        try {
+
+            File folder = new File(mImageCachDir);
+
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            FileOutputStream writer = new FileOutputStream(new File(mImageCachDir,filename),true);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, writer);
+
+            writer.close();
+            Log.d("TAG", "Wrote to file: " + filename);
+
+        } catch (IOException e) {
+            Log.e(TAG, "File write failed: " + e.toString());
+        }
+
+
+    }
+    private Bitmap readFromFile(String filename) {
+
+        File newDir = new File(mImageCachDir,  filename);
+
+        Bitmap icon=null;
+        try {
+            icon = BitmapFactory.decodeFile(newDir.toString());
+        }
+        catch (Exception ex){
+            Log.e(TAG, "cold not load bitmap " + filename);
+        }
+        return icon;
+    }
 
 }

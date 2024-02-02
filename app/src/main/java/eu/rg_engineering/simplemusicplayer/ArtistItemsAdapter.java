@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,8 +64,6 @@ public class ArtistItemsAdapter extends
 
         mItemsAll = items;
 
-        imageDownloader = new ImageDownloader();
-
         UpdateData();
 
     }
@@ -95,6 +94,8 @@ public class ArtistItemsAdapter extends
         mCommunication = (ArtistItemsAdapter.ArtistItemsAdapterListener) context;
         mContext = context;
 
+        File path = mContext.getFilesDir();
+        imageDownloader = new ImageDownloader(path.getAbsolutePath());
 
 
         return viewHolder;
