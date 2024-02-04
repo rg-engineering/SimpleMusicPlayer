@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void messageFromArtistItemsAdapter(String msg, String params, ArrayList<String> data) {
-        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params + " " + data.get(0));
+        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params + " " + data!=null ? data.get(0) : "");
 
         switch (msg) {
             case "ShowInfo":
@@ -200,6 +200,10 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from TrackItemsAdapter " + msg + " " + params);
 
         switch (msg) {
+            case "ShowInfo":
+                String info = params.get(0);
+                Toast.makeText(this,info , Toast.LENGTH_LONG).show();
+                break;
             case "IsReady":
                 GetSongs("TrackItemsAdapter");
                 break;

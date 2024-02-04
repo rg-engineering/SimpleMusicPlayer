@@ -17,14 +17,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.media3.common.MediaItem;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +51,7 @@ public class TrackItemsAdapter extends
     private boolean mNeed2SendSongs=false;
 
     //todo playlist file einstellbar, oder mehrere supporten
-    private String filename = "Playlist";
+    private String filename = "playlist.txt";
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -281,6 +279,11 @@ public class TrackItemsAdapter extends
 
             writeToFile(Contents,filename);
 
+            ArrayList<String> params = new ArrayList<>();
+            params.add("to playlist added");
+
+            mCommunication.messageFromTrackItemsAdapter("ShowInfo",params, null );
+
         } catch (Exception ex) {
             Log.e(TAG, "Exception in SavePlaylist " + ex);
         }
@@ -360,25 +363,14 @@ public class TrackItemsAdapter extends
 
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
-
+        Log.d(TAG, "item moved, from " + fromPosition + " to " + toPosition);
     }
 
     @Override
     public void onItemSwiped(int position) {
         Log.d(TAG, "item swiped, position " + position);
 
-        int pos = FindItemInList(mItemsAll, mItemsFiltered.get(position).getId());
 
-        if (pos > -1) {
-            mItemsAll.remove(pos);
-        }
-        mItemsFiltered.remove(position);
-
-        notifyItemRemoved(position);
-        //just inform parent class
-        if (deleteListener != null) {
-            deleteListener.ItemDeleted();
-        }
     }
 
 
@@ -532,28 +524,28 @@ public class TrackItemsAdapter extends
 
     private void writeToFile(String data,String filename) {
         try {
-
-            //File playlistfile = new File(mContext.getFilesDir(), filename);
-            //playlistfile.createNewFile();
-
-            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(mContext.openFileOutput(filename, Context.MODE_PRIVATE));
-            //outputStreamWriter.write(data);
-            //outputStreamWriter.close();
-            //File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            //todo File write failed: java.io.FileNotFoundException: /data/user/0/eu.rg_engineering.simplemusicplayer/files/Playlist: open failed: EISDIR (Is a directory)
 
             File path = mContext.getFilesDir();
-            File newDir = new File(path + "/" + filename);
 
-            if (!newDir.exists()) {
-                newDir.mkdir();
+            File file = new File(path, filename);
+            if (!file.exists()) {
+                file.getParentFile().mkdirs(); // Will create parent directories if not exists
+                file.createNewFile();
             }
-            FileOutputStream writer = new FileOutputStream(new File(path, filename),true);
+
+            FileOutputStream writer = new FileOutputStream(file,true);
             writer.write(data.getBytes());
             writer.close();
-            Log.d("TAG", "Wrote to file: " + newDir);
+            Log.d("TAG", "Wrote to file: " + filename);
 
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
+
+            ArrayList<String> params = new ArrayList<>();
+            params.add("exception " + e.toString());
+
+            mCommunication.messageFromTrackItemsAdapter("ShowInfo",params, null );
         }
 
 

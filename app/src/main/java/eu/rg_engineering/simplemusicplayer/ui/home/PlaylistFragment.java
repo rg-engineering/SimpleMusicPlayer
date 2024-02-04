@@ -48,7 +48,7 @@ public class PlaylistFragment extends Fragment implements
     ArrayList<TrackItem> mPlaylistTracks;
     TextView noOfTracks;
     //todo playlist file einstellbar
-    private final String filename = "Playlist";
+    private final String filename = "playlist.txt";
     @Override
     public void ItemDeleted() {
         //SaveData();
@@ -230,15 +230,15 @@ public class PlaylistFragment extends Fragment implements
     private void writeToFile(String data,String filename) {
         try {
             File path = mContext.getFilesDir();
-            File newDir = new File(path + "/" + filename);
-
-            if (!newDir.exists()) {
-                newDir.mkdir();
+            File file = new File(path, filename);
+            if (!file.exists()) {
+                file.getParentFile().mkdirs(); // Will create parent directories if not exists
+                file.createNewFile();
             }
-            FileOutputStream writer = new FileOutputStream(new File(path, filename),false);
+            FileOutputStream writer = new FileOutputStream(file,false);
             writer.write(data.getBytes());
             writer.close();
-            Log.d("TAG", "Wrote to file: " + newDir);
+            Log.d("TAG", "Wrote to file: " + filename);
 
         }
 

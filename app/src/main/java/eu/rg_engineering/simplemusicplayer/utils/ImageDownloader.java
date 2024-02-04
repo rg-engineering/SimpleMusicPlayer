@@ -154,12 +154,12 @@ public class ImageDownloader {
     private void writeToFile(Bitmap bitmap,String filename) {
         try {
 
-            File folder = new File(mImageCachDir);
-
-            if (!folder.exists()) {
-                folder.mkdir();
+            File file = new File(mImageCachDir, filename);
+            if (!file.exists()) {
+                file.getParentFile().mkdirs(); // Will create parent directories if not exists
+                file.createNewFile();
             }
-            FileOutputStream writer = new FileOutputStream(new File(mImageCachDir,filename),true);
+            FileOutputStream writer = new FileOutputStream(file,true);
 
             bitmap.compress(Bitmap.CompressFormat.JPEG, 85, writer);
 

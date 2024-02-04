@@ -238,25 +238,14 @@ public class AlbumItemsAdapter extends
 
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
-
+        Log.d(TAG, "item moved, from " + fromPosition + " to " + toPosition);
     }
 
     @Override
     public void onItemSwiped(int position) {
         Log.d(TAG, "item swiped, position " + position);
 
-        int pos = FindItemInList(mItemsAll, mItemsFiltered.get(position).getId());
 
-        if (pos > -1) {
-            mItemsAll.remove(pos);
-        }
-        mItemsFiltered.remove(position);
-
-        notifyItemRemoved(position);
-        //just inform parent class
-        if (deleteListener != null) {
-            deleteListener.ItemDeleted();
-        }
     }
 
 

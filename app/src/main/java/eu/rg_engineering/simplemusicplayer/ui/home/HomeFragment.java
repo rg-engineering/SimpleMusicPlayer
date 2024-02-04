@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import eu.rg_engineering.simplemusicplayer.R;
 import io.sentry.Sentry;
 
+//todo Anzeige Album und Artist auf Handy optimieren
 
 public class HomeFragment extends Fragment
    {

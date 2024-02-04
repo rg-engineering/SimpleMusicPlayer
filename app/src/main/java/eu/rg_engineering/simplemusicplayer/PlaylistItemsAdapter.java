@@ -229,9 +229,6 @@ public class PlaylistItemsAdapter extends
             }
         }
     }
-
-    //todo image nur einmal downloaden und nicht alle Sekunde
-
     public void SetCurrentPlaytime(int index, long playtime) {
 
         Log.d(TAG, "got current playtime " + index + " / " + playtime + " " + mItemsFiltered.size());
@@ -359,7 +356,9 @@ public class PlaylistItemsAdapter extends
 
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
+        Log.d(TAG, "item moved, from " + fromPosition + " to " + toPosition);
 
+        //todo save playlist
     }
 
     @Override
@@ -378,6 +377,8 @@ public class PlaylistItemsAdapter extends
         if (deleteListener != null) {
             deleteListener.ItemDeleted();
         }
+
+        //todo save playlist
     }
 
 
