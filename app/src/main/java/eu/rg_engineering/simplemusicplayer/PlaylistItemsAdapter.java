@@ -32,6 +32,7 @@ import io.sentry.Sentry;
 
 
 //todo playlist muss sortierbar werden
+//todo musicservice aktualsieren, wenn playlist sich ändert (reihenfolge, löschen)
 //todo playlist automatisch speichern, wenn Seite verlassen wird
 //todo entfernter track muss auch aus Media-Liste im Service gelöscht werden, sonst wird er trotzdem gespielt
 

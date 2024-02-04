@@ -26,6 +26,7 @@
         android:id="@+id/filter_artist"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:hint="artist"
         app:layout_constraintBottom_toTopOf="@id/rvArtists"
         app:layout_constraintStart_toStartOf="parent"

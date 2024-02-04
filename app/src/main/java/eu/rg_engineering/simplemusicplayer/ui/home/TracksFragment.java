@@ -32,6 +32,8 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 import io.sentry.Sentry;
 
+//todo sortieren der tracks nach nummer im album
+
 public class TracksFragment extends Fragment implements
         OnDeleteTrackitemListener {
 
@@ -87,10 +89,10 @@ public class TracksFragment extends Fragment implements
             TrackItemsAdapter = new TrackItemsAdapter(mTracks,this);
 
 
-            ItemTouchHelper.Callback callback = new MyItemTouchHelper(TrackItemsAdapter);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-            TrackItemsAdapter.setTouchHelper(itemTouchHelper);
-            itemTouchHelper.attachToRecyclerView(rvTrackItems);
+            //ItemTouchHelper.Callback callback = new MyItemTouchHelper(TrackItemsAdapter);
+            //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+            //TrackItemsAdapter.setTouchHelper(itemTouchHelper);
+            //itemTouchHelper.attachToRecyclerView(rvTrackItems);
             // Attach the adapter to the recyclerview to populate items
             rvTrackItems.setAdapter(TrackItemsAdapter);
 

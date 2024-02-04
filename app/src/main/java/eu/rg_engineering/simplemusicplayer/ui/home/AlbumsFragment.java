@@ -88,10 +88,10 @@ public class AlbumsFragment extends Fragment implements
             AlbumItemsAdapter = new AlbumItemsAdapter(mAlbums, this);
 
 
-            ItemTouchHelper.Callback callback = new MyItemTouchHelper(AlbumItemsAdapter);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-            AlbumItemsAdapter.setTouchHelper(itemTouchHelper);
-            itemTouchHelper.attachToRecyclerView(rvAlbumItems);
+            //ItemTouchHelper.Callback callback = new MyItemTouchHelper(AlbumItemsAdapter);
+            //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+            //AlbumItemsAdapter.setTouchHelper(itemTouchHelper);
+            //itemTouchHelper.attachToRecyclerView(rvAlbumItems);
             // Attach the adapter to the recyclerview to populate items
             rvAlbumItems.setAdapter(AlbumItemsAdapter);
 

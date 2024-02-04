@@ -56,10 +56,10 @@ public class ArtistsFragment extends Fragment implements
             ArtistItemsAdapter = new ArtistItemsAdapter(mArtists,this);
 
 
-            ItemTouchHelper.Callback callback = new MyItemTouchHelper(ArtistItemsAdapter);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-            ArtistItemsAdapter.setTouchHelper(itemTouchHelper);
-            itemTouchHelper.attachToRecyclerView(rvArtistItems);
+            //ItemTouchHelper.Callback callback = new MyItemTouchHelper(ArtistItemsAdapter);
+            //ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+            //ArtistItemsAdapter.setTouchHelper(itemTouchHelper);
+            //itemTouchHelper.attachToRecyclerView(rvArtistItems);
             // Attach the adapter to the recyclerview to populate items
             rvArtistItems.setAdapter(ArtistItemsAdapter);
 

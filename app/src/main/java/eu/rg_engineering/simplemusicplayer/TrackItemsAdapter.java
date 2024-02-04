@@ -32,12 +32,13 @@ import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 import io.sentry.Sentry;
 
 
-//todo swipe verhindern
+
 
 public class TrackItemsAdapter extends
         RecyclerView.Adapter<TrackItemsAdapter.ViewHolder> implements
-        Filterable,
-        ItemTouchHelperAdapter {
+        Filterable
+        //,ItemTouchHelperAdapter
+        {
 
     private final String TAG = "TrackItemsAdapter";
     private final List<TrackItem> mItemsFiltered;
@@ -361,6 +362,7 @@ public class TrackItemsAdapter extends
         }
     };
 
+    /*
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
         Log.d(TAG, "item moved, from " + fromPosition + " to " + toPosition);
@@ -373,6 +375,8 @@ public class TrackItemsAdapter extends
 
     }
 
+
+     */
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -524,7 +528,7 @@ public class TrackItemsAdapter extends
 
     private void writeToFile(String data,String filename) {
         try {
-            //todo File write failed: java.io.FileNotFoundException: /data/user/0/eu.rg_engineering.simplemusicplayer/files/Playlist: open failed: EISDIR (Is a directory)
+            //File write failed: java.io.FileNotFoundException: /data/user/0/eu.rg_engineering.simplemusicplayer/files/Playlist: open failed: EISDIR (Is a directory)
 
             File path = mContext.getFilesDir();
 

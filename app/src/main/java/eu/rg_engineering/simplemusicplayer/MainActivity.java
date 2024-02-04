@@ -66,7 +66,7 @@ import io.sentry.Sentry;
 //todo in Einstellungen link hinzufügen, wie man den Token ermittelt
 //todo Auswahl der plex-Bibliothek (derzeit automatisch bzw. in Einstellungen)
 //todo überall Sentry catches einbauen
-//todo link zu Sentry-Informtionen
+//todo link zu Sentry-Informationen
 //todo sentry abschaltbar machen
 //todo Albums mit various interpretes werden nicht gefunden (lokale Bibliothek) z.Bsp. Bravo Hits
 //todo info text album und artist) muss in echte Textbox

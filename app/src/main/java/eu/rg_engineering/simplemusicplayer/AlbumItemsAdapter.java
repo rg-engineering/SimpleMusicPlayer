@@ -27,12 +27,13 @@ import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
 
-//todo swipe verhindern
+
 
 public class AlbumItemsAdapter extends
         RecyclerView.Adapter<AlbumItemsAdapter.ViewHolder> implements
-        Filterable,
-        ItemTouchHelperAdapter {
+        Filterable
+        //,ItemTouchHelperAdapter
+        {
 
     private final String TAG = "AlbumItemsAdapter";
     private final List<AlbumItem> mItemsFiltered;
@@ -235,7 +236,7 @@ public class AlbumItemsAdapter extends
         }
     };
 
-
+/*
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
         Log.d(TAG, "item moved, from " + fromPosition + " to " + toPosition);
@@ -247,7 +248,7 @@ public class AlbumItemsAdapter extends
 
 
     }
-
+*/
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
