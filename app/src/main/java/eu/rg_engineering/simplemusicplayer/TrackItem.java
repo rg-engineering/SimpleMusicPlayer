@@ -23,12 +23,13 @@ public class TrackItem implements Parcelable  {
     private int mDuration;
     private int mProgress;
     private long mCurrentPlaytime;
+    private int mAlbumIndex;
 
     protected TrackItem(Parcel in) {
         mID = in.readString();
         mName = in.readString();
     }
-    public TrackItem(String name, String album, String artist, String filename, int duration, String path2AlbumImage, String path2ArtistImage ) {
+    public TrackItem(String name, String album, String artist, String filename, int duration, String path2AlbumImage, String path2ArtistImage, int albumIndex ) {
         mID = UUID.randomUUID().toString();
         mName = name;
         mAlbum = album;
@@ -39,6 +40,8 @@ public class TrackItem implements Parcelable  {
         mCurrentPlaytime = 0;
         mPath2AlbumImage= path2AlbumImage;
         mPath2ArtistImage = path2ArtistImage;
+        mAlbumIndex=albumIndex;
+
     }
 
     public TrackItem(String data ) {
@@ -73,11 +76,15 @@ public class TrackItem implements Parcelable  {
     public int getProgress() {
         return mProgress;
     }
-    public String GetPath2AlbumImage(){
+    public String getPath2AlbumImage(){
         return mPath2AlbumImage;
     }
-    public String GetPath2ArtistImage(){
+    public String getPath2ArtistImage(){
         return mPath2ArtistImage;
+    }
+
+    public int getAlbumIndex(){
+        return mAlbumIndex;
     }
 
     public void setCurrentPlaytime(long playtime) {
@@ -122,13 +129,14 @@ public class TrackItem implements Parcelable  {
         parcel.writeInt(mDuration);
         parcel.writeString(mPath2AlbumImage);
         parcel.writeString(mPath2ArtistImage);
+        parcel.writeInt(mAlbumIndex);
     }
 
     public static ArrayList<TrackItem> createItemsList(int numItems) {
         ArrayList<TrackItem> items = new ArrayList<>();
 
         for (int i = 1; i <= numItems; i++) {
-            items.add(new TrackItem("track"+i,"","","",0,"",""));
+            items.add(new TrackItem("track"+i,"","","",0,"","",-1));
         }
         return items;
     }
@@ -152,6 +160,8 @@ public class TrackItem implements Parcelable  {
         sRet += System.getProperty("line.separator");
         sRet += mPath2ArtistImage;
         sRet += System.getProperty("line.separator");
+        sRet += mAlbumIndex;
+        sRet += System.getProperty("line.separator");
 
         return sRet;
     }
@@ -167,6 +177,7 @@ public class TrackItem implements Parcelable  {
         sRet += "','" + mDuration;
         sRet += "','" + mPath2AlbumImage;
         sRet += "','" + mPath2ArtistImage;
+        sRet += "','" + mAlbumIndex;
         sRet += "'" + System.getProperty("line.separator");
 
         return sRet;
@@ -183,17 +194,23 @@ public class TrackItem implements Parcelable  {
                 mArtist = parts[3];
                 mFileName = parts[4];
                 try {
-
                     String sDuration = parts[5].replace("'","");
-
                     mDuration = Integer.parseInt(sDuration);
                 } catch (NumberFormatException e) {
                     mDuration = 0;
                 }
                 mPath2AlbumImage = parts[6];
+                mPath2ArtistImage = parts[7];
                 //remove last "'"
-                mPath2ArtistImage = parts[7].substring(0, parts[7].length() - 1);
+                //mPath2ArtistImage = parts[7].substring(0, parts[7].length() - 1);
                 //must be removed when adding new entries...
+                try {
+                    String sAlbumIndex = parts[8].replace("'","");
+                    mAlbumIndex = Integer.parseInt(sAlbumIndex);
+                } catch (NumberFormatException e) {
+                    mAlbumIndex = -1;
+                }
+
 
 
             }

@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
@@ -53,6 +55,7 @@ public class TrackItemsAdapter extends
 
     //todo playlist file einstellbar, oder mehrere supporten
     private String filename = "playlist.txt";
+    private int mSortMode=-1;
 
     public void notifyDatasetChanged() {
         notifyDataSetChanged();
@@ -244,7 +247,7 @@ public class TrackItemsAdapter extends
                 track.TrackName = item.getName();
                 track.Url = item.getFileName();
                 //URL zum Bild
-                track.Path2Image = item.GetPath2ArtistImage();
+                track.Path2Image = item.getPath2ArtistImage();
 
                 tracks.add(track);
             }
@@ -552,6 +555,80 @@ public class TrackItemsAdapter extends
             mCommunication.messageFromTrackItemsAdapter("ShowInfo",params, null );
         }
 
+
+    }
+
+    public void  SetSortmode(int mode){
+       /*
+        0 alphabetically_descending
+        1 alphabetically_ascending
+        2 track_number_on_album_descending
+        3 track_number_on_album_ascending
+        */
+
+        mSortMode=mode;
+
+        switch (mSortMode){
+            case 0:
+                Collections.sort(mItemsFiltered, new Comparator() {
+                    @Override
+                    public int compare(Object o1, Object o2) {
+                        TrackItem t1 = (TrackItem) o1;
+                        TrackItem t2 = (TrackItem) o2;
+                        return t1.getName().compareToIgnoreCase(t2.getName());
+                    }
+                });
+                break;
+            case 1:
+                Collections.sort(mItemsFiltered, new Comparator() {
+                    @Override
+                    public int compare(Object o1, Object o2) {
+                        TrackItem t1 = (TrackItem) o1;
+                        TrackItem t2 = (TrackItem) o2;
+                        return t2.getName().compareToIgnoreCase(t1.getName());
+                    }
+                });
+                break;
+            case 2:
+                Collections.sort(mItemsFiltered, new Comparator() {
+                    @Override
+                    public int compare(Object o1, Object o2) {
+                        TrackItem t1 = (TrackItem) o1;
+                        int c1= t1.getAlbumIndex();
+                        TrackItem t2 = (TrackItem) o2;
+                        int c2= t2.getAlbumIndex();
+                        int ret=-1;
+                        if (c1>c2){
+                            ret=0;
+                        }
+                        return ret;
+                    }
+                });
+                break;
+            case 3:
+                Collections.sort(mItemsFiltered, new Comparator() {
+                    @Override
+                    public int compare(Object o1, Object o2) {
+                        TrackItem t1 = (TrackItem) o1;
+                        int c1= t1.getAlbumIndex();
+                        TrackItem t2 = (TrackItem) o2;
+                        int c2= t2.getAlbumIndex();
+                        int ret=-1;
+                        if (c1<c2){
+                            ret=0;
+                        }
+                        return ret;
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+
+        notifyDataSetChanged();
+
+        //change musicservice
+        GetSongs();
 
     }
 

@@ -39,5 +39,9 @@
     <string name="albums">Albums</string>
     <string name="artists">artists</string>
     <string name="tracks">Tracks</string>
+    <string name="alphabetically_descending">alphabetically (descending)</string>
+    <string name="alphabetically_ascending">alphabetically (ascending)</string>
+    <string name="track_number_on_album_descending">track number on album (descending)</string>
+    <string name="track_number_on_album_ascending">track number on album (ascending)</string>
 
 </resources>

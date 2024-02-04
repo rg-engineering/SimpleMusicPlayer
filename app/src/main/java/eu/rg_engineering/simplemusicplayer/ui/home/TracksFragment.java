@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +55,7 @@ public class TracksFragment extends Fragment implements
     ImageView artistImage;
     ImageView albumImage;
     private ImageDownloader imageDownloader=null;
+    private Spinner spinnerTracks2Sort= null;
 
     @Override
     public void ItemDeleted() {
@@ -155,6 +158,13 @@ public class TracksFragment extends Fragment implements
             File path = mContext.getFilesDir();
             imageDownloader = new ImageDownloader(path.getAbsolutePath());
             UpdateInfo();
+
+            spinnerTracks2Sort = (Spinner) root.findViewById(R.id.tracks2Sort);
+            FillSpinner();
+
+
+
+
         } catch (Exception ex) {
             Log.e(TAG, "exception in onCreateView " + ex);
             Sentry.captureException(ex);
@@ -194,6 +204,34 @@ public class TracksFragment extends Fragment implements
         TrackItemsAdapter.GetSongs();
     }
 
+    private void FillSpinner(){
+        ArrayList<String> sortModes = new ArrayList<String>();
+
+        sortModes.add(getString(R.string.alphabetically_ascending));
+        sortModes.add(getString(R.string.alphabetically_descending));
+        sortModes.add(getString(R.string.track_number_on_album_ascending));
+        sortModes.add(getString(R.string.track_number_on_album_descending));
+
+
+        ArrayAdapter<String> adapterSortmode = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, sortModes);
+        adapterSortmode.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTracks2Sort.setAdapter(adapterSortmode);
+        spinnerTracks2Sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "spinnerTracks2Sort item selected " + position);
+                TrackItemsAdapter.SetSortmode(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(TAG, "spinnerTracks2Sort nothing selected ");
+            }
+        });
+        TrackItemsAdapter.SetSortmode(0);
+
+
+    }
 
     private void UpdateInfo() {
         MainActivity activity = (MainActivity) getActivity();

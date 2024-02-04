@@ -40,4 +40,8 @@
     <string name="albums">Alben</string>
     <string name="artists">Interpreten</string>
     <string name="tracks">Musikstücke</string>
+    <string name="alphabetically_descending">alphabetisch (absteigend)</string>
+    <string name="alphabetically_ascending">alphabetisch (aufsteigend)</string>
+    <string name="track_number_on_album_descending">Titelnummer auf dem Album (absteigend)</string>
+    <string name="track_number_on_album_ascending">Titelnummer auf dem Album (aufsteigend)</string>
 </resources>

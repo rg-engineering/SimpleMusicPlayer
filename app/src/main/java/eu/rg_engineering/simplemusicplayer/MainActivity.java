@@ -465,6 +465,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "update UpdatePlayList " + tracks.size());
         try {
+            stopMusic();
             mediaItems.clear();
 
             for (TrackData track : tracks) {
@@ -496,9 +497,6 @@ public class MainActivity extends AppCompatActivity
     public void onVisibilityChanged(int visibility) {
         Log.w(TAG, "onVisibilityChanged called " + visibility);
     }
-
-
-
 
     class UpdateProgressTask extends TimerTask {
         public void run() {

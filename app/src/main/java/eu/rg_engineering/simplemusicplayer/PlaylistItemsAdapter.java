@@ -205,7 +205,7 @@ public class PlaylistItemsAdapter extends
         }
 
         if (imageViewAlbum != null) {
-            String path2image = item.GetPath2AlbumImage();
+            String path2image = item.getPath2AlbumImage();
 
             if (path2image != null && path2image.length() > 0) {
                 Log.d(TAG, item.getName()+": image view album should be used ");
@@ -218,7 +218,7 @@ public class PlaylistItemsAdapter extends
         }
 
         if (imageViewArtist != null) {
-            String path2image = item.GetPath2ArtistImage();
+            String path2image = item.getPath2ArtistImage();
 
             if (path2image != null && path2image.length() > 0) {
                 Log.d(TAG, item.getName()+": image view artist should be used ");
@@ -259,7 +259,7 @@ public class PlaylistItemsAdapter extends
                 track.Artist = item.getArtist();
                 track.TrackName = item.getName();
                 track.Url = item.getFileName();
-                track.Path2Image = item.GetPath2ArtistImage();
+                track.Path2Image = item.getPath2ArtistImage();
 
                 tracks.add(track);
             }

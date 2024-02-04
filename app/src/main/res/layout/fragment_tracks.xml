@@ -26,10 +26,8 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:hint="track"
-        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.272" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnBackTracks"
@@ -90,5 +88,13 @@
         app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
         app:layout_constraintTop_toBottomOf="@+id/albumName4Tracks" />
+
+    <Spinner
+        android:id="@+id/tracks2Sort"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
+        app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
+        app:layout_constraintTop_toBottomOf="@+id/filter_tracks" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

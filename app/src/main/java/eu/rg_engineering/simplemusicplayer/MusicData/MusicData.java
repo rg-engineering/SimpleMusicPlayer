@@ -234,7 +234,16 @@ public class MusicData  {
                     Log.e(TAG, "duration is not a number");
                     Sentry.captureException(ex);
                 }
-                TrackItem track = new TrackItem(name, album, artist, filename, duration, path2AlbumImage, path2ArtistImage);
+
+                int albumIndex=-1;
+                try {
+                    albumIndex = Integer.parseInt(item.index);
+                } catch (NumberFormatException ex) {
+                    Log.e(TAG, "album index is not a number");
+                    Sentry.captureException(ex);
+                }
+
+                TrackItem track = new TrackItem(name, album, artist, filename, duration, path2AlbumImage, path2ArtistImage, albumIndex);
                 mLocalTracks.add(track);
             }
         }
@@ -409,6 +418,7 @@ public class MusicData  {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.ALBUM_ID,
                 MediaStore.Audio.Media.ARTIST_ID,
+                MediaStore.Audio.Media.TRACK
 
                 //MediaStore.Audio.Media.DATA
         };
@@ -432,6 +442,17 @@ public class MusicData  {
                     Log.e(TAG, "duration is not a number");
                     Sentry.captureException(ex);
                 }
+                int nAlbumIndex=-1;
+                try {
+                    nAlbumIndex = Integer.parseInt(cur.getString(7));
+                }
+                catch (NumberFormatException ex) {
+                    Log.e(TAG, "album index is not a number");
+                    Sentry.captureException(ex);
+                }
+
+
+
                 String sDuration = String.format("%02d:%02d:%02d",
                         TimeUnit.MILLISECONDS.toHours(nDuration),
                         TimeUnit.MILLISECONDS.toMinutes(nDuration) -
@@ -467,7 +488,7 @@ public class MusicData  {
                 Log.d(TAG, "Image " + albumArt);
                 artCursor.close();
 
-                TrackItem track = new TrackItem(Title,Album,Artist,fileName,nDuration,"","");
+                TrackItem track = new TrackItem(Title,Album,Artist,fileName,nDuration,"","", nAlbumIndex);
                 mLocalTracksAll.add(track);
 
                 if (!ArtistExists(Artist)) {
