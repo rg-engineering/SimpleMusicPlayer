@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,12 +32,12 @@ import eu.rg_engineering.simplemusicplayer.R;
 import eu.rg_engineering.simplemusicplayer.TrackItem;
 import eu.rg_engineering.simplemusicplayer.PlaylistItemsAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
-import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
+import eu.rg_engineering.simplemusicplayer.utils.OnPlaylistitemListener;
 import io.sentry.Sentry;
 
 
 public class PlaylistFragment extends Fragment implements
-        OnDeletePlaylistitemListener {
+        OnPlaylistitemListener {
 
     private final String TAG = "PlaylistFragment";
     PlaylistFragmentListener mCommunication;
@@ -50,8 +49,23 @@ public class PlaylistFragment extends Fragment implements
     //todo playlist file einstellbar
     private final String filename = "playlist.txt";
     @Override
-    public void ItemDeleted() {
-        //SaveData();
+    public void ItemDeleted(int position) {
+        Log.d(TAG, "item removed " + position);
+        //mPlaylistTracks.remove(position);
+    }
+
+    @Override
+    public void ItemMoved(int oldPos, int newPos) {
+        Log.d(TAG, "moved from " + oldPos + " to " + newPos);
+
+        //TrackItem item = mPlaylistTracks.get(oldPos);
+        //mPlaylistTracks.remove(item);
+        //mPlaylistTracks.add(newPos,item);
+    }
+
+    @Override
+    public void PlayList2Save() {
+        SavePlaylist();
     }
 
     public interface PlaylistFragmentListener {
@@ -215,9 +229,10 @@ public class PlaylistFragment extends Fragment implements
         try {
             StringBuilder Contents = new StringBuilder();
             //todo save play list
-            Log.d(TAG, "save play list");
+            Log.d(TAG, "save play list "+ mPlaylistTracks.size());
 
             for (int i =0; i< mPlaylistTracks.size(); i++) {
+                Log.d(TAG, "save "+ mPlaylistTracks.get(i).getName());
                 Contents.append(mPlaylistTracks.get(i).Serialize(true));
             }
             writeToFile(Contents.toString(),filename);

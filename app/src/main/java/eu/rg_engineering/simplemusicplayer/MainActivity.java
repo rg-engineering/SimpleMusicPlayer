@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void messageFromArtistItemsAdapter(String msg, String params, ArrayList<String> data) {
-        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params + " " + data!=null ? data.get(0) : "");
+        Log.d(TAG, "got message from ArtistFragment " + msg + " " + params );
 
         switch (msg) {
             case "ShowInfo":
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void messageFromAlbumItemsAdapter(String msg, String params, ArrayList<String> data) {
-        Log.d(TAG, "got message from AlbumFragment " + msg + " " + params + " " + data.get(0));
+        Log.d(TAG, "got message from AlbumFragment " + msg + " " + params );
 
         switch (msg) {
             case "ShowInfo":
@@ -275,6 +275,10 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from PlaylistItemsAdapter " + msg);
 
         switch (msg) {
+            case "ShowInfo":
+                String info = params.get(0);
+                Toast.makeText(this,info , Toast.LENGTH_LONG).show();
+                break;
             case "IsReady":
                 GetSongs("PlaylistItemsAdapter");
                 break;
@@ -724,7 +728,9 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "start music ");
 
         try {
-            controllerFuture.get().play();
+
+            //todo muss wieder rein
+            //controllerFuture.get().play();
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in stopMusic " + ex);

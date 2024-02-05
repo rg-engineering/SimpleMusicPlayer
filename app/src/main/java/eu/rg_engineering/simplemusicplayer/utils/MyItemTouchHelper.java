@@ -1,6 +1,3 @@
-
-
-
 package eu.rg_engineering.simplemusicplayer.utils;
 
 import android.graphics.Color;
@@ -20,13 +17,13 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     private final String TAG = "MyItemTouchHelper";
     private final ItemTouchHelperAdapter mAdapter;
 
-    public MyItemTouchHelper(ItemTouchHelperAdapter mAdapter) {
-        this.mAdapter = mAdapter;
+    public MyItemTouchHelper(ItemTouchHelperAdapter adapter) {
+        this.mAdapter = adapter;
     }
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return false;
+        return true;
     }
 
     @Override
@@ -79,4 +76,6 @@ public class MyItemTouchHelper extends ItemTouchHelper.Callback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         mAdapter.onItemSwiped(viewHolder.getAdapterPosition());
     }
+
+
 }

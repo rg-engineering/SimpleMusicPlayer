@@ -34,7 +34,6 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteTrackitemListener;
 import io.sentry.Sentry;
 
-//todo sortieren der tracks nach nummer im album
 
 public class TracksFragment extends Fragment implements
         OnDeleteTrackitemListener {

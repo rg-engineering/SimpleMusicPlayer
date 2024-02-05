@@ -27,12 +27,12 @@ import java.util.List;
 
 import eu.rg_engineering.simplemusicplayer.utils.ImageDownloader;
 import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
-import eu.rg_engineering.simplemusicplayer.utils.OnDeletePlaylistitemListener;
+import eu.rg_engineering.simplemusicplayer.utils.OnPlaylistitemListener;
 import io.sentry.Sentry;
 
 
-//todo playlist muss sortierbar werden
-//todo musicservice aktualsieren, wenn playlist sich ändert (reihenfolge, löschen)
+
+//todo musicservice aktualisieren, wenn playlist sich ändert (Reihenfolge, löschen)
 //todo playlist automatisch speichern, wenn Seite verlassen wird
 //todo entfernter track muss auch aus Media-Liste im Service gelöscht werden, sonst wird er trotzdem gespielt
 
@@ -46,7 +46,7 @@ public class PlaylistItemsAdapter extends
     private final List<TrackItem> mItemsFiltered;
     private List<TrackItem> mItemsAll;
     private ItemTouchHelper mTouchHelper;
-    private final OnDeletePlaylistitemListener deleteListener;
+    private final OnPlaylistitemListener deleteListener;
     private int mFilterIdx = 0;
     private int currentPlayedMusicPosition = -1;
     Context mContext;
@@ -66,18 +66,14 @@ public class PlaylistItemsAdapter extends
     public interface PlaylistItemsAdapterListener {
         void messageFromPlaylistItemsAdapter(String msg, ArrayList<String> params, ArrayList<TrackData> tracks);
     }
-    public PlaylistItemsAdapter(List<TrackItem> items, OnDeletePlaylistitemListener deleteListener) {
+    public PlaylistItemsAdapter(List<TrackItem> items, OnPlaylistitemListener deleteListener) {
 
         Log.d(TAG, "PlaylistItemsAdapter contructor ");
 
         this.deleteListener = deleteListener;
         mItemsFiltered = TrackItem.createItemsList(0);
-
         mItemsAll = items;
-
-
         UpdateData();
-
     }
 
     @Override
@@ -359,7 +355,21 @@ public class PlaylistItemsAdapter extends
     public void onItemMoved(int fromPosition, int toPosition) {
         Log.d(TAG, "item moved, from " + fromPosition + " to " + toPosition);
 
-        //todo save playlist
+        TrackItem item = mItemsFiltered.get(fromPosition);
+        mItemsFiltered.remove(item);
+        mItemsFiltered.add(toPosition,item);
+        mItemsAll.remove(item);
+        mItemsAll.add(toPosition,item);
+
+        notifyItemMoved(fromPosition,toPosition);
+
+        //just inform parent class
+        if (deleteListener != null) {
+            deleteListener.ItemMoved(fromPosition,toPosition);
+        }
+
+        //save playlist
+        SavePlaylist();
     }
 
     @Override
@@ -371,15 +381,25 @@ public class PlaylistItemsAdapter extends
         if (pos > -1) {
             mItemsAll.remove(pos);
         }
+        else {
+            Log.e(TAG, "swiped item not found " + position);
+        }
         mItemsFiltered.remove(position);
 
         notifyItemRemoved(position);
         //just inform parent class
         if (deleteListener != null) {
-            deleteListener.ItemDeleted();
+            deleteListener.ItemDeleted(position);
         }
 
-        //todo save playlist
+        //save playlist
+        SavePlaylist();
+    }
+
+    private void SavePlaylist(){
+        if (deleteListener != null) {
+            deleteListener.PlayList2Save();
+        }
     }
 
 
@@ -425,7 +445,6 @@ public class PlaylistItemsAdapter extends
 
             mGestureDetector = new GestureDetector(itemView.getContext(), this);
 
-
             itemView.setOnTouchListener(this);
         }
 
@@ -461,8 +480,20 @@ public class PlaylistItemsAdapter extends
 
         @Override
         public void onLongPress(MotionEvent e) {
-            if (mTouchHelper != null) {
-                mTouchHelper.startDrag(this);
+
+            if (mItemsFiltered.size() != mItemsAll.size()){
+
+                UpdateData();
+                notifyDataSetChanged();
+
+                ArrayList<String> params = new ArrayList<>();
+                params.add("only unfiltered list can be sorted");
+                mCommunication.messageFromPlaylistItemsAdapter("ShowInfo",params, null );
+            }
+            else {
+                if (mTouchHelper != null) {
+                    mTouchHelper.startDrag(this);
+                }
             }
         }
 
@@ -521,7 +552,7 @@ public class PlaylistItemsAdapter extends
 
                     Log.d(TAG, "check item " + list.get(i).getName() + " =? " + id);
 
-                    if (list.get(i).getName().toLowerCase().contains(id.toLowerCase())) {
+                    if (list.get(i).getId().toLowerCase().contains(id.toLowerCase())) {
 
                         Log.d(TAG, "item found at " + i);
                         nRet = i;
