@@ -51,16 +51,11 @@ public class PlaylistFragment extends Fragment implements
     @Override
     public void ItemDeleted(int position) {
         Log.d(TAG, "item removed " + position);
-        //mPlaylistTracks.remove(position);
     }
 
     @Override
     public void ItemMoved(int oldPos, int newPos) {
         Log.d(TAG, "moved from " + oldPos + " to " + newPos);
-
-        //TrackItem item = mPlaylistTracks.get(oldPos);
-        //mPlaylistTracks.remove(item);
-        //mPlaylistTracks.add(newPos,item);
     }
 
     @Override
@@ -74,7 +69,6 @@ public class PlaylistFragment extends Fragment implements
 
     @Override
     public void onAttach(Context context) {
-
         super.onAttach(context);
         mCommunication = (PlaylistFragmentListener) context;
         mContext = context;

@@ -728,12 +728,9 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "start music ");
 
         try {
-
-            //todo muss wieder rein
-            //controllerFuture.get().play();
-
+            controllerFuture.get().play();
         } catch (Exception ex) {
-            Log.e(TAG, "exception in stopMusic " + ex);
+            Log.e(TAG, "exception in startMusic " + ex);
         }
 
     }

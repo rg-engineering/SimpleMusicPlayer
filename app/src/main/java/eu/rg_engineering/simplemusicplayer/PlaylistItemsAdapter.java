@@ -30,13 +30,6 @@ import eu.rg_engineering.simplemusicplayer.utils.ItemTouchHelperAdapter;
 import eu.rg_engineering.simplemusicplayer.utils.OnPlaylistitemListener;
 import io.sentry.Sentry;
 
-
-
-//todo musicservice aktualisieren, wenn playlist sich ändert (Reihenfolge, löschen)
-//todo playlist automatisch speichern, wenn Seite verlassen wird
-//todo entfernter track muss auch aus Media-Liste im Service gelöscht werden, sonst wird er trotzdem gespielt
-
-
 public class PlaylistItemsAdapter extends
         RecyclerView.Adapter<PlaylistItemsAdapter.ViewHolder> implements
         Filterable,
@@ -400,6 +393,9 @@ public class PlaylistItemsAdapter extends
         if (deleteListener != null) {
             deleteListener.PlayList2Save();
         }
+
+        //todo evtl. timer hinzufügen?
+        GetSongs();
     }
 
 
@@ -528,8 +524,6 @@ public class PlaylistItemsAdapter extends
         if (pos > -1) {
             mItemsFiltered.set(pos, item);
         }
-
-
     }
 
     public void AddItem(TrackItem item) {
@@ -537,9 +531,7 @@ public class PlaylistItemsAdapter extends
 
         mItemsAll.add(item);
 
-
         getFilter().filter("");
-
     }
 
 
