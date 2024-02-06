@@ -33,5 +33,6 @@
     <color name="HappySun">#F9DC86</color>
     <color name="JuicyGreen">#D9E0B0</color>
     <color name="CloudyBlue">#C9D2D1</color>
+    <color name="Black">#000000</color>
 
 </resources>

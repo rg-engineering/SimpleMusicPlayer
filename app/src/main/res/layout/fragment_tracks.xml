@@ -19,82 +19,91 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <AutoCompleteTextView
-        android:id="@+id/filter_tracks"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:hint="track"
-        app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnBackTracks"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/ic_arrow_back_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
-        app:layout_constraintStart_toStartOf="@+id/toolbar3"
-        app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/btnBackTracks"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ic_arrow_back_black_24dp"
 
-    <TextView
-        android:id="@+id/artistName4Tracks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:text="artist"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
-        app:layout_constraintEnd_toStartOf="@+id/artistImage4Tracks"
-        app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/albumName4Tracks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:text="album"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
-        app:layout_constraintTop_toTopOf="parent" />
+            <AutoCompleteTextView
+                android:id="@+id/filter_tracks"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:hint="track"
+                android:textSize="12sp"
+                android:textColor="@color/Black"
+                app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/artistImage4Tracks"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+            <TextView
+                android:id="@+id/artistName4Tracks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="artist"
+                android:textSize="10sp"
+                android:textColor="@color/Black"
+                app:layout_constraintEnd_toStartOf="@+id/artistImage4Tracks"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/albumImage4Tracks"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
-        app:layout_constraintEnd_toStartOf="@+id/artistName4Tracks"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+            <TextView
+                android:id="@+id/albumName4Tracks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="album"
+                android:textSize="10sp"
+                android:textColor="@color/Black"
+                app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
+                app:layout_constraintTop_toBottomOf="@+id/artistImage4Tracks" />
 
-    <TextView
-        android:id="@+id/numberOfTracks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
-        app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
-        app:layout_constraintTop_toBottomOf="@+id/albumName4Tracks" />
+            <ImageView
+                android:id="@+id/artistImage4Tracks"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
-    <Spinner
-        android:id="@+id/tracks2Sort"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/rvTracks"
-        app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
-        app:layout_constraintTop_toBottomOf="@+id/filter_tracks" />
+            <ImageView
+                android:id="@+id/albumImage4Tracks"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/artistImage4Tracks"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/numberOfTracks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/Black"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Spinner
+                android:id="@+id/tracks2Sort"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
+                app:layout_constraintTop_toBottomOf="@+id/filter_tracks" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
