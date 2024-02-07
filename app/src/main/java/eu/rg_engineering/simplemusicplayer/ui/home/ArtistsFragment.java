@@ -27,7 +27,6 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteArtistitemListener;
 import io.sentry.Sentry;
 
-//todo Info-Anzeige optimieren -> echte textbox
 public class ArtistsFragment extends Fragment implements
         OnDeleteArtistitemListener {
 

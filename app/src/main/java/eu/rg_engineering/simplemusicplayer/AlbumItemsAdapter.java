@@ -141,7 +141,7 @@ public class AlbumItemsAdapter extends
                     public void onClick(View view) {
                         Log.d(TAG, "infoButton pressed position " + position);
                         String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromAlbumItemsAdapter("ShowInfo", info, null);
+                        mCommunication.messageFromAlbumItemsAdapter("ShowMoreInfo", info, null);
                     }
                 });
             } else {

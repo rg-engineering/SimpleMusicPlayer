@@ -3,6 +3,7 @@ package eu.rg_engineering.simplemusicplayer;
 
 
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -69,7 +71,7 @@ import io.sentry.Sentry;
 //todo link zu Sentry-Informationen
 //todo sentry abschaltbar machen
 //todo Albums mit various interpretes werden nicht gefunden (lokale Bibliothek) z.Bsp. Bravo Hits
-//todo info text album und artist) muss in echte Textbox
+
 
 
 public class MainActivity extends AppCompatActivity
@@ -152,6 +154,9 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from ArtistFragment " + msg + " " + params );
 
         switch (msg) {
+            case "ShowMoreInfo":
+                ShowMoreInfo(params, "artist information");
+                break;
             case "ShowInfo":
                 Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
@@ -177,6 +182,9 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "got message from AlbumFragment " + msg + " " + params );
 
         switch (msg) {
+            case "ShowMoreInfo":
+                ShowMoreInfo(params, "album information");
+                break;
             case "ShowInfo":
                 Toast.makeText(this, params, Toast.LENGTH_LONG).show();
                 break;
@@ -766,6 +774,27 @@ public class MainActivity extends AppCompatActivity
                 playerView.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+    private void ShowMoreInfo(String text, String headline){
+        new AlertDialog.Builder(this)
+                .setTitle(headline)
+
+                //todo can we translate the text automatically?
+                .setMessage(text)
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                    }
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                //.setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
     }
 
 

@@ -32,7 +32,7 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
 
-//todo Info-Anzeige optimieren -> echte textbox
+
 
 public class AlbumsFragment extends Fragment implements
         OnDeleteAlbumitemListener {

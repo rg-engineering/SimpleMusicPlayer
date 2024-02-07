@@ -137,7 +137,7 @@ public class ArtistItemsAdapter extends
                     public void onClick(View view) {
                         Log.d(TAG, "infoButton pressed position " + position);
                         String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromArtistItemsAdapter("ShowInfo", info, null);
+                        mCommunication.messageFromArtistItemsAdapter("ShowMoreInfo", info, null);
                     }
                 });
             } else {
