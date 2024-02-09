@@ -382,7 +382,7 @@ public class MusicData  {
             mLocalAlbums.clear();
             //only albums of selected artist
             for (AlbumItem item : mLocalAlbumsAll) {
-                if (item.getArtist().contains(mArtist4Album)){
+                if (item.containArtist(mArtist4Album)){
                     mLocalAlbums.add(item);
                 }
             }
@@ -407,6 +407,8 @@ public class MusicData  {
     public final Uri AUDIO_URI = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
 
+
+    //todo scan optimieren, dauert sehr lange..
 
     public void getAllLocalMusic(ContentResolver cr) {
         Log.d(TAG, "check for audio files ");
@@ -500,6 +502,12 @@ public class MusicData  {
                     AlbumItem album = new AlbumItem(Album,Artist,0,"","", -1);
                     mLocalAlbumsAll.add(album);
                 }
+                else {
+                    //wenn schon da, dann evtl. artist hinzufügen siehe Bravo Hits
+
+                    mLocalAlbumsAll.get(0).AddArtist(Artist);
+                }
+
 
             }
             cur.close();
@@ -507,7 +515,10 @@ public class MusicData  {
     }
     private boolean ArtistExists(String ArtistName) {
 
+        //boolean ret = mLocalArtists.contains(ArtistName);
+
         boolean ret = false;
+
         for (ArtistItem item : mLocalArtists) {
 
             String name= item.getName();
@@ -516,12 +527,17 @@ public class MusicData  {
                 break;
             }
         }
+
+
         return ret;
     }
 
     private boolean AlbumExists(String AlbumName) {
 
+        //boolean ret = mLocalAlbumsAll.contains(AlbumName);
+
         boolean ret = false;
+
         for (AlbumItem item: mLocalAlbumsAll){
 
             String name= item.getName();
@@ -530,6 +546,7 @@ public class MusicData  {
                 break;
             }
         }
+
         return ret;
     }
 

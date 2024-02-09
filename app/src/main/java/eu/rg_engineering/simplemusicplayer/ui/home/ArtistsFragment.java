@@ -27,6 +27,8 @@ import eu.rg_engineering.simplemusicplayer.utils.MyItemTouchHelper;
 import eu.rg_engineering.simplemusicplayer.utils.OnDeleteArtistitemListener;
 import io.sentry.Sentry;
 
+//todo exception in onCreateView java.util.ConcurrentModificationException
+
 public class ArtistsFragment extends Fragment implements
         OnDeleteArtistitemListener {
 

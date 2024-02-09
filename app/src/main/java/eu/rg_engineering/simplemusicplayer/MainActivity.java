@@ -1,7 +1,5 @@
 package eu.rg_engineering.simplemusicplayer;
 
-
-
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
@@ -62,8 +60,6 @@ import eu.rg_engineering.simplemusicplayer.ui.home.PlaylistFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment;
 import io.sentry.Sentry;
 
-
-
 //todo Rückkehr von "Einstellungen" oder "About" muss Bibliothek oder playlist öffnen
 //todo in Einstellungen link hinzufügen, wie man den Token ermittelt
 //todo Auswahl der plex-Bibliothek (derzeit automatisch bzw. in Einstellungen)
@@ -71,8 +67,6 @@ import io.sentry.Sentry;
 //todo link zu Sentry-Informationen
 //todo sentry abschaltbar machen
 //todo Albums mit various interpretes werden nicht gefunden (lokale Bibliothek) z.Bsp. Bravo Hits
-
-
 
 public class MainActivity extends AppCompatActivity
         implements

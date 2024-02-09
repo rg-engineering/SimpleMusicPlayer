@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -12,12 +13,11 @@ public class AlbumItem implements Parcelable {
 
     private final String mID;
     private final String mName;
-    private String mArtist;
+    private ArrayList<String> mArtists;
     private int mYear;
     private String mPath2Image;
     private String mSummery;
     private int mPlex_ratingKey = -1;
-
 
     protected AlbumItem(Parcel in) {
         mID = in.readString();
@@ -27,7 +27,10 @@ public class AlbumItem implements Parcelable {
     public AlbumItem(String name, String artist, int year, String path2image, String summery, int plex_ratingkey) {
         mID = UUID.randomUUID().toString();
         mName = name;
-        mArtist = artist;
+        if (mArtists==null) {
+            mArtists = new ArrayList<>();
+        }
+        mArtists.add(artist);
         mYear = year;
         mPath2Image = path2image;
         mSummery = summery;
@@ -44,8 +47,44 @@ public class AlbumItem implements Parcelable {
         return mName;
     }
 
+    public void AddArtist(String artist){
+
+        if (!mArtists.contains(artist)){
+            mArtists.add(artist);
+        }
+    }
+
+    public Boolean containArtist(String artist){
+        Boolean ret=false;
+
+        ret = mArtists.contains(artist);
+
+        return ret;
+    }
+    public String getArtist(int idx) {
+
+        String artist="";
+        if (idx<mArtists.size()){
+            artist=mArtists.get(idx);
+        }
+        return artist;
+    }
+
     public String getArtist() {
-        return mArtist;
+
+        String artist="";
+        if (mArtists.size()>1){
+            artist="various";
+        }
+        else {
+            artist=mArtists.get(0);
+        }
+
+        return artist;
+    }
+
+    public Boolean ArtistExists(String artist){
+        return mArtists.contains(artist);
     }
 
     public int getYear() {
@@ -85,7 +124,7 @@ public class AlbumItem implements Parcelable {
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(mID);
         parcel.writeString(mName);
-        parcel.writeString(mArtist);
+        parcel.writeArray(mArtists.toArray());
         parcel.writeInt(mYear);
         parcel.writeString(mPath2Image);
         parcel.writeString(mSummery);
@@ -108,7 +147,7 @@ public class AlbumItem implements Parcelable {
         sRet += System.getProperty("line.separator");
         sRet += mName;
         sRet += System.getProperty("line.separator");
-        sRet += mArtist;
+        sRet += mArtists.toString();
         sRet += System.getProperty("line.separator");
         sRet += mYear;
         sRet += System.getProperty("line.separator");
@@ -127,7 +166,7 @@ public class AlbumItem implements Parcelable {
 
         sRet += "," + mID;
         sRet += "," + mName;
-        sRet += "," + mArtist;
+        sRet += "," + mArtists.toString();
         sRet += "," + mYear;
         sRet += "," + mPath2Image;
         sRet += "," + mSummery;
