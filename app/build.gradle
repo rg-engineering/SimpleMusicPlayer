@@ -10,8 +10,8 @@ android {
         applicationId "eu.rg_engineering.simplemusicplayer"
         minSdkVersion 27
         targetSdkVersion 33
-        versionCode 140
-        versionName '0.14.0'
+        versionCode 150
+        versionName '0.15.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
