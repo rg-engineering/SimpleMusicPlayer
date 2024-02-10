@@ -62,5 +62,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/sentry">
+        <CheckBoxPreference
+            app:key="useSentry"
+            app:title="@string/use_sentry"
+            app:defaultValue="true"
+            />
+    </PreferenceCategory>
 
 </PreferenceScreen>

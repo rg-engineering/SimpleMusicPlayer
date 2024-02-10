@@ -2,6 +2,7 @@ package eu.rg_engineering.simplemusicplayer;
 
 import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -44,6 +45,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +61,15 @@ import eu.rg_engineering.simplemusicplayer.ui.home.HomeFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.PlaylistFragment;
 import eu.rg_engineering.simplemusicplayer.ui.home.TracksFragment;
 import io.sentry.Sentry;
+import io.sentry.SentryLevel;
+import io.sentry.android.core.SentryAndroid;
 
 
 //todo Rückkehr von "Einstellungen" oder "About" muss Bibliothek oder playlist öffnen
 //todo in Einstellungen link hinzufügen, wie man den Token ermittelt
 //todo Auswahl der plex-Bibliothek (derzeit automatisch bzw. in Einstellungen)
-//todo überall Sentry catches einbauen
-//todo link zu Sentry-Informationen
-//todo sentry abschaltbar machen
+
+
 
 
 //todo Starten der App dauert teilweise ewig lange...
@@ -327,6 +330,28 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean bUseSentry = sharedPreferences.getBoolean("useSentry", true);
+
+
+        if (bUseSentry) {
+            SentryAndroid.init(this, options -> {
+
+                // Add a callback that will be used before the event is sent to Sentry.
+                // With this callback, you can modify the event or, when returning null, also discard the event.
+                options.setBeforeSend((event, hint) -> {
+                    if (SentryLevel.DEBUG.equals(event.getLevel()))
+                        return null;
+                    else
+                        return event;
+                });
+            });
+        }
+
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

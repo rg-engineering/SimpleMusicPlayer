@@ -33,6 +33,8 @@
         <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
         <!-- enable profiling when starting transactions, adjust in production env -->
         <meta-data android:name="io.sentry.traces.profiling.sample-rate" android:value="1.0" />
+        <!-- so we can disable it by user -->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
 
 
         <activity

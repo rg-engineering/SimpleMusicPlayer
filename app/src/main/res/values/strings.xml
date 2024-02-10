@@ -72,6 +72,8 @@
     <string name="alphabetically_ascending">alphabetically (ascending)</string>
     <string name="track_number_on_album_descending">track number on album (descending)</string>
     <string name="track_number_on_album_ascending">track number on album (ascending)</string>
+    <string name="sentry">Sentry</string>
+    <string name="use_sentry">use Sentry</string>
 
 
 </resources>

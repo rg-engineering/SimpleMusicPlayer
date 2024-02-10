@@ -32,7 +32,7 @@
     <string name="settings_general" >Allgemeine Einstellungen</string>
     <string name="usePlexServer" >Plex Server verwenden</string>
     <string name="plex_server_libid" >Plex Server Bibliotheks-ID</string>
-    <string name="sentry_hint" >Diese App nutzt Sentry-Bibliotheken, um Ausnahmen und Codefehler automatisch an die Entwickler zu melden.</string>
+    <string name="sentry_hint" >Diese App nutzt Sentry-Bibliotheken, um Ausnahmen und Codefehler automatisch an die Entwickler zu melden. In den Einstellungen kannst du Sentry komplett deaktivieren.</string>
     <string name="playlist">Lieblingsmusik</string>
     <string name="library">Bibliothek</string>
     <string name="simplemusicplayer_by_rg_engineering">Einfacher Musik-Player von rg-engineering</string>
@@ -44,4 +44,6 @@
     <string name="alphabetically_ascending">A-Z  ↑</string>
     <string name="track_number_on_album_descending">Titel ↓</string>
     <string name="track_number_on_album_ascending">Titel ↑</string>
+    <string name="sentry">Sentry</string>
+    <string name="use_sentry">Sentry nutzen</string>
 </resources>
