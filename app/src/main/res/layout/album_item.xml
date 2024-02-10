@@ -51,6 +51,7 @@
             android:textStyle="normal"
             android:visibility="invisible"
             card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toStartOf="@+id/album_image"
             card_view:layout_constraintStart_toEndOf="@+id/album_Artist"
             card_view:layout_constraintTop_toTopOf="parent" />
 

@@ -38,9 +38,10 @@
                 android:id="@+id/filter_tracks"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:hint="track"
-                android:textSize="12sp"
                 android:textColor="@color/Black"
+                android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,10 +51,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="artist"
-                android:textSize="10sp"
                 android:textColor="@color/Black"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/artistImage4Tracks"
                 app:layout_constraintEnd_toStartOf="@+id/artistImage4Tracks"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/artistImage4Tracks" />
 
             <TextView
                 android:id="@+id/albumName4Tracks"
@@ -61,10 +63,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="album"
-                android:textSize="10sp"
                 android:textColor="@color/Black"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
-                app:layout_constraintTop_toBottomOf="@+id/artistImage4Tracks" />
+                app:layout_constraintTop_toTopOf="@+id/albumImage4Tracks" />
 
             <ImageView
                 android:id="@+id/artistImage4Tracks"
@@ -92,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:text="TextView"
                 android:textColor="@color/Black"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -100,6 +103,7 @@
                 android:id="@+id/tracks2Sort"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/numberOfTracks"
                 app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
                 app:layout_constraintTop_toBottomOf="@+id/filter_tracks" />
 

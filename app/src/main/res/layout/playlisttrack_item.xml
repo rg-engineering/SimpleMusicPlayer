@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="8"
-            android:textSize="18sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="8"
-            android:textSize="18sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/track_Name" />
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="8"
-            android:textSize="18sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/track_Album" />
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_weight="8"
-            android:textSize="18sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/track_Artist" />
@@ -105,18 +105,6 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/track_ProgressBar"
-
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="50dp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/track_Duration" />
-
         <SeekBar
             android:id="@+id/track_SeekBar"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
@@ -128,7 +116,7 @@
             android:progress="3"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/track_ProgressBar" />
+            card_view:layout_constraintTop_toBottomOf="@+id/track_Duration" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

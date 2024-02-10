@@ -26,8 +26,6 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:hint="track"
-        android:textColor="@color/Black"
-        android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/numberOfTracksInPlaylist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -47,8 +45,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textColor="@color/Black"
-        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
         app:layout_constraintEnd_toStartOf="@+id/playlist_deleteAll"
         app:layout_constraintTop_toTopOf="parent" />

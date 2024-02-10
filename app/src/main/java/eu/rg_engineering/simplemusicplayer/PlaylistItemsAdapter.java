@@ -164,12 +164,15 @@ public class PlaylistItemsAdapter extends
             currentPlaytimeTextView.setText(item.getCurrentPlaytime());
         }
 
+        /*
         ProgressBar currentProgress = viewHolder.currentProgressbar;
         if (currentProgress != null) {
             currentProgress.setMin(0);
             currentProgress.setMax(100);
             currentProgress.setProgress(item.getProgress());
         }
+
+         */
         SeekBar currentSeek = viewHolder.currentSeekbar;
         if (currentSeek != null) {
             currentSeek.setMin(0);
@@ -412,7 +415,7 @@ public class PlaylistItemsAdapter extends
         public TextView albumTextView;
         public TextView durationTextView;
         public TextView currentPlaytimeTextView;
-        public ProgressBar currentProgressbar;
+        //public ProgressBar currentProgressbar;
         public SeekBar currentSeekbar;
         public Button btnPlaySong;
         public ImageView imageViewAlbum;
@@ -432,7 +435,7 @@ public class PlaylistItemsAdapter extends
             albumTextView = (TextView) itemView.findViewById(R.id.track_Album);
             durationTextView = (TextView) itemView.findViewById(R.id.track_Duration);
             currentPlaytimeTextView = (TextView) itemView.findViewById(R.id.track_CurrentPlaytime);
-            currentProgressbar = (ProgressBar) itemView.findViewById(R.id.track_ProgressBar);
+            // = (ProgressBar) itemView.findViewById(R.id.track_ProgressBar);
             currentSeekbar = (SeekBar) itemView.findViewById(R.id.track_SeekBar);
             btnPlaySong = (Button) itemView.findViewById(R.id.track_PlaySong);
 
