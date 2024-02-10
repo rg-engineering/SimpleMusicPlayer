@@ -369,9 +369,9 @@ public class MainActivity extends AppCompatActivity
         PackageInfo packageinfo = null;
         try {
             packageinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "exception in onCreate " + e.getMessage());
-            Sentry.captureException(e);
+        } catch (PackageManager.NameNotFoundException ex) {
+            Log.e(TAG, "exception in onCreate " + ex.getMessage());
+            Sentry.captureException(ex);
         }
         String Version = packageinfo.versionName;
 
@@ -500,6 +500,7 @@ public class MainActivity extends AppCompatActivity
             controllerFuture.get().addMediaItems(mediaItems);
         } catch (Exception ex) {
             Log.e(TAG, "exception in  UpdatePlayList" + ex);
+            Sentry.captureException(ex);
         }
     }
 
@@ -533,6 +534,7 @@ public class MainActivity extends AppCompatActivity
                 }
             } catch (Exception ex) {
                 Log.e(TAG, "exception in UpdateProgress  " + ex);
+                Sentry.captureException(ex);
             }
         }
     };
@@ -693,12 +695,14 @@ public class MainActivity extends AppCompatActivity
                                         }
                                     } catch (Exception ex) {
                                         Log.e(TAG, "exception in onIsPlayingChanged " + ex);
+                                        Sentry.captureException(ex);
                                     }
                                 }
                             }
                         });
             } catch (Exception ex) {
                 Log.e(TAG, "exception in CreateMediaController " + ex);
+                Sentry.captureException(ex);
             }
 
         }, ContextCompat.getMainExecutor(this));
@@ -726,6 +730,7 @@ public class MainActivity extends AppCompatActivity
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in stopMusic " + ex);
+            Sentry.captureException(ex);
         }
 
     }
@@ -737,6 +742,7 @@ public class MainActivity extends AppCompatActivity
             controllerFuture.get().play();
         } catch (Exception ex) {
             Log.e(TAG, "exception in startMusic " + ex);
+            Sentry.captureException(ex);
         }
 
     }
@@ -749,6 +755,7 @@ public class MainActivity extends AppCompatActivity
 
         } catch (Exception ex) {
             Log.e(TAG, "exception in stopMusic " + ex);
+            Sentry.captureException(ex);
         }
     }
 

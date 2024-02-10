@@ -183,6 +183,7 @@ public class PlaylistFragment extends Fragment implements
             readFromFile(filename);
         } catch (Exception ex) {
             Log.e(TAG, "Exception in SavePlaylist " + ex);
+            Sentry.captureException(ex);
         }
     }
     private String readFromFile(String filename) {
@@ -209,11 +210,12 @@ public class PlaylistFragment extends Fragment implements
 
 
         }
-        catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found: " + e);
+        catch (FileNotFoundException ex) {
+            Log.e(TAG, "File not found: " + ex);
             mCommunication.messageFromPlaylistFragment("ShowInfo", "playlist not found");
-        } catch (IOException e) {
-            Log.e(TAG, "Can not read file: " + e);
+        } catch (IOException ex) {
+            Log.e(TAG, "Can not read file: " + ex);
+            Sentry.captureException(ex);
         }
 
         return ret;
@@ -233,6 +235,7 @@ public class PlaylistFragment extends Fragment implements
 
         } catch (Exception ex) {
             Log.e(TAG, "Exception in SavePlaylist " + ex);
+            Sentry.captureException(ex);
         }
     }
 
@@ -251,8 +254,9 @@ public class PlaylistFragment extends Fragment implements
 
         }
 
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e);
+        catch (IOException ex) {
+            Log.e("Exception", "File write failed: " + ex);
+            Sentry.captureException(ex);
         }
     }
 
@@ -271,6 +275,7 @@ public class PlaylistFragment extends Fragment implements
             }
         } catch (Exception ex) {
             Log.e(TAG, "Exception in Add2Playlist " + ex);
+            Sentry.captureException(ex);
         }
         SavePlaylist();
     }
@@ -290,8 +295,9 @@ public class PlaylistFragment extends Fragment implements
 
         }
 
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e);
+        catch (IOException ex) {
+            Log.e("Exception", "File write failed: " + ex);
+            Sentry.captureException(ex);
         }
 
         ReadPlaylist();

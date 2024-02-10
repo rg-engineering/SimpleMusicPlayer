@@ -293,6 +293,7 @@ public class TrackItemsAdapter extends
 
         } catch (Exception ex) {
             Log.e(TAG, "Exception in SavePlaylist " + ex);
+            Sentry.captureException(ex);
         }
     }
 
@@ -549,11 +550,11 @@ public class TrackItemsAdapter extends
             writer.close();
             Log.d("TAG", "Wrote to file: " + filename);
 
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-
+        } catch (IOException ex) {
+            Log.e("Exception", "File write failed: " + ex.toString());
+            Sentry.captureException(ex);
             ArrayList<String> params = new ArrayList<>();
-            params.add("exception " + e.toString());
+            params.add("exception " + ex.toString());
 
             mCommunication.messageFromTrackItemsAdapter("ShowInfo",params, null );
         }

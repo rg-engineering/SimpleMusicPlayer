@@ -164,7 +164,7 @@ public class Plex_FindData extends Thread {
     private void downloadXml(URL url) {
         try {
             loadXmlFromNetwork(url);
-        } catch (IOException e) {
+        } catch (IOException ex) {
 
         } catch (XmlPullParserException ex) {
             Log.e(TAG, "exception in downloadXml " + ex);
@@ -254,6 +254,7 @@ public class Plex_FindData extends Thread {
         }
         catch (Exception ex){
             Log.e(TAG, "exception in loadXmlFromNetwork " + ex);
+            Sentry.captureException(ex);
         }
 
         finally {

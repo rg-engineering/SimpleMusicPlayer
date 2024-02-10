@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import io.sentry.Sentry;
+
 public class TrackItem implements Parcelable  {
 
     private final String TAG = "TrackItem";
@@ -217,6 +219,7 @@ public class TrackItem implements Parcelable  {
         }
         catch (Exception ex){
             Log.e(TAG, "exception in Deserialize " + ex );
+            Sentry.captureException(ex);
         }
     }
 

@@ -166,8 +166,9 @@ public class ImageDownloader {
             writer.close();
             Log.d("TAG", "Wrote to file: " + filename);
 
-        } catch (IOException e) {
-            Log.e(TAG, "File write failed: " + e.toString());
+        } catch (IOException ex) {
+            Log.e(TAG, "File write failed: " + ex.toString());
+            Sentry.captureException(ex);
         }
 
 
@@ -182,6 +183,7 @@ public class ImageDownloader {
         }
         catch (Exception ex){
             Log.e(TAG, "cold not load bitmap " + filename);
+            Sentry.captureException(ex);
         }
         return icon;
     }
