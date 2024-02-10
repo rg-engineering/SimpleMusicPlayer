@@ -66,7 +66,7 @@ import io.sentry.android.core.SentryAndroid;
 
 
 //todo Rückkehr von "Einstellungen" oder "About" muss Bibliothek oder playlist öffnen
-//todo in Einstellungen link hinzufügen, wie man den Token ermittelt
+
 //todo Auswahl der plex-Bibliothek (derzeit automatisch bzw. in Einstellungen)
 
 

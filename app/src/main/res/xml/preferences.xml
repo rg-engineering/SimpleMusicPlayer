@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <PreferenceCategory app:title="@string/settings_general">
@@ -16,25 +17,38 @@
             app:key="plex_server_ip"
             app:title="@string/plex_server_ip"
             app:defaultValue="192.168.3.21"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            app:isPreferenceVisible="false"/>
 
         <EditTextPreference
             app:key="plex_server_port"
             app:title="@string/plex_server_port"
             app:defaultValue="32400"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            app:isPreferenceVisible="false"/>
 
         <EditTextPreference
             app:key="plex_server_token"
             app:title="@string/plex_server_token"
             app:defaultValue="LAtVbxshNWzuGUwtm8bJ"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            app:isPreferenceVisible="false"/>
+
+        <Preference
+            app:key="GetHint"
+            app:title="@string/how_to_get_plex_server_token"
+            app:isPreferenceVisible="false">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/" />
+        </Preference>
 
         <EditTextPreference
             app:key="plex_server_libid"
             app:title="@string/plex_server_libid"
             app:defaultValue="2"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            app:isPreferenceVisible="false"/>
 
     </PreferenceCategory>
 
@@ -66,8 +80,7 @@
         <CheckBoxPreference
             app:key="useSentry"
             app:title="@string/use_sentry"
-            app:defaultValue="true"
-            />
+            app:defaultValue="true"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

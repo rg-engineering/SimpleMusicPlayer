@@ -75,6 +75,7 @@
     <string name="sentry">Sentry</string>
     <string name="use_sentry">use Sentry</string>
     <string name="showsentrydataprivacy">Sentry Data Privacy</string>
+    <string name="how_to_get_plex_server_token">How to get plex server token</string>
 
 
 </resources>
