@@ -74,6 +74,7 @@
     <string name="track_number_on_album_ascending">track number on album (ascending)</string>
     <string name="sentry">Sentry</string>
     <string name="use_sentry">use Sentry</string>
+    <string name="showsentrydataprivacy">Sentry Data Privacy</string>
 
 
 </resources>

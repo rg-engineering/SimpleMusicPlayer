@@ -18,7 +18,6 @@ import eu.rg_engineering.simplemusicplayer.R;
 public class AboutFragment extends Fragment {
 
     private AboutViewModel AboutViewModel;
-    private Button btnShowDataPrivacy= null;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -27,17 +26,22 @@ public class AboutFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_about, container, false);
 
 
-        btnShowDataPrivacy = root.findViewById(R.id.btnDataPrivacy);
-        setShowDataPrivacyButtonListener();
-
-        return root;
-    }
-
-    private void setShowDataPrivacyButtonListener() {
+        Button btnShowDataPrivacy = root.findViewById(R.id.btnDataPrivacy);
         btnShowDataPrivacy.setOnClickListener(e -> {
             Uri uri = Uri.parse("https://rg-engineering.de/ingenieurbuero-fuer-software-entwicklung-elektro-projektierung-und-photovoltaik/datenschutz/datenschutzerklaerung-app-einfacher-musikplayer/");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         });
+
+        Button btnShowSentryDataPrivacy = root.findViewById(R.id.btnSentryDataPrivacy);
+        btnShowSentryDataPrivacy.setOnClickListener(e -> {
+            Uri uri = Uri.parse("https://sentry.io/privacy/");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+
+        return root;
     }
+
+
 }

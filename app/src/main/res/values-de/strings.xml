@@ -46,4 +46,5 @@
     <string name="track_number_on_album_ascending">Titel ↑</string>
     <string name="sentry">Sentry</string>
     <string name="use_sentry">Sentry nutzen</string>
+    <string name="showsentrydataprivacy">Sentry Datenschutz</string>
 </resources>
