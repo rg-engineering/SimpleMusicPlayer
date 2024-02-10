@@ -67,6 +67,10 @@ import io.sentry.Sentry;
 //todo überall Sentry catches einbauen
 //todo link zu Sentry-Informationen
 //todo sentry abschaltbar machen
+//todo bei mehreren Artist auf einem Album wird das falsche Album gefunden
+//todo Layout Album auf Tlefon -> Artist name + suche filter wie in tracks (größe + farbe)
+//todo Telefon: Karten für tracks halbe höhe
+//todo Starten der App dauert teilweise ewig lange...
 
 
 public class MainActivity extends AppCompatActivity

@@ -504,8 +504,10 @@ public class MusicData  {
                 }
                 else {
                     //wenn schon da, dann evtl. artist hinzufügen siehe Bravo Hits
-
-                    mLocalAlbumsAll.get(0).AddArtist(Artist);
+                    int idx = AlbumGetIndex(Album);
+                    if (idx >= 0) {
+                        mLocalAlbumsAll.get(idx).AddArtist(Artist);
+                    }
                 }
 
 
@@ -546,9 +548,19 @@ public class MusicData  {
                 break;
             }
         }
-
         return ret;
     }
 
+    private int AlbumGetIndex(String AlbumName){
+        int ret = -1;
+
+        for (int index = 0; index < mLocalAlbumsAll.size(); index++) {
+            if (mLocalAlbumsAll.get(index).getName().contains(AlbumName)) {
+                return index;
+            }
+        }
+
+        return ret;
+    }
 
 }
