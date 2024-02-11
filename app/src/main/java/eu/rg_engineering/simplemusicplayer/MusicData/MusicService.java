@@ -54,19 +54,8 @@ public class MusicService extends MediaSessionService {
     @Override
     public void onCreate() {
         super.onCreate();
-        //todo saved instance
-        //if (savedInstanceState != null) {
-        //    trackSelectionParameters =
-        //            TrackSelectionParameters.fromBundle(
-        //                    savedInstanceState.getBundle(KEY_TRACK_SELECTION_PARAMETERS));
-        //    startAutoPlay = savedInstanceState.getBoolean(KEY_AUTO_PLAY);
-        //    startItemIndex = savedInstanceState.getInt(KEY_ITEM_INDEX);
-        //    startPosition = savedInstanceState.getLong(KEY_POSITION);
-        //    restoreServerSideAdsLoaderState(savedInstanceState);
-        //} else {
         trackSelectionParameters = new TrackSelectionParameters.Builder(this).build();
         clearStartPosition();
-        //}
         initializePlayer();
     }
 

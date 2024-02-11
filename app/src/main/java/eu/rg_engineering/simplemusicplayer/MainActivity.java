@@ -65,14 +65,9 @@ import io.sentry.SentryLevel;
 import io.sentry.android.core.SentryAndroid;
 
 
-//todo Rückkehr von "Einstellungen" oder "About" muss Bibliothek oder playlist öffnen
-
+//todo !!!! Rückkehr von "Einstellungen" oder "About" muss Bibliothek oder playlist öffnen
 //todo Auswahl der plex-Bibliothek (derzeit automatisch bzw. in Einstellungen)
-
-
-
-
-//todo Starten der App dauert teilweise ewig lange...
+//todo !!!! Starten der App dauert teilweise ewig lange...
 
 
 public class MainActivity extends AppCompatActivity

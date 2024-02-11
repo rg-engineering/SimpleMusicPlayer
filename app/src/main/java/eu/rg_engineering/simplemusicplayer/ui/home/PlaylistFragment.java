@@ -224,7 +224,7 @@ public class PlaylistFragment extends Fragment implements
 
         try {
             StringBuilder Contents = new StringBuilder();
-            //todo save play list
+            //save play list
             Log.d(TAG, "save play list "+ mPlaylistTracks.size());
 
             for (int i =0; i< mPlaylistTracks.size(); i++) {
