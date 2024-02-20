@@ -68,7 +68,13 @@ import io.sentry.android.core.SentryAndroid;
 //todo !!!! Rückkehr von "Einstellungen" oder "About" muss Bibliothek oder playlist öffnen
 //todo Auswahl der plex-Bibliothek (derzeit automatisch bzw. in Einstellungen)
 //todo !!!! Starten der App dauert teilweise ewig lange...
+//todo background iamge on all devices: https://medium.com/@chetan882777/set-lock-screen-background-of-album-art-in-android-6dad001ff97
 
+//todo sentry ConcurrentModificationException MainActivity.btnBackAlbums
+//todo sentry NullPointerException MainActivity.btnBackTracks (NullPointerException: Attempt to invoke virtual method 'int android.graphics.Bitmap.getByteCount()' on a null object reference)
+//todo sentry Image Decoding on Main Thread MainActivity.filter_artist
+//todo sentry Regex on Main Thread
+//todo sentry NullPointerException   Attempt to invoke virtual method 'void eu.rg_engineering.simplemusicplayer.PlaylistItemsAdapter.GetSongs()' on a null object reference
 
 public class MainActivity extends AppCompatActivity
         implements
