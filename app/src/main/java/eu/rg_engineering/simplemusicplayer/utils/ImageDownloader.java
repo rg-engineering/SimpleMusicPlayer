@@ -53,13 +53,19 @@ public class ImageDownloader {
             protected int sizeOf(String key, Bitmap bitmap) {
                 // The cache size will be measured in kilobytes rather than
                 // number of items.
-                return bitmap.getByteCount() / 1024;
+
+                int bytes = 0;
+                if (bitmap!=null){
+                    bytes= bitmap.getByteCount() / 1024;
+                }
+
+                return bytes;
             }
         };
     }
 
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (getBitmapFromMemoryCache(key) == null) {
+        if (getBitmapFromMemoryCache(key) == null && bitmap != null) {
             int size = bitmap.getByteCount() / 1024;
             Log.d(TAG, "put bitmap into cache " + key + " size " + size + "kB");
             memoryCache.put(key, bitmap);
