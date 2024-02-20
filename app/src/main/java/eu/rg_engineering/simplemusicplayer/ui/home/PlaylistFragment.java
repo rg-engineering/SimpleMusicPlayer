@@ -163,11 +163,21 @@ public class PlaylistFragment extends Fragment implements
     }
 
     public void SetCurrentplaytime(int index, long duration) {
-        playlistItemsAdapter.SetCurrentPlaytime(index, duration);
+        if (playlistItemsAdapter!=null) {
+            playlistItemsAdapter.SetCurrentPlaytime(index, duration);
+        }
+        else {
+            mCommunication.messageFromPlaylistFragment("ShowInfo", "exception: SetCurrentPlaytime not found");
+        }
     }
 
     public void GetSongs() {
-        playlistItemsAdapter.GetSongs();
+        if (playlistItemsAdapter!=null) {
+            playlistItemsAdapter.GetSongs();
+        }
+        else {
+            mCommunication.messageFromPlaylistFragment("ShowInfo", "exception: GetSongs not found");
+        }
     }
 
     private void ReadPlaylist() {
