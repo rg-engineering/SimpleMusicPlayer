@@ -47,7 +47,8 @@ public class MusicItem implements Parcelable {
             try {
                 mDuration = Integer.parseInt(separated[5]);
             } catch (NumberFormatException ex) {
-                Sentry.captureException(ex);
+                Log.e(TAG, "duration is not a number");
+                //Sentry.captureException(ex);
             }
             if (mID == null || mID.isEmpty() || mID.length() < 6) {
                 mID = UUID.randomUUID().toString();

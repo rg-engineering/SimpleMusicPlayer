@@ -154,7 +154,7 @@ public class MusicData  {
                     ratingKey = Integer.parseInt(item.ratingKey);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "ratingkey is not a number");
-                    Sentry.captureException(ex);
+                    //Sentry.captureException(ex);
                 }
                 ArtistItem artist = new ArtistItem(name, genre, country, path2image, summery, ratingKey);
                 mLocalArtists.add(artist);
@@ -182,7 +182,7 @@ public class MusicData  {
                     year = Integer.parseInt(item.year);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "year is not a number");
-                    Sentry.captureException(ex);
+                    //Sentry.captureException(ex);
                 }
                 String path2image = (item.thumb != null && item.thumb.length() > 0) ? "http://" + IP + ":" + Port + item.thumb + "?X-Plex-Token=" + Token : "";
 
@@ -192,7 +192,7 @@ public class MusicData  {
                     ratingKey = Integer.parseInt(item.ratingKey);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "ratingkey is not a number");
-                    Sentry.captureException(ex);
+                    //Sentry.captureException(ex);
                 }
                 AlbumItem album = new AlbumItem(name, artist, year, path2image, summery, ratingKey);
 
@@ -232,7 +232,7 @@ public class MusicData  {
                     duration = Integer.parseInt(item.duration);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "duration is not a number");
-                    Sentry.captureException(ex);
+                    //Sentry.captureException(ex);
                 }
 
                 int albumIndex=-1;
@@ -240,7 +240,7 @@ public class MusicData  {
                     albumIndex = Integer.parseInt(item.index);
                 } catch (NumberFormatException ex) {
                     Log.e(TAG, "album index is not a number");
-                    Sentry.captureException(ex);
+                    //Sentry.captureException(ex);
                 }
 
                 TrackItem track = new TrackItem(name, album, artist, filename, duration, path2AlbumImage, path2ArtistImage, albumIndex);
@@ -442,7 +442,7 @@ public class MusicData  {
                 }
                 catch (NumberFormatException ex) {
                     Log.e(TAG, "duration is not a number");
-                    Sentry.captureException(ex);
+                    //Sentry.captureException(ex);
                 }
                 int nAlbumIndex=-1;
                 try {
@@ -450,7 +450,7 @@ public class MusicData  {
                 }
                 catch (NumberFormatException ex) {
                     Log.e(TAG, "album index is not a number");
-                    Sentry.captureException(ex);
+                    //Sentry.captureException(ex);
                 }
 
 
