@@ -13,6 +13,7 @@ import androidx.media3.common.MediaItem;
 import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -521,6 +522,19 @@ public class MusicData  {
 
         boolean ret = false;
 
+        Iterator<ArtistItem> iter = mLocalArtists.iterator();
+
+        while (iter.hasNext()) {
+            ArtistItem item = iter.next();
+
+            String name= item.getName();
+            if (name.equals(ArtistName)) {
+                ret = true;
+                break;
+            }
+        }
+
+        /*
         for (ArtistItem item : mLocalArtists) {
 
             String name= item.getName();
@@ -530,6 +544,7 @@ public class MusicData  {
             }
         }
 
+         */
 
         return ret;
     }
@@ -539,7 +554,19 @@ public class MusicData  {
         //boolean ret = mLocalAlbumsAll.contains(AlbumName);
 
         boolean ret = false;
+        Iterator<AlbumItem> iter = mLocalAlbumsAll.iterator();
 
+        while (iter.hasNext()) {
+            AlbumItem item = iter.next();
+
+            String name= item.getName();
+            if (name.equals(AlbumName)) {
+                ret = true;
+                break;
+            }
+        }
+
+        /*
         for (AlbumItem item: mLocalAlbumsAll){
 
             String name= item.getName();
@@ -548,6 +575,8 @@ public class MusicData  {
                 break;
             }
         }
+
+         */
         return ret;
     }
 
