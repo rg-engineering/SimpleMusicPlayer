@@ -33,7 +33,7 @@ import eu.rg_engineering.simplemusicplayer.utils.OnDeleteAlbumitemListener;
 import io.sentry.Sentry;
 
 
-
+//todo add complete album to playlist
 public class AlbumsFragment extends Fragment implements
         OnDeleteAlbumitemListener {
 
