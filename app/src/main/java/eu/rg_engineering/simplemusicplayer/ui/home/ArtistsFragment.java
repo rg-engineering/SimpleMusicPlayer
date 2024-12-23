@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,8 @@ public class ArtistsFragment extends Fragment implements
     private ArtistItemsAdapter ArtistItemsAdapter = null;
     ArrayList<ArtistItem> mArtists;
     TextView noOfArtists;
+    private TextView permissionHint;
+    private String sNeededPermissions;
 
     @Override
     public void ItemDeleted() {
@@ -49,6 +52,15 @@ public class ArtistsFragment extends Fragment implements
 
         try {
             rvArtistItems = (RecyclerView) root.findViewById(R.id.rvArtists);
+            permissionHint = (TextView) root.findViewById(R.id.PermissionRequired);
+
+            if (sNeededPermissions.length()>0){
+                permissionHint.setText(sNeededPermissions);
+                permissionHint.setVisibility(View.VISIBLE);
+            }
+            else {
+                permissionHint.setVisibility(View.INVISIBLE);
+            }
 
             MainActivity activity = (MainActivity) getActivity();
             mArtists=activity.mMusicData.getArtistData();
@@ -142,5 +154,20 @@ public class ArtistsFragment extends Fragment implements
             String counts = "" + mArtists.size() + " " + getString(R.string.artists);
             noOfArtists.setText(counts);
         }
+    }
+
+    public void PermissionsNeeded(String NeededPermissions){
+
+        sNeededPermissions = NeededPermissions;
+        /*
+        if (NeededPermissions.length()>0){
+            permissionHint.setText(NeededPermissions);
+            permissionHint.setVisibility(View.VISIBLE);
+        }
+        else {
+            permissionHint.setVisibility(View.INVISIBLE);
+        }
+
+         */
     }
 }

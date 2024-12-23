@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity
     private List<MediaItem> mediaItems;
     ListenableFuture<MediaController> controllerFuture;
     private String mPlayStartedFrom;
+    private String sNeededPermissions="";
 
     @Override
     public void messageFromHomeFragment(String msg, String params) {
@@ -405,14 +406,20 @@ public class MainActivity extends AppCompatActivity
         TextView text = (TextView) header.findViewById(R.id.VersionView);
         text.setText(Version);
 
+        sNeededPermissions="";
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            Log.e(TAG, "need more permissions");
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PERMISSION_REQUEST_CODE);
+            if (Build.VERSION.SDK_INT < 33) {
+                Log.e(TAG, "need more permissions READ_EXTERNAL_STORAGE");
+
+                sNeededPermissions += "Permission external storage is missing" + System.getProperty("line.separator");
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_CODE);
+            }
         } else {
             Log.d(TAG, "permission set correctly");
         }
@@ -420,8 +427,11 @@ public class MainActivity extends AppCompatActivity
                 android.Manifest.permission.READ_MEDIA_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            Log.e(TAG, "need more permissions");
+
+
             if (Build.VERSION.SDK_INT > 32) {
+                Log.e(TAG, "need more permissions READ_MEDIA_AUDIO");
+                sNeededPermissions+="Permission audio access is missing" + System.getProperty("line.separator");
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.READ_MEDIA_AUDIO},
                         PERMISSION_REQUEST_CODE);
@@ -429,6 +439,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             Log.d(TAG, "permission set correctly");
         }
+
+
 
         CreateMediaController();
 
@@ -458,6 +470,9 @@ public class MainActivity extends AppCompatActivity
 
         //todo wenn Playlist empty, dann auf Bibliothek, andernfalls auf Playlist schalten
         replaceFragment(mArtistsFragment);
+
+        //todo Box anzeigen, wenn Rechte nicht reichen
+        mArtistsFragment.PermissionsNeeded(sNeededPermissions);
     }
 
 
