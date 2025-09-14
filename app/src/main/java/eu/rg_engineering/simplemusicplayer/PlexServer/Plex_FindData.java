@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class Plex_FindData extends Thread {
         Token = sharedPreferences.getString("plex_server_token", "");
         LibID = sharedPreferences.getString("plex_server_libid", "");
 
-        if (IP.length()>0 && Port.length()>0 && Token.length()>0 && LibID.length()>0){
+        if (!IP.isEmpty() && !IP.equals("xxx.xxx.xxx.xxx")  && !Port.isEmpty() && !Token.isEmpty() && !LibID.isEmpty()){
             ConfigOk=true;
         }
         else {
@@ -77,7 +78,7 @@ public class Plex_FindData extends Thread {
             mCommunication.messageFromPlexFindArtist("config not okay");
         }
 
-        Boolean usePlexServer = sharedPreferences.getBoolean("usePlexServer", false);
+        boolean usePlexServer = sharedPreferences.getBoolean("usePlexServer", false);
 
         if (usePlexServer && ConfigOk) {
             //started in separate thread
@@ -170,6 +171,7 @@ public class Plex_FindData extends Thread {
             Log.e(TAG, "exception in downloadXml " + ex);
             Sentry.captureException(ex);
         }
+
     }
 
     private void loadXmlFromNetwork(URL url) throws XmlPullParserException, IOException {
@@ -252,6 +254,13 @@ public class Plex_FindData extends Thread {
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         }
+        catch (SocketTimeoutException ex){
+            Log.e(TAG, "exception in loadXmlFromNetwork " + ex);
+
+            //todo inform user to check settings
+
+        }
+
         catch (Exception ex){
             Log.e(TAG, "exception in loadXmlFromNetwork " + ex);
             Sentry.captureException(ex);

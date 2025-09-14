@@ -25,7 +25,7 @@
         android:id="@+id/filter_playlisttracks"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:hint="track"
+        android:hint="@string/track"
         app:layout_constraintEnd_toStartOf="@+id/numberOfTracksInPlaylist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
         android:id="@+id/numberOfTracksInPlaylist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/numberoftracksinplaylist"
         app:layout_constraintBottom_toTopOf="@+id/rvPlaylistTracks"
         app:layout_constraintEnd_toStartOf="@+id/playlist_deleteAll"
         app:layout_constraintTop_toTopOf="parent" />

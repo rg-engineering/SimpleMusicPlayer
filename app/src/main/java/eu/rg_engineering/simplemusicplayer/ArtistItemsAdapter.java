@@ -73,11 +73,8 @@ public class ArtistItemsAdapter extends
 
         Log.d(TAG, "UpdateData called ");
         mItemsFiltered.clear();
-        for (ArtistItem item : mItemsAll) {
-
-            //todo filter beachten???
-            mItemsFiltered.add(item);
-        }
+        //todo filter beachten???
+        mItemsFiltered.addAll(mItemsAll);
     }
 
     @NonNull
@@ -105,6 +102,8 @@ public class ArtistItemsAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ArtistItemsAdapter.ViewHolder viewHolder, int position) {
 // Get the data model based on position
+
+        //position here is okay
         ArtistItem item = mItemsFiltered.get(position);
 
         //Log.d(TAG, "onBindViewHolder called, position " + position);
@@ -128,7 +127,7 @@ public class ArtistItemsAdapter extends
         if (infoButton != null) {
             String infoSummery = item.getInfo();
 
-            if (infoSummery != null && infoSummery.length() > 0) {
+            if (infoSummery != null && !infoSummery.isEmpty()) {
                 Log.d(TAG, item.getName()+": info Button should be visible " + position);
                 infoButton.setVisibility(View.VISIBLE);
 
@@ -147,7 +146,7 @@ public class ArtistItemsAdapter extends
         if (imageImageView != null) {
             String path2image = item.getPath2Image();
 
-            if (path2image != null && path2image.length() > 0) {
+            if (path2image != null && !path2image.isEmpty()) {
                 Log.d(TAG, item.getName() + ": image view should be used ");
                 //new DownloadImageTask(imageImageView, item.getName()).execute(path2image);
                 imageDownloader.loadBitmap(path2image, imageImageView);
@@ -334,17 +333,18 @@ public class ArtistItemsAdapter extends
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
+            v.performClick();
             return true;
         }
     }
 
     public String GetSerializedData() {
-        String sRet = "";
+        StringBuilder sRet = new StringBuilder();
 
         for (int i = 0; i < mItemsAll.size(); i++) {
-            sRet += mItemsAll.get(i).Serialize2();
+            sRet.append(mItemsAll.get(i).Serialize2());
         }
-        return sRet;
+        return sRet.toString();
     }
 
     public void ChangeItem(int index, ArtistItem item) {

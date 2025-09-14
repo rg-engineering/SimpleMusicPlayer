@@ -115,11 +115,8 @@ public class TrackItemsAdapter extends
 
         Log.d(TAG, "UpdateData Tracks called ");
         mItemsFiltered.clear();
-        for (TrackItem item : mItemsAll) {
-
-            //todo filter beachten???
-            mItemsFiltered.add(item);
-        }
+        //todo filter beachten???
+        mItemsFiltered.addAll(mItemsAll);
 
         //send songs here to main since plex needs longer then internal data
         if (mNeed2SendSongs) {
@@ -150,6 +147,7 @@ public class TrackItemsAdapter extends
     @Override
     public void onBindViewHolder(@NonNull TrackItemsAdapter.ViewHolder viewHolder, int position) {
 // Get the data model based on position
+        //position here is okay
         TrackItem item = mItemsFiltered.get(position);
 
         Log.d(TAG, "onBindViewHolder tracks called, position " + position);
@@ -239,7 +237,7 @@ public class TrackItemsAdapter extends
     public void GetSongs() {
         Log.d(TAG, "GetSongs  " );
 
-        if (mItemsFiltered.size()>0) {
+        if (!mItemsFiltered.isEmpty()) {
             mNeed2SendSongs=false;
             ArrayList<TrackData> tracks = new ArrayList<>();
 
@@ -474,17 +472,18 @@ public class TrackItemsAdapter extends
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
+            v.performClick();
             return true;
         }
     }
 
     public String GetSerializedData() {
-        String sRet = "";
+        StringBuilder sRet = new StringBuilder();
 
         for (int i = 0; i < mItemsAll.size(); i++) {
-            sRet += mItemsAll.get(i).Serialize2();
+            sRet.append(mItemsAll.get(i).Serialize2());
         }
-        return sRet;
+        return sRet.toString();
     }
 
     public void ChangeItem(int index, TrackItem item) {
@@ -574,7 +573,7 @@ public class TrackItemsAdapter extends
 
         switch (mSortMode){
             case 0:
-                Collections.sort(mItemsFiltered, new Comparator() {
+                mItemsFiltered.sort(new Comparator() {
                     @Override
                     public int compare(Object o1, Object o2) {
                         TrackItem t1 = (TrackItem) o1;
@@ -584,7 +583,7 @@ public class TrackItemsAdapter extends
                 });
                 break;
             case 1:
-                Collections.sort(mItemsFiltered, new Comparator() {
+                mItemsFiltered.sort(new Comparator() {
                     @Override
                     public int compare(Object o1, Object o2) {
                         TrackItem t1 = (TrackItem) o1;
@@ -594,32 +593,32 @@ public class TrackItemsAdapter extends
                 });
                 break;
             case 2:
-                Collections.sort(mItemsFiltered, new Comparator() {
+                mItemsFiltered.sort(new Comparator() {
                     @Override
                     public int compare(Object o1, Object o2) {
                         TrackItem t1 = (TrackItem) o1;
-                        int c1= t1.getAlbumIndex();
+                        int c1 = t1.getAlbumIndex();
                         TrackItem t2 = (TrackItem) o2;
-                        int c2= t2.getAlbumIndex();
-                        int ret=-1;
-                        if (c1>c2){
-                            ret=0;
+                        int c2 = t2.getAlbumIndex();
+                        int ret = -1;
+                        if (c1 > c2) {
+                            ret = 0;
                         }
                         return ret;
                     }
                 });
                 break;
             case 3:
-                Collections.sort(mItemsFiltered, new Comparator() {
+                mItemsFiltered.sort(new Comparator() {
                     @Override
                     public int compare(Object o1, Object o2) {
                         TrackItem t1 = (TrackItem) o1;
-                        int c1= t1.getAlbumIndex();
+                        int c1 = t1.getAlbumIndex();
                         TrackItem t2 = (TrackItem) o2;
-                        int c2= t2.getAlbumIndex();
-                        int ret=-1;
-                        if (c1<c2){
-                            ret=0;
+                        int c2 = t2.getAlbumIndex();
+                        int ret = -1;
+                        if (c1 < c2) {
+                            ret = 0;
                         }
                         return ret;
                     }

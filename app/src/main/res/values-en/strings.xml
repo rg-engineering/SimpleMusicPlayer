@@ -47,5 +47,14 @@
     <string name="use_sentry">use Sentry</string>
     <string name="showsentrydataprivacy">Sentry Data Privacy</string>
     <string name="how_to_get_plex_server_token">How to get plex server token?</string>
+    <string name="artist">artist</string>
+    <string name="numberofalbum">numberOfAlbum</string>
+    <string name="numberofartists">numberOfArtists</string>
+    <string name="numberoftracksinplaylist">numberOfTracksInPlaylist</string>
+    <string name="track">track</string>
+    <string name="numberoftracks">numberOfTracks</string>
+    <string name="confirm">confirm</string>
+    <string name="please_check_ip_settings">Please check IP settings</string>
+    <string name="inform_wrong_ip_config">wrong IP configuration</string>
 
 </resources>

@@ -25,7 +25,7 @@
         android:id="@+id/filter_tracks"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:hint="track"
+        android:hint="@string/track"
         app:layout_constraintStart_toEndOf="@+id/btnBackTracks"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:text="artist"
+        android:text="@string/artist"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintEnd_toStartOf="@+id/artistImage4Tracks"
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:text="album"
+        android:text="@string/album"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
         app:layout_constraintTop_toTopOf="parent" />
@@ -84,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:text="TextView"
+        android:text="@string/numberoftracks"
         app:layout_constraintBottom_toTopOf="@+id/rvTracks"
         app:layout_constraintEnd_toStartOf="@+id/albumImage4Tracks"
         app:layout_constraintTop_toBottomOf="@+id/albumName4Tracks" />

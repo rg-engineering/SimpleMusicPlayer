@@ -105,11 +105,8 @@ public class PlaylistItemsAdapter extends
 
         Log.d(TAG, "UpdateData Tracks called ");
         mItemsFiltered.clear();
-        for (TrackItem item : mItemsAll) {
-
-            //todo filter beachten???
-            mItemsFiltered.add(item);
-        }
+        //todo filter beachten???
+        mItemsFiltered.addAll(mItemsAll);
 
         //send songs here to main since plexe needs longer then internal data
         if (mNeed2SendSongs) {
@@ -135,6 +132,9 @@ public class PlaylistItemsAdapter extends
     @Override
     public void onBindViewHolder(@NonNull PlaylistItemsAdapter.ViewHolder viewHolder, int position) {
 // Get the data model based on position
+
+
+        //position here is okay
         TrackItem item = mItemsFiltered.get(position);
 
         Log.d(TAG, "onBindViewHolder playlist called, position " + position);
@@ -199,7 +199,7 @@ public class PlaylistItemsAdapter extends
         if (imageViewAlbum != null) {
             String path2image = item.getPath2AlbumImage();
 
-            if (path2image != null && path2image.length() > 0) {
+            if (path2image != null && !path2image.isEmpty()) {
                 Log.d(TAG, item.getName()+": image view album should be used ");
                 //new DownloadImageTask(imageViewAlbum, item.getName()).execute(path2image);
                 imageDownloader.loadBitmap(path2image, imageViewAlbum);
@@ -212,7 +212,7 @@ public class PlaylistItemsAdapter extends
         if (imageViewArtist != null) {
             String path2image = item.getPath2ArtistImage();
 
-            if (path2image != null && path2image.length() > 0) {
+            if (path2image != null && !path2image.isEmpty()) {
                 Log.d(TAG, item.getName()+": image view artist should be used ");
                 //new DownloadImageTask(imageViewArtist, item.getName()).execute(path2image);
                 imageDownloader.loadBitmap(path2image, imageViewArtist);
@@ -241,7 +241,7 @@ public class PlaylistItemsAdapter extends
     public void GetSongs() {
         Log.d(TAG, "GetSongs  " );
 
-        if (mItemsFiltered.size()>0) {
+        if (!mItemsFiltered.isEmpty()) {
             mNeed2SendSongs=false;
             ArrayList<TrackData> tracks = new ArrayList<>();
 
@@ -505,17 +505,18 @@ public class PlaylistItemsAdapter extends
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
+            v.performClick();
             return true;
         }
     }
 
     public String GetSerializedData() {
-        String sRet = "";
+        StringBuilder sRet = new StringBuilder();
 
         for (int i = 0; i < mItemsAll.size(); i++) {
-            sRet += mItemsAll.get(i).Serialize2();
+            sRet.append(mItemsAll.get(i).Serialize2());
         }
-        return sRet;
+        return sRet.toString();
     }
 
     public void ChangeItem(int index, TrackItem item) {

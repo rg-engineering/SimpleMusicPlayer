@@ -23,7 +23,7 @@
     <string name="v_0_0_0" translatable="false">V 0.0.0</string>
     <string name="info_rg_engineering_eu" translatable="false">info@rg-engineering.eu</string>
     <string name="rg_engineering_eu" translatable="false">rg-engineering</string>
-    <string name="copyright" translatable="false">(c) 2023 - 2024</string>
+    <string name="copyright" translatable="false">(c) 2023 - 2025</string>
 
     <!-- Preference Titles -->
     <string name="messages_header" translatable="false">Messages</string>
@@ -76,6 +76,16 @@
     <string name="use_sentry">use Sentry</string>
     <string name="showsentrydataprivacy">Sentry Data Privacy</string>
     <string name="how_to_get_plex_server_token">How to get plex server token</string>
+    <string name="artist">artist</string>
+    <string name="numberofalbum">numberOfAlbum</string>
+    <string name="numberofartists">numberOfArtists</string>
+    <string name="permissionrequired">PermissionRequired</string>
+    <string name="numberoftracksinplaylist">numberOfTracksInPlaylist</string>
+    <string name="track">track</string>
+    <string name="numberoftracks">numberOfTracks</string>
+    <string name="confirm">confirm</string>
+    <string name="please_check_ip_settings">please_check_IP_settings</string>
+    <string name="inform_wrong_ip_config">inform_wrong_IP_config</string>
 
 
 </resources>

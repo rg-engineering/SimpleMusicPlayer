@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -103,7 +104,6 @@ public class MainActivity extends AppCompatActivity
     private List<MediaItem> mediaItems;
     ListenableFuture<MediaController> controllerFuture;
     private String mPlayStartedFrom;
-    private String sNeededPermissions="";
 
     @Override
     public void messageFromHomeFragment(String msg, String params) {
@@ -400,13 +400,14 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "exception in onCreate " + ex.getMessage());
             Sentry.captureException(ex);
         }
+        assert packageinfo != null;
         String Version = packageinfo.versionName;
 
         View header = navigationView.getHeaderView(0);
         TextView text = (TextView) header.findViewById(R.id.VersionView);
         text.setText(Version);
 
-        sNeededPermissions="";
+        String sNeededPermissions = "";
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -431,7 +432,7 @@ public class MainActivity extends AppCompatActivity
 
             if (Build.VERSION.SDK_INT > 32) {
                 Log.e(TAG, "need more permissions READ_MEDIA_AUDIO");
-                sNeededPermissions+="Permission audio access is missing" + System.getProperty("line.separator");
+                sNeededPermissions +="Permission audio access is missing" + System.getProperty("line.separator");
                 ActivityCompat.requestPermissions(this,
                         new String[]{android.Manifest.permission.READ_MEDIA_AUDIO},
                         PERMISSION_REQUEST_CODE);
@@ -441,6 +442,26 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+
+        String IP = sharedPreferences.getString("plex_server_ip", "");
+        boolean usePlexServer = sharedPreferences.getBoolean("usePlexServer", false);
+        if (usePlexServer){
+            if (IP.isEmpty() || IP.equals("xxx.xxx.xxx.xxx") || IP.equals("192.168.3.21")){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(true);
+                builder.setTitle(R.string.inform_wrong_ip_config);
+                builder.setMessage(R.string.please_check_ip_settings);
+                builder.setPositiveButton(R.string.confirm,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.d(TAG, "got okay ");
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
 
         CreateMediaController();
 

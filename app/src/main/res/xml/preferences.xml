@@ -16,7 +16,7 @@
         <EditTextPreference
             app:key="plex_server_ip"
             app:title="@string/plex_server_ip"
-            app:defaultValue="192.168.3.21"
+            app:defaultValue="xxx.xxx.xxx.xxx"
             app:useSimpleSummaryProvider="true"
             app:isPreferenceVisible="false"/>
 

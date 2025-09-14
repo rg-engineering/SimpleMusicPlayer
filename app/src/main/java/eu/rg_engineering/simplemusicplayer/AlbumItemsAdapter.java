@@ -102,6 +102,9 @@ public class AlbumItemsAdapter extends
     @Override
     public void onBindViewHolder(@NonNull AlbumItemsAdapter.ViewHolder viewHolder, int position) {
 // Get the data model based on position
+
+
+        //position here is okay
         AlbumItem item = mItemsFiltered.get(position);
 
         //Log.d(TAG, "onBindViewHolder called, position " + position);
@@ -132,7 +135,7 @@ public class AlbumItemsAdapter extends
         if (infoButton != null) {
             String infoSummery = item.getInfo();
 
-            if (infoSummery != null && infoSummery.length() > 0) {
+            if (infoSummery != null && !infoSummery.isEmpty()) {
                 Log.d(TAG, item.getName()+ ": info Button should be visible " + position);
                 infoButton.setVisibility(View.VISIBLE);
 
@@ -144,6 +147,8 @@ public class AlbumItemsAdapter extends
                         mCommunication.messageFromAlbumItemsAdapter("ShowMoreInfo", info, null);
                     }
                 });
+
+
             } else {
                 Log.d(TAG, item.getName()+": info Button should be invisible " + position);
             }
@@ -151,7 +156,7 @@ public class AlbumItemsAdapter extends
         if (imageImageView != null) {
             String path2image = item.getPath2Image();
 
-            if (path2image != null && path2image.length() > 0) {
+            if (path2image != null && !path2image.isEmpty()) {
                 Log.d(TAG, item.getName() +": image view should be used ");
                 //new DownloadImageTask(imageImageView, item.getName()).execute(path2image);
                 imageDownloader.loadBitmap(path2image, imageImageView);
@@ -338,17 +343,18 @@ public class AlbumItemsAdapter extends
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
+            v.performClick();
             return true;
         }
     }
 
     public String GetSerializedData() {
-        String sRet = "";
+        StringBuilder sRet = new StringBuilder();
 
         for (int i = 0; i < mItemsAll.size(); i++) {
-            sRet += mItemsAll.get(i).Serialize2();
+            sRet.append(mItemsAll.get(i).Serialize2());
         }
-        return sRet;
+        return sRet.toString();
     }
 
     public void ChangeItem(int index, AlbumItem item) {

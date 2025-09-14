@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
@@ -26,6 +27,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         CheckBoxPreference usePlexServer = findPreference("usePlexServer");
 
+        assert usePlexServer != null;
         if(usePlexServer.isChecked()) {
             EditTextPreference pref_plexserverip = findPreference("plex_server_ip");
             if (pref_plexserverip != null) {
@@ -53,9 +55,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 
         Preference backgroundImageFilePicker = (Preference) findPreference("BackgroundImage");
+        assert backgroundImageFilePicker != null;
         backgroundImageFilePicker.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
+            public boolean onPreferenceClick(@NonNull Preference preference) {
 
                 Intent intent = new Intent();
                 intent.setType("image/*");
@@ -75,11 +78,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_IMAGE) {
 
+                assert data != null;
                 Uri selectedImageURI = data.getData();
+                assert getActivity() != null;
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                assert selectedImageURI != null;
                 editor.putString("BackgroundImage", selectedImageURI.toString());
-                editor.commit();
+                editor.apply();
             }
         }
     }
