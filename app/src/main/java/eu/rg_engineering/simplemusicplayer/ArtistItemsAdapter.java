@@ -134,9 +134,12 @@ public class ArtistItemsAdapter extends
                 infoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d(TAG, "infoButton pressed position " + position);
-                        String info = mItemsFiltered.get(position).getInfo();
-                        mCommunication.messageFromArtistItemsAdapter("ShowMoreInfo", info, null);
+                        int currentPos = viewHolder.getBindingAdapterPosition();
+                        if (currentPos != RecyclerView.NO_POSITION) {
+                            Log.d(TAG, "infoButton pressed position " + currentPos);
+                            String info = mItemsFiltered.get(currentPos).getInfo();
+                            mCommunication.messageFromArtistItemsAdapter("ShowMoreInfo", info, null);
+                        }
                     }
                 });
             } else {

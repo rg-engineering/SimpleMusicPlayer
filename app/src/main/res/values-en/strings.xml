@@ -50,6 +50,7 @@
     <string name="artist">artist</string>
     <string name="numberofalbum">numberOfAlbum</string>
     <string name="numberofartists">numberOfArtists</string>
+    <string name="permissionrequired">PermissionRequired</string>
     <string name="numberoftracksinplaylist">numberOfTracksInPlaylist</string>
     <string name="track">track</string>
     <string name="numberoftracks">numberOfTracks</string>

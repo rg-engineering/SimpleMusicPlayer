@@ -11,6 +11,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pUpnpServiceRequest;
 import android.util.Log;
 
+/*
 public class discoverServer {
 
     private final String TAG = "discoverServer";
@@ -83,3 +84,4 @@ public class discoverServer {
     }
 
 }
+*/

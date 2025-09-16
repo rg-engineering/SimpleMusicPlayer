@@ -184,8 +184,11 @@ public class PlaylistItemsAdapter extends
         btnPlaySong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "PlayMusic pressed position " + position);
-                PlayCurrentSong(position);
+                int currentPos = viewHolder.getBindingAdapterPosition();
+                if (currentPos != RecyclerView.NO_POSITION) {
+                    Log.d(TAG, "PlayMusic pressed position " + currentPos);
+                    PlayCurrentSong(currentPos);
+                }
             }
         });
 

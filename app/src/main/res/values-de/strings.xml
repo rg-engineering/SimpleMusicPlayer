@@ -51,6 +51,7 @@
     <string name="artist">Künstler</string>
     <string name="numberofalbum">"Anszahl der Alben "</string>
     <string name="numberofartists">Anzahl der Künstler</string>
+    <string name="permissionrequired">PermissionRequired</string>
     <string name="numberoftracksinplaylist">Anzahl der Tracks in der Playlist</string>
     <string name="track">Track</string>
     <string name="numberoftracks">Anzahl der Tracks</string>
